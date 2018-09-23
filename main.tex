@@ -4,7 +4,38 @@
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{natbib}
+\usepackage{listings}
+\usepackage{xcolor}
 
+\definecolor{lightgray}{rgb}{.94,.94,.94}
+\definecolor{Green}{rgb}{0,107,0}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, class, export, boolean, throw, implements, import, this, constructor, string, number, public, private, static, const, var, let, void},
+  keywordstyle=\color{orange}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{Green}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
 
 \graphicspath{ {Pictures/} }
 
@@ -14,7 +45,6 @@
 \include{header}
 \include{statement-and-thanksgiving}
 \tableofcontents
-\pagestyle{plain}
 \include{introduction}
 \include{promises}
 \include{Observables}

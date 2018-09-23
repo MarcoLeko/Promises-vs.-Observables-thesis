@@ -1,5 +1,56 @@
 \setcounter{secnumdepth}{1}
 \section{Einführung}
+Diese Bachelorarbeit behandelt die Ausführung und Verarbeitung von asynchronen Prozessen in der Programmierung speziell in der Sprache Typescript.\\
+Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie   \textit{(\glqq{}Type\grqq{} zu deutsch: Typ)} ist eine typisierte Form der Skriptsprache Javascript. In Typescript ist es Standard, jede Variable, Funktion und Funktionsparameter im Vorfeld zu typisieren. Mit dem Typescript Compiler werden Dateien mit dem Suffix *.ts in *.js überführt. Zur Laufzeit werden Fehler im Code vom Typescript-Compiler entdeckt.
+\\
+\\
+\textbf{Beispiel}:
+\medskip
+\begin{lstlisting}
+class Greeter {
+    greeting: string;
+    constructor (message: string) {
+        this.greeting = message;
+    }
+    greet() {
+        return "Hello, " + this.greeting;
+    }
+}  
+\end{lstlisting}
+
+\begin{center}
+    \large{Auflistung 1: Typescript Klasse}
+\end{center}
+
+\begin{lstlisting}
+var Greeter = (function () {
+    function Greeter(message) {
+        this.greeting = message;
+    }
+    Greeter.prototype.greet = function () {
+        return "Hello, " + this.greeting;
+    };
+    return Greeter;
+})(); 
+\end{lstlisting}
+
+\begin{center}
+    \large{Auflistung 2: Überführung in Javascript}
+\end{center}
+
+Im oberen Code-Schnippsel wurden die variablen und die Klassenmethoden nach Typescript-Standard deklariert. Diese Typen werden beim übersetzen in Javascript ignoriert. Der Kompilierer einer Entwcklungsumgebung prüft dann, ob beim übergeben eines Paramaters in den Konstruktor ein numerischer oder boolean Wert eingesetzt wird. Dies wird dann als ein Fehler erkannt. Der Kompilierer übersetzt auch nicht direkt deklarierte Typen. Wie in diesem Fall wird erkannt, dass die Methode greet() einen string Wert zurückgibt.
+\\
+\\
+Da Syntaktisch alles was auf Javascript geschrieben auch valider Typescript Code ist, kann man Typescript als Superset von Javascript bezeichnen.
+Wichtig zu erwähnen ist, dass diese Sprache optionale statische Typen, Klassen und Interfaces bietet, diese sind jedoch keine Pflicht in der Anwendung. Es ist lediglich ein Standard.
+Da Javascript Code oft schwerer lesbar und noch schwerer zu erweitern ist, wird aus diesem Grund Typescript für die Anwendung der Beispiele genutzt.
+
+\subsection{Tooling}
+
+Typescript setzt auf Klassen. Heutzutage trennt die Schreibweise in Javascript und Typescript allerdings nur noch die Typisierung, weshalb hier der Mehrwert inzwischen geringer ist. Ansonsten bietet Typescript auch die Möglichkeit zu einem modularen Programmieren, allerdings muss das Verknüpfen zusätzlich von außen durch einen Module-Loader gestemmt werden, Typescript selbst kennt nur Methoden zum Im- und Exportieren.
+
+Um einen modularen Aufbau des Projektes zu gewährleisten, wird das Build-Tool \glqq{}Webpack\grqq{} verwendet. Bei Webpack handelt es sich um einen \glqq{}static module bundler\grqq{} für JavaScript-Anwendungen. Die Idee dahinter ist, einen Dependency-Graphen aufzubauen, der alle JavaScript-Module der Anwendung enthält und diese in ein (oder mehrere) Bundle packt. So kann man Code separat abgekapselt werden. 
+
 \begin{enumerate} 
 \item Motivation hinter der bachelorarbeit
 \item Was kann man aus dieser Bachelorarbeit "gewinnen"?
