@@ -1,10 +1,19 @@
 \setcounter{secnumdepth}{1}
 \section{Einführung}
 Diese Bachelorarbeit behandelt die Ausführung und Verarbeitung von asynchronen Prozessen in der Programmierung speziell in der Sprache Typescript.\\
+Zielgruppe dieser Arbeit sind Personen, die Grundkenntnisse in der Sprache Javascript/Typescript vorweisen können.
+Sollte man von der Skriptsprache Typescript noch nicht/kaum etwas gehört haben, sollte vor dem Lesen dieser Arbeit die Offizielle Dokumentation von Microsoft durchgegangen werden.
+
+\begin{center}
+\url{https://www.typescriptlang.org/docs/home.html}
+\end{center}
+
+In dieser Arbeit wird nur oberflächlich auf die Unterschiede der beiden Sprachen eingegangen. Des Weiteren sollten man von den  Kernkonzepte der Promises und Observables schon mal gehört haben, da diese in der Arbeit gegenübergestellt werden.
+
+\subsection{Typescript}
 Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie   \textit{(\glqq{}Type\grqq{} zu deutsch: Typ)} ist eine typisierte Form der Skriptsprache Javascript. In Typescript ist es Standard, jede Variable, Funktion und Funktionsparameter im Vorfeld zu typisieren. Mit dem Typescript Compiler werden Dateien mit dem Suffix *.ts in *.js überführt. Zur Laufzeit werden Fehler im Code vom Typescript-Compiler entdeckt.
-\\
-\\
-\textbf{Beispiel}:
+
+\subsubsection{}{Beispiel}:
 \medskip
 \begin{lstlisting}
 class Greeter {
@@ -38,7 +47,7 @@ var Greeter = (function () {
     \large{Auflistung 2: Überführung in Javascript}
 \end{center}
 
-Im oberen Code-Schnippsel wurden die variablen und die Klassenmethoden nach Typescript-Standard deklariert. Diese Typen werden beim übersetzen in Javascript ignoriert. Der Kompilierer einer Entwcklungsumgebung prüft dann, ob beim übergeben eines Paramaters in den Konstruktor ein numerischer oder boolean Wert eingesetzt wird. Dies wird dann als ein Fehler erkannt. Der Kompilierer übersetzt auch nicht direkt deklarierte Typen. Wie in diesem Fall wird erkannt, dass die Methode greet() einen string Wert zurückgibt.
+Im oberen Code-Schnipsel wurden die variablen und die Klassenmethoden nach Typescript-Standard deklariert. Diese Typen werden beim übersetzen in Javascript ignoriert. Der Kompiler einer Entwicklungsumgebung prüft dann, ob beim übergeben eines Parameters in den Konstruktor ein numerischer oder Boolean-Wert eingesetzt wird. Dies wird dann als ein Fehler erkannt. Der Kompiler übersetzt auch nicht direkt deklarierte Typen. Wie in diesem Fall wird erkannt, dass die Methode greet() einen String-Wert zurückgibt.
 \\
 \\
 Da Syntaktisch alles was auf Javascript geschrieben auch valider Typescript Code ist, kann man Typescript als Superset von Javascript bezeichnen.
@@ -49,7 +58,7 @@ Da Javascript Code oft schwerer lesbar und noch schwerer zu erweitern ist, wird 
 
 Typescript setzt auf Klassen. Heutzutage trennt die Schreibweise in Javascript und Typescript allerdings nur noch die Typisierung, weshalb hier der Mehrwert inzwischen geringer ist. Ansonsten bietet Typescript auch die Möglichkeit zu einem modularen Programmieren, allerdings muss das Verknüpfen zusätzlich von außen durch einen Module-Loader gestemmt werden, Typescript selbst kennt nur Methoden zum Im- und Exportieren.
 
-Um einen modularen Aufbau des Projektes zu gewährleisten, wird das Build-Tool \glqq{}Webpack\grqq{} verwendet. Bei Webpack handelt es sich um einen \glqq{}static module bundler\grqq{} für JavaScript-Anwendungen. Die Idee dahinter ist, einen Dependency-Graphen aufzubauen, der alle JavaScript-Module der Anwendung enthält und diese in ein (oder mehrere) Bundle packt. So kann man Code separat abgekapselt werden. 
+Um einen modularen Aufbau des Projektes zu gewährleisten, wird das Build-Tool \glqq{}Webpack\grqq{} verwendet. Bei Webpack handelt es sich um einen \glqq{}static module bundler\grqq{} für JavaScript-Anwendungen. Die Idee dahinter ist, einen Dependency-Graphen aufzubauen, der alle JavaScript-Module der Anwendung enthält und diese in ein (oder mehrere) Bundle packt. Zusätzlich können CSS-Module und HMTL-Module gebündelt werden. So kann Code separat abgekapselt werden. 
 
 \begin{enumerate} 
 \item Motivation hinter der bachelorarbeit
