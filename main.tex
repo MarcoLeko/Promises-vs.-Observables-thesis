@@ -1,10 +1,25 @@
 \documentclass[letterpaper]{article}
 \usepackage[utf8]{inputenc}
+
+% Package for translating default language into german e.g. table of contents - Inhaltsverzechnis %
 \usepackage[ngerman]{babel}
+
+% Package for adding pictures %
 \usepackage{graphicx}
+
+% Package for adding urls %
 \usepackage{hyperref}
+
+% Package for manipulating header and footer %
 \usepackage{fancyhdr}
-\usepackage{natbib}
+
+% Package for table of contents %
+\usepackage[square,numbers]{natbib}
+
+% Package for adding References in the table of contents %
+\usepackage[nottoc]{tocbibind}
+
+% Packegs for adding javascript code with code highlighting %
 \usepackage{listings}
 \usepackage{xcolor}
 
@@ -39,6 +54,7 @@
 }
 
 \graphicspath{ {Pictures/} }
+\bibliographystyle{abbrvnat}
 
 \begin{document}
 
@@ -50,5 +66,6 @@
 \include{promises}
 \include{Observables}
 \include{Zusammenfassung}
-\include{literatur}
+\bibliography{references}
+
 \end{document}
