@@ -1,4 +1,4 @@
-\documentclass[letterpaper]{article}
+\documentclass[letterpaper, dvipsnames]{article}
 \usepackage[utf8]{inputenc}
 
 \usepackage[ngerman]{babel} % Package for translating default language into german e.g. table of contents - Inhaltsverzechnis 
@@ -14,13 +14,10 @@
 \usepackage[square, numbers, sort&compress]{natbib} % Package for table of contents
 \bibliographystyle{unsrtnat}
 \usepackage[nottoc]{tocbibind} % Package for adding References in the table of contents
-\usepackage{listings} % Packegs for adding javascript code with code highlighting
-\usepackage{xcolor}
+\usepackage{listings} % Package for adding javascript code with code highlighting
+\usepackage[dvipsnames]{xcolor} % Package for adding colors
 
 \definecolor{lightgray}{rgb}{.94,.94,.94}
-\definecolor{Green}{rgb}{0,107,0}
-\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
-
 \lstdefinelanguage{JavaScript}{
   keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, class, export, boolean, throw, implements, import, this, constructor, string, number, public, private, static, const, var, let, void},
   keywordstyle=\color{orange}\bfseries,
@@ -28,8 +25,8 @@
   sensitive=false,
   comment=[l]{//},
   morecomment=[s]{/*}{*/},
-  commentstyle=\color{purple}\ttfamily,
-  stringstyle=\color{Green}\ttfamily,
+  commentstyle=\color{OliveGreen}\ttfamily,
+  stringstyle=\color{OliveGreen}\ttfamily,
   morestring=[b]',
   morestring=[b]"
 }
@@ -46,7 +43,6 @@
    showtabs=false,
    captionpos=b
 }
-
 
 \begin{document}
 

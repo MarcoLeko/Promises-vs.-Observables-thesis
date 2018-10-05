@@ -58,16 +58,58 @@ Nichtsdestotrotz findet Typescript immer mehr Beliebtheit in Unternehmensprojekt
 \caption{Prozentualer Anteil der Entwickler die Interesse an neuen Technologien zeigen und weiter mit neuen Technologien arbeiten möchten. \cite{typescript-survey}}
 \end{figure}
 
-\subsection{Vorbereitung}
-\subsubsection{Tooling}
-Um unser Typescript-Beispielprojekt modular zu gestalten, brauchen wir die Hilfe eines sog.\glqq Module-Bundlers\grqq{}. Code-splitting und die Unterteilung in Module wollen wir aus dem Grund der Übersichtlichkeit sowie der einfachen Verwaltung des Codes machen. Es ist eine klassische Programmierpraxis, bekannt aus den Programmiersprachen wie C, C++, PHP, Ruby, Python usw. Das Problem bei kompiliertem Javascript in einem Internetbrowser ist, dass es nativ kein Code-splitting unterstützt. Alle Skripte werden im Rahmen eines Kontexts im Browser bearbeitet, in der Reihenfolge, in der sie aus einem HTML-Format parsiert werden. Und hier kommt Webpack ins Spiel. \cite{webpack-einfuehrung}
-\\\\
-Typescript setzt auf Klassen. Heutzutage trennt die Schreibweise in Javascript und Typescript allerdings nur noch die Typisierung, weshalb hier der Mehrwert inzwischen geringer ist. Ansonsten bietet Typescript auch die Möglichkeit zu einem modularen Programmieren, allerdings muss das Verknüpfen zusätzlich von außen durch einen Module-Loader gestemmt werden, Typescript selbst kennt nur Methoden zum Im- und Exportieren.
+\subsection{Tooling}
 
-Um einen modularen Aufbau des Projektes zu gewährleisten, wird das Build-Tool \glqq{}Webpack\grqq{} verwendet. Bei Webpack handelt es sich um einen \glqq{}static module bundler\grqq{} für JavaScript-Anwendungen. Die Idee dahinter ist, einen Dependency-Graphen aufzubauen, der alle JavaScript-Module der Anwendung enthält und diese in ein (oder mehrere) Bundle packt. Zusätzlich können CSS-Module und HMTL-Module gebündelt werden. So kann Code separat abgekapselt werden.\cite{Webpack-basics}
+Um unser Typescript-Beispielprojekt modular zu gestalten, brauchen wir die Hilfe eines sog.\glqq Module-Bundlers\grqq{}. Code-splitting und die Unterteilung in Module wollen wir aus dem Grund der Übersichtlichkeit sowie der einfachen Verwaltung des Codes machen. Es ist eine klassische Programmierpraxis, bekannt aus den Programmiersprachen wie C, C++, PHP, Java, usw. Das Problem bei kompiliertem Javascript in einem Internetbrowser ist, dass es nativ kein Code-splitting unterstützt. Alle Skripte werden im Rahmen eines Kontextes im Browser bearbeitet, in der Reihenfolge, in der sie aus einem HTML-Format eingefügt werden. Und hier kommt Webpack ins Spiel. \cite{webpack-einfuehrung}
+\\\\
+Webpack bearbeitet modular geschriebenen Code und baut darauf einen Dependency-Graphen auf. Alle JavaScript-Module sind darin enthalten und diese in ein (oder mehrere) Bundle gepackt. Dabei kommen zwei Fragen auf:
+
+\subsubsection{Was sind Javascript Module?}
+JavaScript-Module ermöglichen es, Code zu gruppieren (auch \glqq{}Splitting\grqq{} genannt), so wie wir, es wie oben erwähnt, aus anderen Programmiersprachen kennen. Das ermöglicht beim überarbeiten des Codes eine bessere Einfindung und Übersicht. Zur Verdeutlichung nehmen wir ein einfaches Beispiel aus unserem Beispielprojekt:
+
+
+\begin{figure}[H]
+\begin{lstlisting}
+// views/register-panel.ts
+export function createRegisterPanel(): string {
+    return `<form id="registerForm" class="sign-up-form mt-5">
+                <img class="mb-4" id="hm-logo" width="250" height="auto">
+                <div class="text-center">
+                    <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+                </div>
+                <label for="inputEmail" class="sr-only">Email address</label>
+                <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="inputPassword" class="form-control mt-1" placeholder="Password" required="">
+                <button id="registerButton" type="button" class="btn btn-lg btn-primary btn-block mt-2 mb-3">Sign up</button>
+            </form>`;
+}
+\end{lstlisting}
+\end{figure}
+In der Datei views/register-panel.ts definieren wir eine Funktion createRegisterPanel(), die HTML-Elemente zurückgibt. Diese Funktionen exportieren wir. Somit ist register-panel.ts unser Modul.
+
+\begin{figure}[H]
+\begin{lstlisting}
+import {createRegisterPanel} from './views/register-panel';
+
+class Register {
+
+    constructor() {
+        document.body.innerHTML = createRegisterPanel();
+    }
+    
+}
+\end{lstlisting}
+\end{figure}
+
+Unser Modul verwenden wir dann in der Datei main.js, welche die Funktion createRegisterPanel() aus dem Modul importiert und verwendet. Nun können wir mit diesen Dateien in unserem Browser noch nicht viel anfangen. Wir brauchen hier einen Module Bundler wie Webpack, um aus dem Code ein Bundle zu machen.
+
+\subsubsection{Was ist ein Bundle?}
+
+Ein Bundle ist quasi der zusammengefasste JavaScript-Code. Wir geben Webpack als Eingabe unsere Datei main.js, Webpack lädt unsere vollständige Anwendung und erstellt dann – im einfachen Fall – eine JavaScript-Datei, die unseren vollständigen Code enthält und so auch im Browser verwendet werden kann.\cite{Webpack-basics}
 
 \begin{enumerate} 
-\item Motivation hinter der bachelorarbeit
+\item Motivation hinter der Bachelorarbeit
 \item Was kann man aus dieser Bachelorarbeit "gewinnen"?
 \end{enumerate}
 
