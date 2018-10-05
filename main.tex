@@ -6,11 +6,13 @@
 
 \usepackage{graphicx} % Package for adding pictures
 \usepackage{float} % Package for allowing to float images
+\graphicspath{ {Pictures/} }
+
 \usepackage{hyperref} % Package for adding urls
 \usepackage{fancyhdr} % Package for manipulating header and footer
 
-\usepackage[square,numbers]{natbib} % Package for table of contents
-
+\usepackage[square, numbers, sort&compress]{natbib} % Package for table of contents
+\bibliographystyle{unsrtnat}
 \usepackage[nottoc]{tocbibind} % Package for adding References in the table of contents
 \usepackage{listings} % Packegs for adding javascript code with code highlighting
 \usepackage{xcolor}
@@ -45,8 +47,6 @@
    captionpos=b
 }
 
-\graphicspath{ {Pictures/} }
-\bibliographystyle{abbrvnat}
 
 \begin{document}
 
