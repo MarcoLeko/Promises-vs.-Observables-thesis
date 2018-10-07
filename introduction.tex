@@ -5,7 +5,7 @@ Zielgruppe dieser Arbeit sind Personen, die Grundkenntnisse in der Sprache Javas
 Sollte man von der Skriptsprache Typescript noch nicht/kaum etwas gehört haben, sollte vor dem Lesen dieser Arbeit die Offizielle Dokumentation von Microsoft durchgegangen werden.
 
 \begin{center}
-\url{https://www.typescriptlang.org/docs/home.html}
+\url{https://www.typescriptlang.org/docs/home.html} 
 \end{center}
 
 In dieser Arbeit wird nur oberflächlich auf die Unterschiede der beiden Sprachen eingegangen. Des Weiteren sollte man von den Kernkonzepten der Promises und Observables schon mal gehört haben, da diese in der Arbeit gegenübergestellt werden.
@@ -46,10 +46,10 @@ var Greeter = (function () {
 \end{lstlisting}
 \caption{Überführung in Javascript \cite{typescript-example}}
 \end{figure}
-In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Klassen-Methode greet() und des Konstruktors in einer Funktion. Sowohl Klassen als auch Interfaces werden in Javascript nicht genutzt.
+In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Klassen-Methode greet() und des Konstruktors. Sowohl Klassen als auch Interfaces werden in Javascript nicht genutzt.
 \\\\
 Da Syntaktisch alles was auf Javascript geschrieben auch valider Typescript Code ist, kann man Typescript als Superset von Javascript bezeichnen.
-Wichtig zu erwähnen ist, dass diese Sprache optionale statische Typen, Klassen und Interfaces bietet, diese sind jedoch keine Pflicht in der Anwendung. Es ist lediglich eine Konvention.
+Wichtig zu erwähnen ist, dass diese Sprache optionale statische Typen, Klassen und Interfaces bietet, diese sind keine Pflicht in der Anwendung. Es ist lediglich eine Konvention.
 Nichtsdestotrotz findet Typescript immer mehr Beliebtheit in Unternehmensprojekten. Entwicklerteams können durch die Typisierung schneller Bugs am Code erkennen und durch den modularen Aufbau, den Typescript ermöglicht, die Organisation und Dokumentation von großen Projekten verbessern. Diese Tendenz wird von der beliebten Entwicklerplattform Stackoverflow untermauert, die laut einer Umfrage welche die beliebtesten Programmiersprachen unter Entwickler sei, folgendes rauskam:
 
 \begin{figure}[H]
@@ -60,7 +60,7 @@ Nichtsdestotrotz findet Typescript immer mehr Beliebtheit in Unternehmensprojekt
 
 \subsection{Tooling}
 
-Um unser Typescript-Beispielprojekt modular zu gestalten, brauchen wir die Hilfe eines sog.\glqq Module-Bundlers\grqq{}. Code-splitting und die Unterteilung in Module wollen wir aus dem Grund der Übersichtlichkeit sowie der einfachen Verwaltung des Codes machen. Es ist eine klassische Programmierpraxis, bekannt aus den Programmiersprachen wie C, C++, PHP, Java, usw. Das Problem bei kompiliertem Javascript in einem Internetbrowser ist, dass es nativ kein Code-splitting unterstützt. Alle Skripte werden im Rahmen eines Kontextes im Browser bearbeitet, in der Reihenfolge, in der sie aus einem HTML-Format eingefügt werden. Und hier kommt Webpack ins Spiel. \cite{webpack-einfuehrung}
+Um unser Typescript-Beispielprojekt modular zu gestalten, brauchen wir die Hilfe eines sog. \glqq Module-Bundlers\grqq{}. Die Unterteilung in Module wollen wir aus dem Grund der Übersichtlichkeit sowie der einfachen Verwaltung des Codes machen. Es ist eine klassische Programmierpraxis, bekannt aus den Programmiersprachen C, C++, PHP, Java, uvm. Das Problem bei kompiliertem Javascript in einem Internetbrowser ist, dass es nativ kein Code-splitting unterstützt. Alle Skripte werden im Rahmen eines Kontextes im Browser bearbeitet, in der Reihenfolge, in der sie aus einem HTML-Format eingefügt werden. Und hier kommt Webpack ins Spiel. \cite{webpack-einfuehrung}
 \\\\
 Webpack bearbeitet modular geschriebenen Code und baut darauf einen Dependency-Graphen auf. Alle JavaScript-Module sind darin enthalten und diese in ein (oder mehrere) Bundle gepackt. Dabei kommen zwei Fragen auf:
 
@@ -70,43 +70,50 @@ JavaScript-Module ermöglichen es, Code zu gruppieren (auch \glqq{}Splitting\grq
 
 \begin{figure}[H]
 \begin{lstlisting}
-// views/register-panel.ts
-export function createRegisterPanel(): string {
-    return `<form id="registerForm" class="sign-up-form mt-5">
-                <img class="mb-4" id="hm-logo" width="250" height="auto">
-                <div class="text-center">
-                    <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-                </div>
-                <label for="inputEmail" class="sr-only">Email address</label>
-                <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-                <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" class="form-control mt-1" placeholder="Password" required="">
-                <button id="registerButton" type="button" class="btn btn-lg btn-primary btn-block mt-2 mb-3">Sign up</button>
-            </form>`;
+// views/entry-panel.ts
+export function createEntryPanel(): void {
+    document.body.innerHTML = 
+    `<form id="signUpForm" class="sign-up-form mt-5">
+        <img class="mb-4" id="hm-logo" width="250" height="auto">
+        <div class="text-center">
+            <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+        </div>
+            <div id="signUpMethod">
+                <button id="loginFormButton" type="button" class="btn btn-lg btn-info btn-block mt-2 mb-3">Login</button>
+                <div class="hr-sect">or</div>
+                <button id="registerFormButton"type="button" class="btn btn-lg btn-primary btn-block mt-2 mb-3">Register</button>
+        </div>
+    </form>`;
 }
 \end{lstlisting}
 \end{figure}
-In der Datei views/register-panel.ts definieren wir eine Funktion createRegisterPanel(), die HTML-Elemente zurückgibt. Diese Funktionen exportieren wir. Somit ist register-panel.ts unser Modul.
+In der Datei views/entry-panel.ts definieren wir eine Funktion createEntryPanel(), die HTML-Elemente setzt. Diese Funktionen exportieren wir. Somit ist entry-panel.ts unser Modul.
 
 \begin{figure}[H]
 \begin{lstlisting}
-import {createRegisterPanel} from './views/register-panel';
+import {createEntryPanel} from './views/entry-panel';
 
 class Register {
 
     constructor() {
-        document.body.innerHTML = createRegisterPanel();
+        createEntryPanel();
     }
     
 }
 \end{lstlisting}
 \end{figure}
 
-Unser Modul verwenden wir dann in der Datei main.js, welche die Funktion createRegisterPanel() aus dem Modul importiert und verwendet. Nun können wir mit diesen Dateien in unserem Browser noch nicht viel anfangen. Wir brauchen hier einen Module Bundler wie Webpack, um aus dem Code ein Bundle zu machen.
+Unser Modul verwenden wir dann in der Datei main.js, welche die Funktion createEntryPanel() aus dem Modul importiert und verwendet. Nun können wir mit diesen Dateien in unserem Browser noch nicht viel anfangen. Wir brauchen hier einen Module Bundler wie Webpack, um aus dem Code ein Bundle zu machen.
 
 \subsubsection{Was ist ein Bundle?}
 
-Ein Bundle ist quasi der zusammengefasste JavaScript-Code. Wir geben Webpack als Eingabe unsere Datei main.js, Webpack lädt unsere vollständige Anwendung und erstellt dann – im einfachen Fall – eine JavaScript-Datei, die unseren vollständigen Code enthält und so auch im Browser verwendet werden kann.\cite{Webpack-basics}
+Ein Bundle ist der zusammengefasste JavaScript-Code. Wir geben Webpack als Eingabe unsere Datei main.js, Webpack  lädt dann unsere vollständige Anwendung und erstellt – im einfachen Fall – eine JavaScript-Datei, die unseren vollständigen Code enthält und so auch im Browser verwendet werden kann.\cite{Webpack-basics}
+Für das Beispielprojekt dieser Bachelorarbeit wird zusätzlich die HTML-Root Datei generiert. Die Metadaten dieser Datei wie z.B. die Bestimmung des Titels oder das Hinzufügen eines Favicons werden dank eines Webpack-Plugins in der Webpack-Konfigurationsdatei definiert. Durch Plugins und Loader kann Webpack auch Bilder, CSS und uvm. laden.
+Für weitere Informationen wird die offizielle Dokumentation von Webpack empfohlen:
+
+\begin{center}
+\url{https://webpack.js.org/}
+\end{center}
 
 \begin{enumerate} 
 \item Motivation hinter der Bachelorarbeit
