@@ -2,7 +2,7 @@
 \section{Einführung}
 Diese Bachelorarbeit behandelt die Ausführung und Verarbeitung von asynchronen Prozessen in der Programmierung speziell in der Sprache Typescript.\\
 Zielgruppe dieser Arbeit sind Personen, die Grundkenntnisse in der Sprache Javascript/Typescript vorweisen können.
-Sollte man von der Skriptsprache Typescript noch nicht/kaum etwas gehört haben, sollte vor dem Lesen dieser Arbeit die Offizielle Dokumentation von Microsoft durchgegangen werden.
+Sollte man von der Skriptsprache Typescript noch nicht/kaum etwas gehört haben, sollte vor dem Lesen dieser Arbeit die offizielle Dokumentation von Microsoft durchgegangen werden.
 
 \begin{center}
 \url{https://www.typescriptlang.org/docs/home.html} 
@@ -60,12 +60,12 @@ Nichtsdestotrotz findet Typescript immer mehr Beliebtheit in Unternehmensprojekt
 
 \subsection{Tooling}
 
-Um unser Typescript-Beispielprojekt modular zu gestalten, brauchen wir die Hilfe eines sog. \glqq Module-Bundlers\grqq{}. Die Unterteilung in Module wollen wir aus dem Grund der Übersichtlichkeit sowie der einfachen Verwaltung des Codes machen. Es ist eine klassische Programmierpraxis, bekannt aus den Programmiersprachen C, C++, PHP, Java, uvm. Das Problem bei kompiliertem Javascript in einem Internetbrowser ist, dass es nativ kein Code-splitting unterstützt. Alle Skripte werden im Rahmen eines Kontextes im Browser bearbeitet, in der Reihenfolge, in der sie aus einem HTML-Format eingefügt werden. Und hier kommt Webpack ins Spiel. \cite{webpack-einfuehrung}
+Um das Typescript-Beispielprojekt modular zu gestalten, braucht man die Hilfe eines sog. \glqq Module-Bundlers\grqq{}. Die Unterteilung in Module hilft, wie oben erwähnt, das Projekt übersichtlicher zu gestalten. Es ist eine klassische Programmierpraxis, bekannt aus den Programmiersprachen C, C++, PHP, Java, uvm. Das Problem bei kompiliertem Javascript in einem Internetbrowser ist, dass es nativ kein Code-splitting unterstützt. Alle Skripte werden im Rahmen eines Kontextes im Browser bearbeitet, in der Reihenfolge, in der sie aus einem HTML-Format eingefügt werden. Und hier kommt Webpack ins Spiel. \cite{webpack-einfuehrung}
 \\\\
-Webpack bearbeitet modular geschriebenen Code und baut darauf einen Dependency-Graphen auf. Alle JavaScript-Module sind darin enthalten und diese in ein (oder mehrere) Bundle gepackt. Dabei kommen zwei Fragen auf:
+Webpack bearbeitet modular geschriebenen Code und baut darauf einen Dependency-Graphen auf. Alle JavaScript-Module sind darin enthalten und diese werden in ein (oder mehrere) Bundle gepackt. Dabei kommen zwei Fragen auf:
 
 \subsubsection{Was sind Javascript Module?}
-JavaScript-Module ermöglichen es, Code zu gruppieren (auch \glqq{}Splitting\grqq{} genannt), so wie wir, es wie oben erwähnt, aus anderen Programmiersprachen kennen. Das ermöglicht beim überarbeiten des Codes eine bessere Einfindung und Übersicht. Zur Verdeutlichung nehmen wir ein einfaches Beispiel aus unserem Beispielprojekt:
+JavaScript-Module ermöglichen es, Code zu gruppieren (auch \glqq{}Splitting\grqq{} genannt). Das ermöglicht beim überarbeiten des Codes eine bessere Einfindung und Übersicht. Zur Verdeutlichung nehmen wir ein einfaches Beispiel aus unserem Beispielprojekt:
 
 
 \begin{figure}[H]
@@ -107,7 +107,7 @@ Unser Modul verwenden wir dann in der Datei main.js, welche die Funktion createE
 
 \subsubsection{Was ist ein Bundle?}
 
-Ein Bundle ist der zusammengefasste JavaScript-Code. Wir geben Webpack als Eingabe unsere Datei main.js, Webpack  lädt dann unsere vollständige Anwendung und erstellt – im einfachen Fall – eine JavaScript-Datei, die unseren vollständigen Code enthält und so auch im Browser verwendet werden kann.\cite{Webpack-basics}
+Ein Bundle ist der zusammengefasste JavaScript-Code. Wir geben Webpack als Eingabe unsere Datei main.js, Webpack lädt dann die komplette Anwendung und erstellt – im einfachen Fall – eine JavaScript-Datei, die den vollständigen Code enthält und so auch im Browser verwendet werden kann.\cite{Webpack-basics}
 Für das Beispielprojekt dieser Bachelorarbeit wird zusätzlich die HTML-Root Datei generiert. Die Metadaten dieser Datei wie z.B. die Bestimmung des Titels oder das Hinzufügen eines Favicons werden dank eines Webpack-Plugins in der Webpack-Konfigurationsdatei definiert. Durch Plugins und Loader kann Webpack auch Bilder, CSS und uvm. laden.
 Für weitere Informationen wird die offizielle Dokumentation von Webpack empfohlen:
 
