@@ -72,7 +72,7 @@ JavaScript-Module ermöglichen es, Code zu gruppieren (auch \glqq{}Splitting\grq
 \begin{lstlisting}
 // views/entry-panel.ts
 export function createEntryPanel(): void {
-    document.body.innerHTML = 
+    document.getElementById('main').innerHTML = 
     `<form id="signUpForm" class="sign-up-form mt-5">
         <img class="mb-4" id="hm-logo" width="250" height="auto">
         <div class="text-center">
