@@ -11,7 +11,7 @@ Sollte man von der Skriptsprache Typescript noch nicht/kaum etwas gehört haben,
 In dieser Arbeit wird nur oberflächlich auf die Unterschiede der beiden Sprachen eingegangen. Des Weiteren sollte man von den Kernkonzepten der Promises und Observables schon mal gehört haben, da diese in der Arbeit gegenübergestellt werden.
 
 \subsection{Typescript}
-Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie \textit{(\glqq{}Type\grqq{} deutsch: Typ)} ist eine typisierte Form der Skriptsprache Javascript. In Typescript ist es Standard, jede Variable, Funktion und Funktionsparameter im Vorfeld zu typisieren. Mit dem Typescript Compiler werden Dateien mit dem Suffix *.ts in *.js überführt. Zur Laufzeit werden Fehler im Code vom Typescript-Compiler entdeckt.
+Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie \textit{(\glqq{}Type\grqq{} zu deutsch: Typ)} ist eine typisierte Form der Skriptsprache Javascript. In Typescript ist es Standard, jede Variable, Funktion und Funktionsparameter im Vorfeld zu typisieren. Mit dem Typescript Compiler werden Dateien mit dem Suffix *.ts in *.js überführt.
 
 \subsubsection{Beispiel}
 
@@ -47,85 +47,47 @@ var Greeter = (function () {
 \caption{Überführung in Javascript \cite{typescript-example}}
 \end{figure}
 In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Klassen-Methode greet() und des Konstruktors. Sowohl Klassen als auch Interfaces werden in Javascript nicht genutzt.
-\\\\
+
+\subsubsection{Kompiler}
+
+In einer tsconfig.json Datei können die Kompiler-Optionen für Typescript gesetzt werden. Zudem können Root-Dateien definiert und ausgeschlossen werden. Die Auflistung einer tsconfig.json Datei in einem Verzeichnis zeigt, dass das es sich hierbei um das Root-Verzeichnis des Projekts handelt. Ein Beispiel für die Konfiguration einer solchen Datei könnte folgend aussehen: 
+
+\begin{figure}[h!]
+\begin{lstlisting}
+{
+    "compilerOptions": {
+        "module": "system",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outFile": "../../built/local/tsc.js",
+        "sourceMap": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}  
+\end{lstlisting}
+\caption{tsconfig.json \cite{tsconfig}}
+\end{figure}
+Hier kann z.B. mit der Regel 
+\glqq noImplicitAny\grqq{} verhindert werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any zu deklariert.
+Die Konfiguration dieser Datei betrifft Kompilier-Fehler. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen.\\\\
+
 Da Syntaktisch alles was auf Javascript geschrieben auch valider Typescript Code ist, kann man Typescript als Superset von Javascript bezeichnen.
-Wichtig zu erwähnen ist, dass diese Sprache optionale statische Typen, Klassen und Interfaces bietet, diese sind keine Pflicht in der Anwendung. Es ist lediglich eine Konvention.
-Nichtsdestotrotz findet Typescript immer mehr Beliebtheit in Unternehmensprojekten. Entwicklerteams können durch die Typisierung schneller Bugs am Code erkennen und durch den modularen Aufbau, den Typescript ermöglicht, die Organisation und Dokumentation von großen Projekten verbessern. Diese Tendenz wird von der beliebten Entwicklerplattform Stackoverflow untermauert, die laut einer Umfrage welche die beliebtesten Programmiersprachen unter Entwickler sei, folgendes rauskam:
+Demzufolge kann man die Nutzung von  statische Typen, Klassen und Interfaces als Konvention betrachten.
+
+Im Laufe der Zeit findet typescript immer mehr Beliebtheit in Unternehmensprojekten. Entwicklerteams können durch die Typisierung schneller Bugs am Code erkennen und durch den modularen Aufbau, den Typescript ermöglicht, die Organisation und Dokumentation von großen Projekten verbessern. Diese Tendenz wird von der beliebten Entwicklerplattform Stackoverflow untermauert, die laut einer Umfrage welche die beliebtesten Programmiersprachen unter Entwickler sei, folgendes rausgekommen ist:
 
 \begin{figure}[H]
 \centering
 \includegraphics[height=6cm]{stackoverflow-typescript-popularity}
 \caption{Prozentualer Anteil der Entwickler die Interesse an neuen Technologien zeigen und weiter mit neuen Technologien arbeiten möchten. Jahr: 2017 \cite{typescript-survey}}
 \end{figure}
-
-\subsection{Tooling}
-
-Um das Typescript-Beispielprojekt modular zu gestalten, braucht man die Hilfe eines sog. \glqq Module-Bundlers\grqq{}. Die Unterteilung in Module hilft, wie oben erwähnt, das Projekt übersichtlicher zu gestalten. Es ist eine klassische Programmierpraxis, bekannt aus den Programmiersprachen C, C++, PHP, Java, uvm. Das Problem bei kompiliertem Javascript in einem Internetbrowser ist, dass es nativ kein Code-splitting unterstützt. Alle Skripte werden im Rahmen eines Kontextes im Browser bearbeitet, in der Reihenfolge, in der sie aus einem HTML-Format eingefügt werden. Und hier kommt Webpack ins Spiel. \cite{webpack-einfuehrung}
-\\\\
-Webpack bearbeitet modular geschriebenen Code und baut darauf einen Dependency-Graphen auf. Alle JavaScript-Module sind darin enthalten und diese werden in ein (oder mehrere) Bundle gepackt. Dabei kommen zwei Fragen auf:
-
-\subsubsection{Was sind Javascript Module?}
-JavaScript-Module ermöglichen es, Code zu gruppieren (auch \glqq{}Splitting\grqq{} genannt). Das ermöglicht beim überarbeiten des Codes eine bessere Einfindung und Übersicht. Zur Verdeutlichung nehmen wir ein einfaches Beispiel aus unserem Beispielprojekt:
-
-
-\begin{figure}[H]
-\begin{lstlisting}
-// views/entry-panel.ts
-export function createEntryPanel(): void {
-    document.getElementById('main').innerHTML = 
-    `<form id="signUpForm" class="sign-up-form mt-5">
-        <img class="mb-4" id="hm-logo" width="250" height="auto">
-        <div class="text-center">
-            <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
-        </div>
-            <div id="signUpMethod">
-                <button id="loginFormButton" type="button" class="btn btn-lg btn-info btn-block mt-2 mb-3">Login</button>
-                <div class="hr-sect">or</div>
-                <button id="registerFormButton"type="button" class="btn btn-lg btn-primary btn-block mt-2 mb-3">Register</button>
-        </div>
-    </form>`;
-}
-\end{lstlisting}
-\end{figure}
-In der Datei views/entry-panel.ts definieren wir eine Funktion createEntryPanel(), die HTML-Elemente setzt. Diese Funktionen exportieren wir. Somit ist entry-panel.ts unser Modul.
-
-\begin{figure}[H]
-\begin{lstlisting}
-import {createEntryPanel} from './views/entry-panel';
-
-class Register {
-
-    constructor() {
-        createEntryPanel();
-    }
-    
-}
-\end{lstlisting}
-\end{figure}
-
-Unser Modul verwenden wir dann in der Datei main.js, welche die Funktion createEntryPanel() aus dem Modul importiert und verwendet. Nun können wir mit diesen Dateien in unserem Browser noch nicht viel anfangen. Wir brauchen hier einen Module Bundler wie Webpack, um aus dem Code ein Bundle zu machen.
-
-\subsubsection{Was ist ein Bundle?}
-
-Ein Bundle ist der zusammengefasste JavaScript-Code. Wir geben Webpack als Eingabe unsere Datei main.js, Webpack lädt dann die komplette Anwendung und erstellt – im einfachen Fall – eine JavaScript-Datei, die den vollständigen Code enthält und so auch im Browser verwendet werden kann.\cite{Webpack-basics}
-Für das Beispielprojekt dieser Bachelorarbeit wird zusätzlich die HTML-Root Datei generiert. Die Metadaten dieser Datei wie z.B. die Bestimmung des Titels oder das Hinzufügen eines Favicons werden dank eines Webpack-Plugins in der Webpack-Konfigurationsdatei definiert. Durch Plugins und Loader kann Webpack auch Bilder, CSS und uvm. laden.
-Für weitere Informationen wird die offizielle Dokumentation von Webpack empfohlen:
-
-\begin{center}
-\url{https://webpack.js.org/}
-\end{center}
-
-\subsection{Google Firebase}
-Um praxisnahe asynchrone Verarbeitungsprozesse zu simulieren wie z.B. Daten von einem Server abrufen oder Daten an einem Server hervorbringen, braucht das Beispielprojekt eine Schnittstelle zu einer Datenbank. Um dies so einfach wie möglich zu gestalten (ohne eine komplette Backend-Applikation mit Datenbankanbindung zu bauen), bietet Google mit Firebase eine Plattform die clientseitig eine Kommunikation zwischen Frontend und DaaS ermöglicht. Firebase bietet standartmäßig eine echtzeit \textit{(englisch \glqq{}realtime\grqq{})} Datenbank, die treffend für die Verarbeitung von Observables- und Promises-Operationen ist.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=3.5cm, height=1cm]{firebase-logo}
-\caption{Firebase-Logo\cite{firebase}}
-\end{figure}
-
-Um das Beispielprojekt mit Firebase zu initialisieren, wird ein Google-Account benötigt.
-
 
 \begin{enumerate} 
 \item Motivation hinter der Bachelorarbeit
