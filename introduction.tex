@@ -75,13 +75,12 @@ In einer tsconfig.json Datei können die Kompiler-Optionen für Typescript geset
 \caption{tsconfig.json \cite{tsconfig}}
 \end{figure}
 Hier kann z.B. mit der Regel 
-\glqq noImplicitAny\grqq{} verhindert werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any zu deklariert.
+\glqq noImplicitAny\grqq{} verhindert werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sollte der Compiler einen Fehler anzeigen, wird in jedem Fall eine Javascript-Datei erstellt, und diese ist potenziell auch lauffähig. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any zu deklariert.
 Die Konfiguration dieser Datei betrifft Kompilier-Fehler. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen.\\\\
 
-Da Syntaktisch alles was auf Javascript geschrieben auch valider Typescript Code ist, kann man Typescript als Superset von Javascript bezeichnen.
-Demzufolge kann man die Nutzung von  statische Typen, Klassen und Interfaces als Konvention betrachten.
+Da Syntaktisch alles was auf Javascript geschrieben auch valider Typescript Code ist, kann man Typescript als Superset von Javascript bezeichnen. Demzufolge kann man die Nutzung von statische Typen, Klassen und Interfaces als Konvention betrachten.
 
-Im Laufe der Zeit findet typescript immer mehr Beliebtheit in Unternehmensprojekten. Entwicklerteams können durch die Typisierung schneller Bugs am Code erkennen und durch den modularen Aufbau, den Typescript ermöglicht, die Organisation und Dokumentation von großen Projekten verbessern. Diese Tendenz wird von der beliebten Entwicklerplattform Stackoverflow untermauert, die laut einer Umfrage welche die beliebtesten Programmiersprachen unter Entwickler sei, folgendes rausgekommen ist:
+Im Laufe der Zeit findet Typescript immer mehr Beliebtheit in Unternehmensprojekten. Entwicklerteams können durch die Typisierung schneller Bugs am Code erkennen und durch den modularen Aufbau, den Typescript ermöglicht, die Organisation und Dokumentation von großen Projekten verbessern. Diese Tendenz wird von der beliebten Entwicklerplattform Stackoverflow untermauert, die laut einer Umfrage welche die beliebtesten Programmiersprachen der Entwickler sei, folgendes rausgekommen ist:
 
 \begin{figure}[H]
 \centering
@@ -89,16 +88,16 @@ Im Laufe der Zeit findet typescript immer mehr Beliebtheit in Unternehmensprojek
 \caption{Prozentualer Anteil der Entwickler die Interesse an neuen Technologien zeigen und weiter mit neuen Technologien arbeiten möchten. Jahr: 2017 \cite{typescript-survey}}
 \end{figure}
 
-\begin{enumerate} 
-\item Motivation hinter der Bachelorarbeit
-\item Was kann man aus dieser Bachelorarbeit "gewinnen"?
-\end{enumerate}
+\subsection{Aufbau}
+Diese Bachelorarbeit wird aus zwei Beispielprojekten bestehen. Während eines der Projekte nur im Kern die Ausführung von asynchronen Verarbeitungsprozessen präsentiert mit Hilfe von simulierten Anwendungsbeispielen, wird das zweite Projekt eine Singlepage-Applikation darstellen und praxisnahe Beispiele anwenden. Dies soll mit dem Framework Angular und Google Firebase als DaaS bewerkstelligt werden. Das zweite Projekt wird im zweiten Teil der Arbeit vorgestellt. Die Repositories für beide Projekte sind zu finden unter: 
 
-\section{Vorbereitung}
-\begin{enumerate} 
-\item Welches Framework wird verwendet (Wenn überhaupt?) und welche Sprache angewandt?
-\item Repo-Referenz
-\end{enumerate}
+\begin{center}
+\url{https://github.com/MarcoLeko/Promises-vs.-Observables.git} \\
+\url{https://github.com/MarcoLeko/Angular-Firebase-App.git}
+\end{center}
+
+\subsection{Zielsetzung}
+Ziel der Arbeit ist die Betrachtung und Aufbereitung des Einsatzes von Sprachmitteln zur asynchronen Verarbeitung in Typescript in einer Form, die Einsteigern in die Thematik hilft, die unterschiedlichen Konzepte voneinander abzugrenzen und richtig einzusetzen. Dazu soll asynchrone Verarbeitung insgesamt anhand brauchbarer und für den Einsatz von Typescript typischer Szenarien motiviert werden. Es werden die zur Verfügung stehenden Sprachmittel Promises und Observables mit ihren jeweiligen Features vorgestellt. Dabei soll nach dem Vorstellen der beiden Kernkonzepte im zweiten Teil der Arbeit \glqq Best Practice\grqq{}-Beispiele vorgeführt werden. Nach dem Lesen dieser Arbeit soll der Leser ein gewisses Verständnis dafür gewonnen haben, welche der vorgestellten Sprachmitteln für welchen Anwendungsfall sinnvoller erscheint. 
 
 \subsection{Einführung in asynchrone Operationen}
 *Source-code Beispiel*
