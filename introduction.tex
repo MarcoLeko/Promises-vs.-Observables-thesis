@@ -99,5 +99,18 @@ Diese Bachelorarbeit wird aus zwei Beispielprojekten bestehen. Während eines de
 \subsection{Zielsetzung}
 Ziel der Arbeit ist die Betrachtung und Aufbereitung des Einsatzes von Sprachmitteln zur asynchronen Verarbeitung in Typescript in einer Form, die Einsteigern in die Thematik hilft, die unterschiedlichen Konzepte voneinander abzugrenzen und richtig einzusetzen. Dazu soll asynchrone Verarbeitung insgesamt anhand brauchbarer und für den Einsatz von Typescript typischer Szenarien motiviert werden. Es werden die zur Verfügung stehenden Sprachmittel Promises und Observables mit ihren jeweiligen Features vorgestellt. Dabei soll nach dem Vorstellen der beiden Kernkonzepte im zweiten Teil der Arbeit \glqq Best Practice\grqq{}-Beispiele vorgeführt werden. Nach dem Lesen dieser Arbeit soll der Leser ein gewisses Verständnis dafür gewonnen haben, welche der vorgestellten Sprachmitteln für welchen Anwendungsfall sinnvoller erscheint. 
 
-\subsection{Einführung in asynchrone Operationen}
+\subsection{Terminologie}
+Um die Abgrenzung von verschiedenen asynchronen Sprachmitteln zu beherrschen, muss vorerst geklärt werden, was Asynchronität bedeutet.\\\\
+
+Der zentrale Teil eines Computers, das Programme und einzelne Schritte zum Ausführen bringt ist der Prozessor. Die Geschwindigkeit in der eine Schleife von einem Programm ausgeführt wird, hängt von der Geschwindigkeit des Prozessors ab.
+
+Programme interagieren jedoch mit Operationen außerhalb der Beeinflussung eines Prozessors, wie z.B. die Kommunikation über ein Netzwerk oder Abfragen von Daten von der Festplatte. Solche Operationen hängen von anderen Ressourcen ab und brauchen Zeit. In solchen Szenarien wäre es eine Schande, wenn der Prozessor im Leerlauf stecken würde, anstatt andere Operationen in der Zwischenzeit auszuführen. Genau solche für solche Aufgaben ist das Betriebssystem da. Das Betriebssystem sorgt dafür, dass Kapazitäten des Prozessors auf parallel laufende Programme wechselt, während es auf die Antwort von ausgeführten Operationen wartet.
+
+\subsubsection{Asynchronität}
+In einem \textbf{synchronen} Programmiermodell entstehen Abläufe nacheinander. Wenn eine Funktion mit einer zeitintensiven Aktion abgerufen wird, wird das Ergebnis erst nach dem Beenden der Operation zurückgegeben.  In diesem Zeitintervall werden keine Nebenoperationen ausgeführt. \\
+
+Ein \textbf{asynchrones} Programmiermodell erlaubt multiple Abläufe zum selben Zeitpunkt. Wenn eine Aktion ausgeführt wird, läuft das Programm in einem anderen \glqq Thread\grqq{} weiter. Sollte die Operation fertigt gestellt sein, wird das Programm informiert und liefert das Ergebnis zurück. Ein Beispiel dafür wäre das Suchen von Dateien auf einer Festplatte. \\
+
+Ein Beispiel zum Vergleich von synchronem- und asynchronem Programmieren: 
+Die Wiedergabe mehrerer Meldungen in einem Browser:
 *Source-code Beispiel*
