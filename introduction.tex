@@ -75,8 +75,9 @@ In einer tsconfig.json Datei können die Kompiler-Optionen für Typescript geset
 \caption{tsconfig.json \cite{tsconfig}}
 \end{figure}
 Hier kann z.B. mit der Regel 
-\glqq noImplicitAny\grqq{} verhindert werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sollte der Compiler einen Fehler anzeigen, wird in jedem Fall eine Javascript-Datei erstellt, und diese ist potenziell auch lauffähig. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any zu deklariert.
-Die Konfiguration dieser Datei betrifft Kompilier-Fehler. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen.\\\\
+\glqq noImplicitAny\grqq{} festgelegt werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any deklariert.
+Die Konfiguration dieser Datei betrifft Kompilier-Fehler. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen.
+Zudem wird in jedem Fall eine Javascript-Datei erstellt, auch der Compiler einen Fehler anzeigen. Diese Datei ist potenziell auch lauffähig.\\\\
 
 Da Syntaktisch alles was auf Javascript geschrieben auch valider Typescript Code ist, kann man Typescript als Superset von Javascript bezeichnen. Demzufolge kann man die Nutzung von statische Typen, Klassen und Interfaces als Konvention betrachten.
 
@@ -89,7 +90,7 @@ Im Laufe der Zeit findet Typescript immer mehr Beliebtheit in Unternehmensprojek
 \end{figure}
 
 \subsection{Aufbau}
-Diese Bachelorarbeit wird aus zwei Beispielprojekten bestehen. Während eines der Projekte nur im Kern die Ausführung von asynchronen Verarbeitungsprozessen präsentiert mit Hilfe von simulierten Anwendungsbeispielen, wird das zweite Projekt eine Singlepage-Applikation darstellen und praxisnahe Beispiele anwenden. Dies soll mit dem Framework Angular und Google Firebase als DaaS bewerkstelligt werden. Das zweite Projekt wird im zweiten Teil der Arbeit vorgestellt. Die Repositories für beide Projekte sind zu finden unter: 
+Diese Bachelorarbeit wird aus zwei Code-Projekten bestehen. Während das ersten Projekt nur im Kern die Ausführung von asynchronen Verarbeitungsprozessen präsentiert (mit der Hilfe von simulierten Anwendungsbeispielen), wird das zweite Projekt eine Singlepage-Applikation darstellen und praxisnahe Beispiele anwenden. Dies soll mit dem Framework Angular und Google Firebase als DaaS bewerkstelligt werden. Das zweite Projekt wird im zweiten Teil der Arbeit vorgestellt. Die Repositories für beide Projekte sind zu finden unter: 
 
 \begin{center}
 \url{https://github.com/MarcoLeko/Promises-vs.-Observables.git} \\
@@ -101,15 +102,12 @@ Ziel der Arbeit ist die Betrachtung und Aufbereitung des Einsatzes von Sprachmit
 
 \subsection{Terminologie}
 Um die Abgrenzung von verschiedenen asynchronen Sprachmitteln zu beherrschen, muss vorerst geklärt werden, was Asynchronität bedeutet.\\\\
-
-Der zentrale Teil eines Computers, das Programme und einzelne Schritte zum Ausführen bringt ist der Prozessor. Die Geschwindigkeit in der eine Schleife von einem Programm ausgeführt wird, hängt von der Geschwindigkeit des Prozessors ab.
-
-Programme interagieren jedoch mit Operationen außerhalb der Beeinflussung eines Prozessors, wie z.B. die Kommunikation über ein Netzwerk oder Abfragen von Daten von der Festplatte. Solche Operationen hängen von anderen Ressourcen ab und brauchen Zeit. In solchen Szenarien wäre es eine Schande, wenn der Prozessor im Leerlauf stecken würde, anstatt andere Operationen in der Zwischenzeit auszuführen. Genau solche für solche Aufgaben ist das Betriebssystem da. Das Betriebssystem sorgt dafür, dass Kapazitäten des Prozessors auf parallel laufende Programme wechselt, während es auf die Antwort von ausgeführten Operationen wartet.
+Der zentrale Teil eines Computers, welches Programme und einzelne Schritte zum Ausführen bringt, ist der Prozessor. Die Geschwindigkeit in der eine Schleife von einem Programm ausgeführt wird, hängt von der Geschwindigkeit des Prozessors ab. Programme interagieren jedoch mit Operationen außerhalb des Zuständigkeitsbereiches eines Prozessors, wie z.B. die Kommunikation über ein Netzwerk oder Abfragen von Daten von der Festplatte. Solche Operationen hängen von anderen Ressourcen ab und brauchen Zeit. In solchen Szenarien wäre es unvorteilhaft, wenn der Prozessor im Leerlauf stecken würde, anstatt andere Operationen in der Zwischenzeit auszuführen. Genau für solche Aufgaben ist das Betriebssystem da. Das Betriebssystem sorgt dafür, dass Kapazitäten des Prozessors auf parallel laufende Programme wechselt, während es auf die Antwort von ausgeführten Operationen wartet. Es entstehen dabei verschiedene \glqq Threads\grqq{}. Und hier kommt die Asynchronität ins Spiel:
 
 \subsubsection{Asynchronität}
-In einem \textbf{synchronen} Programmiermodell entstehen Abläufe nacheinander. Wenn eine Funktion mit einer zeitintensiven Aktion abgerufen wird, wird das Ergebnis erst nach dem Beenden der Operation zurückgegeben.  In diesem Zeitintervall werden keine Nebenoperationen ausgeführt. \\
-
 Ein \textbf{asynchrones} Programmiermodell erlaubt multiple Abläufe zum selben Zeitpunkt. Wenn eine Aktion ausgeführt wird, läuft das Programm in einem anderen \glqq Thread\grqq{} weiter. Sollte die Operation fertigt gestellt sein, wird das Programm informiert und liefert das Ergebnis zurück. Ein Beispiel dafür wäre das Suchen von Dateien auf einer Festplatte. \\
+
+In einem \textbf{synchronen} Programmiermodell entstehen Abläufe nacheinander. Wenn eine Funktion mit einer zeitintensiven Aktion abgerufen wird, wird das Ergebnis erst nach dem Beenden der Operation zurückgegeben.  In diesem Zeitintervall werden keine Nebenoperationen ausgeführt. \\
 
 Ein Beispiel zum Vergleich von synchronem- und asynchronem Programmieren: 
 Die Wiedergabe mehrerer Meldungen in einem Browser:
