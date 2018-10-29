@@ -55,7 +55,7 @@ var Greeter = (function () {
 In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Klassen-Methode greet() und des Konstruktors. Sowohl Klassen als auch Interfaces werden in Javascript nicht genutzt.
 
 \subsubsection{Kompiler}
-In einer tsconfig.json Datei können die Kompiler-Optionen für Typescript gesetzt werden. Zudem können Root-Dateien definiert und ausgeschlossen werden. Die Auflistung einer tsconfig.json Datei in einem Verzeichnis zeigt, dass das es sich hierbei um das Root-Verzeichnis des Projekts handelt. Ein Beispiel für die Konfiguration einer solchen Datei könnte folgend aussehen: 
+In einer tsconfig.json Datei können die Kompiler-Optionen für Typescript gesetzt werden. Zudem können Root-Dateien definiert und ausgeschlossen werden. Die Auflistung einer tsconfig.json Datei in einem Verzeichnis zeigt, dass es sich hierbei um das Root-Verzeichnis des Projekts handelt. Ein Beispiel für die Konfiguration einer solchen Datei könnte folgend aussehen: 
 
 \begin{figure}[h!]
 \begin{lstlisting}
@@ -87,7 +87,7 @@ Die Konfiguration dieser Datei betrifft Kompilier-Fehler. Fehler zur Laufzeit si
 \noindent
 Da Syntaktisch alles was auf Javascript geschrieben auch valider Typescript Code ist, kann man Typescript als Superset von Javascript bezeichnen. Demzufolge kann man die Nutzung von statische Typen, Klassen und Interfaces als Konvention betrachten.
 
-\noindent
+\subsubsection{Entwicklung}
 Im Laufe der Zeit findet Typescript immer mehr Beliebtheit in Unternehmensprojekten. Entwicklerteams können durch die Typisierung schneller Bugs am Code erkennen und durch den modularen Aufbau, den Typescript ermöglicht, die Organisation und Dokumentation von großen Projekten verbessern. Diese Tendenz wird von der beliebten Entwicklerplattform Stackoverflow untermauert, die laut einer Umfrage welche die beliebtesten Programmiersprachen der Entwickler sei, folgendes rausgekommen ist:
 
 \begin{figure}[H]
@@ -171,7 +171,7 @@ async.printMessages();
 \end{figure}
 
 \noindent
-Diese Datei enthält 3 Klassen. Während die Notifications Klasse eine Methode für das Addieren einer Nachricht in die HTML-Dom bereitstellt, rufen die Klassen \textbf{Synchronous} und \textbf{Asynchronous} die Nachricht auf. In der Klasse Synchronous werden die HTML-Elemente sequenziell in die Dom eingefügt. In der Asynchronous Klasse dagegen wird ein neues Zeitfenster mit der Funktion \textbf{setTimeout} eröffnet. Nach dem Eröffnen des Zeitfenster wartet der Browser 50 Millisekunden bis die Methode innerhalb dieser Funktion ausgeführt wird. Ein neuer Thread entsteht. Währenddessen wird jedoch schon die nächste Operation ausgeführt.
+Diese Datei enthält 3 Klassen. Während die \textbf{Notifications} Klasse eine Methode für das Addieren einer Nachricht in die HTML-Dom bereitstellt, rufen die Klassen \textbf{Synchronous} und \textbf{Asynchronous} die Nachricht auf. In der Klasse Synchronous werden die HTML-Elemente sequenziell in die Dom eingefügt. In der Asynchronous Klasse dagegen wird ein neues Zeitfenster mit der Funktion \textbf{setTimeout} eröffnet. Nach dem Eröffnen des Zeitfenster wartet der Browser 50 Millisekunden bis die Methode innerhalb dieser Funktion ausgeführt wird. Ein neuer Thread entsteht. Währenddessen wird jedoch schon die nächste Operation ausgeführt.
 Das Ergebnis sieht wie folgt aus:
 
 \begin{figure}[H]
@@ -196,7 +196,7 @@ Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
 \end{figure}
 
 \noindent
-Nun kann man mit dem Befehl \textbf{npm run start} die Typescript-Datei kompilieren. Daraufhin muss nur jeweilige Html-Seite geöffnet werden. Zusammenfassend kann man sagen, dass in dem synchronen Modell implizit auf die Aktionen gewartet wird, und in dem asynchronen Modell explizit. Als Diagramm abgebildet führt der Browser die Methoden wie folgt aus:
+Nun kann man mit dem Befehl \textbf{npm run start} die Typescript-Datei kompilieren. Daraufhin muss die jeweilige Html-Seite geöffnet werden. Zusammenfassend kann man sagen, dass in dem synchronen Modell implizit auf die Aktionen gewartet wird, und in dem asynchronen Modell explizit. Als Diagramm abgebildet führt der Browser die Methoden wie folgt aus:
 
 \begin{enumerate} 
 \item Rote Linie: Programm wird ausgeführt
