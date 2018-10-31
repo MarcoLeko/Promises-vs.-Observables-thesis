@@ -177,31 +177,40 @@ Das Ergebnis sieht wie folgt aus:
 \begin{figure}[H]
 \centering
 \includegraphics[height=6cm]{synchronous-vs-asynchronous}
-\caption{Nachricht 3 wird bereits vor Nachricht 2 ausgegeben.}
+\caption{Die Asynchronous Klasse gibt Nachricht 3 aus bevor Nachricht 2 ausgegeben wird.}
 \end{figure}
 
 \noindent
 Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
  \begin{center}
-     Promises-vs.-Observables$\,\to\,$ src$\,\to\,$ index.html
+     Promises-vs.-Observables$\,\to\,$ webpack.config.js
  \end{center}
 
 \begin{figure}[h!]
 \begin{lstlisting}
-<body>
-    <script src="./sync-vs.-async.js"></script>
-</body>
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/sync-vs-async.ts',
+    ...
+}
 \end{lstlisting}
-\caption{Hier sollte die kompilierte javascript Datei sync-vs.-async.js als HTML-Skript eingefügt werden.}
+\caption{Hier sollte die Typescript Datei sync-vs-async.ts als Eingangspunkt definiert werden.}
 \end{figure}
 
 \noindent
-Nun kann man mit dem Befehl \textbf{npm run start} die Typescript-Datei kompilieren. Daraufhin muss die jeweilige Html-Seite geöffnet werden. Zusammenfassend kann man sagen, dass in dem synchronen Modell implizit auf die Aktionen gewartet wird, und in dem asynchronen Modell explizit. Als Diagramm abgebildet führt der Browser die Methoden wie folgt aus:
+Nun kann man mit dem Befehl \textbf{npm run start} den Development-Server starten. Webpack kompiliert die als Eingangspunkt festgelegte Datei und erstellt ein Bündel.\\
 
-\begin{enumerate} 
-\item Rote Linie: Programm wird ausgeführt
-\item Blaue Linie: Programm muss warten 
-\end{enumerate}
+\noindent
+Zusammenfassend kann man sagen, dass in dem synchronen Modell implizit auf die Aktionen gewartet wird, und in dem asynchronen Modell explizit. Als Diagramm abgebildet führt der Browser die Methoden wie folgt aus:
+
+\begin{center}
+\begin{figure}[H]
+\includegraphics[width=12cm]{synchron-vs-asynchron-diagramm}
+\caption{Rot: Browser führt die Methode aus - Blau: Browser wartet}
+\end{figure}
+\end{center}
+
+Das angeführte Beispiel hat mit der Funktion setTimeout eine asynchrone Operation ausgeführt. Funktionen die als Parameter andere Funktionen übergeben werden, nennt man auch \textbf{callback function} - Rückruffunktionen. Es gibt jedoch auch andere Ansätze der asynchronen Prozessverarbeitung. Diese sind \textbf{Promises}.
 
 
 
