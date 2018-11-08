@@ -1,7 +1,35 @@
 \section{Promises}
+Javascript/Typescript ist eine sequenziell ausführende Skriptsprache. Dank the Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Aber es gibt auch \textbf{Promises}. Doch was sind Promises? \\
+
+\noindent
+Sie (\glqq{}Promises\grqq{} zu deutsch: Versprechen) in Javascript verhalten sich ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
 
 \subsection{Funktionsweise}
-Hier wird ein Beispiel dargestellt.
+Das heißt:
+
+\begin{enumerate}
+    \item Ein Versprechen ist eine Absicherung, dass etwas gemacht wird. Unabhängig davon, ob das Versprechen sich selbst kommt wird oder von einer anderen Partei gegeben wird.
+    
+    \item Ein Versprechen kann eingehalten oder gebrochen werden.
+    
+    \item Wurde ein Versprechen nicht eingehalten, möchte man den Grund für das Einhalten wissen um darauffolgend zu handeln.
+    
+    \item Beim Zeitpunkt eines Versprechens hat man nur die Absicherung. Wir können es nicht sofort ausführen. Man kann nur planen, was gemacht wird, wenn es eingehalten wird. Und man kann eine Maßnahme fällen, wenn das Versprechen nicht eingehalten wird.
+    
+\end{enumerate}
+
+Und genauso ist das Verhalten der Promises in Javascript. Dabei gibt es zwei grundlegende Prinzipien der Promises zu Verstehen. Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
+
+\subsubsection{Erstellen eines Promise}
+
+\begin{figure}[h!]
+\begin{lstlisting}
+new Promise( /* executor */ (resolve, reject)  => { ... } );
+\end{lstlisting}
+\caption{Erzeugung einer neuen Promise-Instanz - promise.ts}
+\end{figure}
+
+Der Konstruktor nimmt eine Funktion als Eingangsparameter. Diese Funktion wird auch Executor genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}.
 
 \subsubsection{Zustände}
 

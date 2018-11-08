@@ -98,7 +98,7 @@ Dabei ist folgendes rausgekommen:
 \end{figure}
 
 \subsection{Aufbau}
-Diese Bachelorarbeit wird aus zwei Code-Projekten bestehen. Während das erste Projekt nur im Kern die Ausführung von asynchronen Verarbeitungsprozessen präsentiert (mit der Hilfe von simulierten Anwendungsbeispielen), wird das zweite Projekt eine Singlepage-Applikation darstellen und praxisnahe Beispiele anwenden. Dies soll mit dem Framework Angular und Google Firebase als DaaS bewerkstelligt werden. Das zweite Projekt wird im zweiten Teil der Arbeit vorgestellt. Die Repositories für beide Projekte sind zu finden unter: 
+Diese Bachelorarbeit wird aus zwei Code-Projekten bestehen. Während das erste Projekt nur im Kern die Ausführung von asynchronen Verarbeitungsprozessen präsentiert (mit der Hilfe von simulierten Anwendungsbeispielen), wird das zweite Projekt eine Singlepage-Applikation darstellen und praxisnahe Beispiele anwenden. Dies soll mit dem Framework Angular und Google Firebase als DaaS bewerkstelligt werden. Das zweite Projekt wird im zweiten Teil der Arbeit näher vorgestellt. Die Repositories für beide Projekte sind zu finden unter: 
 
 \begin{center}
 \url{https://github.com/MarcoLeko/Promises-vs.-Observables.git} \\
@@ -152,7 +152,7 @@ class Synchronous extends Notifications {
         const begin = window.performance.now();
         this.printMessages();
         const end = window.performance.now();
-        document.body.innerHTML += `<div class="time-box sync">Synchronous: ${end - begin}ms</div>`
+        document.body.innerHTML += `<div class="time-box sync">Synchronous: ${end - begin}ms</div>`;
     }
 }
 
@@ -168,7 +168,7 @@ class Asynchronous extends Notifications {
         const begin = window.performance.now();
         this.printMessages();
         const end = window.performance.now();
-        document.body.innerHTML += `<div class="time-box async">Asynchronous: ${end - begin}ms</div>`
+        document.body.innerHTML += `<div class="time-box async">Asynchronous: ${end - begin}ms</div>`;
     }
 }
 
