@@ -1,5 +1,5 @@
 \section{Promises}
-Javascript/Typescript ist eine sequenziell ausführende Skriptsprache. Dank the Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Aber es gibt auch \textbf{Promises}. Doch was sind Promises? \\
+Javascript/Typescript ist eine sequenziell ausführende Skriptsprache. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Aber es gibt auch \textbf{Promises}. Doch was sind Promises? \\
 
 \noindent
 Sie (\glqq{}Promises\grqq{} zu deutsch: Versprechen) in Javascript verhalten sich ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
@@ -8,17 +8,17 @@ Sie (\glqq{}Promises\grqq{} zu deutsch: Versprechen) in Javascript verhalten sic
 Das heißt:
 
 \begin{enumerate}
-    \item Ein Versprechen ist eine Absicherung, dass etwas gemacht wird. Unabhängig davon, ob das Versprechen sich selbst kommt wird oder von einer anderen Partei gegeben wird.
+    \item Ein Versprechen ist eine Absicherung, dass etwas gemacht wird. Unabhängig davon, ob das Versprechen sich selbst oder von einer anderen Partei gegeben wird.
     
     \item Ein Versprechen kann eingehalten oder gebrochen werden.
     
-    \item Wurde ein Versprechen nicht eingehalten, möchte man den Grund für das Einhalten wissen um darauffolgend zu handeln.
+    \item Wurde ein Versprechen nicht eingehalten, möchte man den Grund für die Nichteinhaltung wissen um darauffolgend zu handeln.
     
-    \item Beim Zeitpunkt eines Versprechens hat man nur die Absicherung. Wir können es nicht sofort ausführen. Man kann nur planen, was gemacht wird, wenn es eingehalten wird. Und man kann eine Maßnahme fällen, wenn das Versprechen nicht eingehalten wird.
+    \item Beim Zeitpunkt eines Versprechens hat man nur die Absicherung. Man kann damit erstmal noch nichts anfangen. Es kann nur geplant werden was nach dem Einhalten des Versprechens gemacht wird. Dementsprechend kann man auch Maßnahmen setzen beim Nichteinhalten dieser Absicherung.
     
 \end{enumerate}
 
-Und genauso ist das Verhalten der Promises in Javascript. Dabei gibt es zwei grundlegende Prinzipien der Promises zu Verstehen. Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
+Und genauso ist das Verhalten der Promises in Javascript. Dabei gibt es zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
 
 \subsubsection{Erstellen eines Promise}
 
@@ -26,11 +26,83 @@ Und genauso ist das Verhalten der Promises in Javascript. Dabei gibt es zwei gru
 \begin{lstlisting}
 new Promise( /* executor */ (resolve, reject)  => { ... } );
 \end{lstlisting}
-\caption{Erzeugung einer neuen Promise-Instanz - promise.ts}
+\caption{Erzeugung einer neuen Promise-Instanz - promises/promise.ts}
 \end{figure}
 
-Der Konstruktor nimmt eine Funktion als Eingangsparameter. Diese Funktion wird auch Executor genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}.
+Der Konstruktor nimmt eine Funktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}.
+Zudem wird innerhalb dieser Funktion eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders, bei einem unerwartetem Fehler, ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
 
+\noindent
+Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
+ \begin{center}
+     Promises-vs.-Observables$\,\to\,$ webpack.config.js
+ \end{center}
+
+\begin{figure}[h!]
+\begin{lstlisting}
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/modules/introduction.ts',
+    ...
+}
+\end{lstlisting}
+\caption{Hier sollte die Typescript Datei introduction.ts als Eingangspunkt definiert werden.}
+\end{figure}
+
+
+\begin{figure}[h!]
+\begin{lstlisting}
+const keepsHisWord = true;
+const promise = new Promise((resolve, reject) => {
+    if (keepsHisWord) {
+        resolve('Promises kept!');
+    } else {
+        reject('Promise NOT kept!');
+    }
+});
+
+console.log(promise);
+\end{lstlisting}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics{promise-beispiel-1}
+\caption{Promises haben einen Status und einen Wert}
+\end{figure}
+
+\noindent
+Dieser Promise löst sich auf Anhieb auf, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Der Anfangsstatus des Promise wird im nächsten Beispiel verdeutlicht:
+
+\begin{figure}[H]
+\begin{lstlisting}
+export interface FakeHttpResponse {
+    code: string;
+    message: string;
+}
+
+const scndPromise = new Promise<FakeHttpResponse>((resolve, reject) => {
+    setTimeout(() => {
+        resolve({
+            code: '200',
+            message: 'Promise kept!'
+        });
+    }, 10 * 1000);
+});
+
+console.log(scndPromise);
+setTimeout(() => console.log(scndPromise), 10 * 1000);
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{promise-beispiel-2}
+\caption{Promise hat anfangs den Status \glqq{}ausstehend\grqq{}}
+\end{figure}
+
+Im oberen Beispiel wird der Promise vorbehaltlos nach zehn Sekunden aufgelöst, solange ist der Status ausstehend. Nachdem der Promise aufgelöst wurde, werden Status und Wert aktualisiert. Dabei können nicht nur primitive Typen wie number, boolean oder string zurückgegeben werden, sondern auch selbst generierte Typen und komplexe Typen.
 \subsubsection{Zustände}
 
 \begin{enumerate} 
