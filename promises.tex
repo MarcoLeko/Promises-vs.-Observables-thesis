@@ -1,5 +1,34 @@
 \section{Promises}
-Javascript/Typescript ist eine sequenziell ausführende Skriptsprache. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Aber es gibt auch \textbf{Promises}. Doch was sind Promises? \\
+Javascript/Typescript ist grundsätzlich eine sequenziell ausführende Skriptsprache. Das heißt,  dass zwei Bits eines Skripts nicht im gleichen Augenblick ausführbar sind. Sie müssen nacheinander ausgeführt werden. Im Browser können neben Javascript, auch CSS aktualisiert oder der Einfluss von außen, wie User-Interaktionen, ausgeführt werden. Und jede Operation verlangsamt die Andere. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks gesehen. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Mit Callbacks kann man User-Events gut steuern. Diese geschehen in multiplen Ausführungen und sind jederzeit steuerbar. Jedoch angenommen es gibt im Browser ein Bild, dass bei jedem Klick-Event den Hintergrund des Browser ändert. Hierfür muss zunächst geprüft werden ob dieses Bild erfolgreich im Browser geladen ist. 
+Der Code hierfür würde wie folgt aussehen:
+
+\begin{figure}[H]
+\begin{lstlisting}
+img1.callThisIfLoadedOrWhenLoaded(/** Callback 1 **/ () => {
+  // Add Eventlistener to change the background
+}).orIfFailedCallThis(/** Callback 2 **/ () => {
+  // Show error msg for the user
+});
+\end{lstlisting}
+\end{figure}
+
+\noindent
+Und genau das ist was \textbf{Promises} bieten, bloß mit einer übersichtlichen Struktur:
+
+\begin{figure}[H]
+\begin{lstlisting}
+img1.ready().then(function() {
+  // Add Eventlistener to change the background
+}, function() {
+  // Show error msg for the user
+});
+\end{lstlisting}
+\caption{Beispiel inspiriert von Google-Developer-Docs \cite{callback-vs-promises}}
+\end{figure}
+
+\noindent
+Im Gegensatz zu Callbacks sind Promises mehr an einer einzelner asynchronen erfolgreichen/fehlgeschlagenen Ausführung interessiert und weniger wann das Ereignis entstanden ist. Promises sind danach gerichtet wie man am Ergebnis der Ausführung reagiert. 
+Doch was genau sind Promises? \\
 
 \noindent
 Sie (\glqq{}Promises\grqq{} zu deutsch: Versprechen) in Javascript verhalten sich ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
@@ -18,11 +47,12 @@ Das heißt:
     
 \end{enumerate}
 
+\noindent
 Und genauso ist das Verhalten der Promises in Javascript. Dabei gibt es zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
 
 \subsubsection{Erstellen eines Promise}
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{lstlisting}
 new Promise( /* executor */ (resolve, reject)  => { ... } );
 \end{lstlisting}
@@ -38,7 +68,7 @@ Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
      Promises-vs.-Observables$\,\to\,$ webpack.config.js
  \end{center}
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{lstlisting}
 module.exports = {
     mode: 'development',
@@ -50,7 +80,7 @@ module.exports = {
 \end{figure}
 
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{lstlisting}
 const keepsHisWord = true;
 const promise = new Promise((resolve, reject) => {
@@ -102,6 +132,7 @@ setTimeout(() => console.log(scndPromise), 10 * 1000);
 \caption{Promise hat anfangs den Status \glqq{}ausstehend\grqq{}}
 \end{figure}
 
+\noindent
 Im oberen Beispiel wird der Promise vorbehaltlos nach zehn Sekunden aufgelöst, solange ist der Status ausstehend. Nachdem der Promise aufgelöst wurde, werden Status und Wert aktualisiert. Dabei können nicht nur primitive Typen wie number, boolean oder string zurückgegeben werden, sondern auch selbst generierte Typen und komplexe Typen.
 \subsubsection{Zustände}
 
