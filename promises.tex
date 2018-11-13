@@ -1,4 +1,5 @@
 \section{Promises}
+
 Javascript/Typescript ist grundsätzlich eine sequenziell ausführende Skriptsprache. Das heißt,  dass zwei Bits eines Skripts nicht im gleichen Augenblick ausführbar sind. Sie müssen nacheinander ausgeführt werden. Im Browser können neben Javascript, auch CSS aktualisiert oder der Einfluss von außen, wie User-Interaktionen, ausgeführt werden. Und jede Operation verlangsamt die Andere. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks gesehen. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Mit Callbacks kann man User-Events gut steuern. Diese geschehen in multiplen Ausführungen und sind jederzeit steuerbar. Jedoch angenommen es gibt im Browser ein Bild, dass bei jedem Klick-Event den Hintergrund des Browser ändert. Hierfür muss zunächst geprüft werden ob dieses Bild erfolgreich im Browser geladen ist. 
 Der Code hierfür würde wie folgt aussehen:
 
@@ -31,9 +32,10 @@ Im Gegensatz zu Callbacks sind Promises mehr an einer einzelner asynchronen erfo
 Doch was genau sind Promises? \\
 
 \noindent
-Sie (\glqq{}Promises\grqq{} zu deutsch: Versprechen) in Javascript verhalten sich ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
+Sie \textit{(\glqq{}Promises\grqq{} zu deutsch: Versprechen)} in Javascript verhalten sich ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
 
 \subsection{Funktionsweise}
+
 Das heißt:
 
 \begin{enumerate}
@@ -59,11 +61,11 @@ new Promise( /* executor */ (resolve, reject)  => { ... } );
 \caption{Erzeugung einer neuen Promise-Instanz - promises/promise.ts}
 \end{figure}
 
-Der Konstruktor nimmt eine Funktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}.
-Zudem wird innerhalb dieser Funktion eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders, bei einem unerwartetem Fehler, ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
+Der Konstruktor nimmt eine Funktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Zudem wird innerhalb dieser Funktion eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders, bei einem unerwartetem Fehler, ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
 
 \noindent
 Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
+
  \begin{center}
      Promises-vs.-Observables$\,\to\,$ webpack.config.js
  \end{center}
@@ -78,7 +80,6 @@ module.exports = {
 \end{lstlisting}
 \caption{Hier sollte die Typescript Datei introduction.ts als Eingangspunkt definiert werden.}
 \end{figure}
-
 
 \begin{figure}[H]
 \begin{lstlisting}

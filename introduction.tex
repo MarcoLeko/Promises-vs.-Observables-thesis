@@ -1,24 +1,44 @@
 \setcounter{secnumdepth}{1}
+
 \section{Einführung}
-Diese Bachelorarbeit behandelt die Ausführung und Verarbeitung von asynchronen Prozessen in der Programmierung speziell in der Sprache Typescript.\\
+
+Javascript ist im Aufwind mehr denn je. Sie ist die meist genutzte Programmiersprache unter Entwickler. Laut der jährlichen Umfrage von Stackoverflow im Jahr 2018 belegte sie zum sechsten mal in Folge den ersten Platz.\cite{programming-language-survey} Doch woher kommt dieser Erfolg? \\
+Wenn es um das Web geht, war Javascript in der Webentwicklung schon immer Vorreiter. Doch diese Sprache hat seine Stärken auch in der Vielfalt seiner Einsatzmöglichkeiten. Wie mit dem Framework Node.js, dass ab 2009 in Erscheinung getreten ist, war es Möglich Server-seitigen Javascript-Code zu implementieren. Dies hatte zur Folge, dass man sich nicht mit multiplen Programmiersprachen auseinandersetzen musste. Man hatte eine Vereinheitlichung in seiner Code-Basis für seine Applikation gefunden. Zudem bietet Node.js mit npm als Paketmanager die größte Auswahl an Open-Source-Libraries. Ein Weiter Punkt ist die Multi-Plattform-Kompatibilität die Javascript z.B. mit dem Framework React offenbart. Mit diesen Framework ist es Möglich mit einer Code-Basis sowohl Web-Anwendungen als auch Apps auf mobile Geräte zu entwickeln. Da Javascript's Kompilierung vom Betriebssystem unabhängig ist, ist der Übergang von der Webentwicklung zur Mobile-Entwicklung reibungslos. Und genau das bietet auch Typescript. Da Typescript ein sog. \textbf{Superset} von Javascript ist, kann jeder Code von Javascript auch in Typescript interpretiert werden. Der Unterschied zu Typescript und Javascript liegt in ihrer statischen Typisierung. Das bedeutet, dass Variablen, Methoden und Funktionsparameter im Vorfeld mit einem Typ versehen werden. Aufgrund dessen können Bugs am Code schneller erkannt werden. Zudem lässt sich diese Sprache leicht modular aufbauen. Dadurch können Entwicklerteams in Unternehmensprojekte die Code-Struktur besser organisieren und dokumentieren.\\\\
 
 \noindent
-Zielgruppe dieser Arbeit sind Personen, die Grundkenntnisse in der Sprache Javascript/Typescript vorweisen können.
-Sollte man von der Skriptsprache Typescript noch nie/kaum etwas gehört haben, sollte vor dem Lesen dieser Arbeit die offizielle Dokumentation von Microsoft durchgegangen werden.
+Doch mit der Vielfalt steigt auch die Komplexität der Sprache. Besonders da Javascript nicht nur synchron ausführbar ist, sondern auch asynchron. Entwickler bekommen mit dieser Sprache verschiedene Optionen, der asynchronen Datenverarbeitung in Form von Callbacks, Promises und Streams zur Verfügung. Die Einsatzmöglichkeiten können in einem Projekt variieren, jedoch welcher Ansatz in welcher Situation besser geeignet ist, ist besonders für Entwickler mit wenig Erfahrung schwer zu erkennen.
+
+
+\subsection{Zielsetzung}
+
+Ziel der Arbeit ist die Betrachtung und Aufbereitung des Einsatzes von Sprachmitteln zur asynchronen Verarbeitung in Typescript in einer Form, die Einsteigern in die Thematik hilft, die unterschiedlichen Konzepte voneinander abzugrenzen und richtig einzusetzen. Dazu soll asynchrone Verarbeitung insgesamt anhand brauchbarer und für den Einsatz von Typescript typischer Szenarien motiviert werden. Es werden die zur Verfügung stehenden Sprachmittel Callbacks (im Kurzen), Promises und Observables mit ihren jeweiligen Features vorgestellt. Dabei soll nach dem Vorstellen der Kernkonzepte im zweiten Teil der Arbeit eine Single-Page Applikation mit \glqq Best Practice\grqq{}-Beispiele vorgeführt werden. Nach dem Lesen dieser Arbeit soll der Leser ein gewisses Verständnis dafür gewonnen haben, welche der vorgestellten Sprachmitteln für welchen Anwendungsfall sinnvoller erscheint.\\\\
+
+\noindent
+Zielgruppe dieser Arbeit sind Personen, die Grundkenntnisse in der Sprache Javascript/Typescript vorweisen können. Des Weiteren sollte man von den Modell der asynchronen Datenverarbeitung wie Callbacks, Promises und Oberservables schon mal gehört haben, da diese in der Arbeit gegenübergestellt werden.
+
+\subsection{Aufbau}
+
+Diese Bachelorarbeit wird aus zwei Code-Projekten bestehen. Während das erste Projekt nur im Kern die Ausführung von asynchronen Verarbeitungsprozessen präsentiert (mit der Hilfe von simulierten Anwendungsbeispielen), wird das zweite Projekt eine Single-Page Applikation darstellen und praxisnahe Beispiele anwenden. Dies soll mit dem Framework Angular und Google Firebase als DaaS bewerkstelligt werden. Das zweite Projekt wird im zweiten Teil der Arbeit näher vorgestellt. Die Repositories für beide Projekte sind zu finden unter: 
 
 \begin{center}
-\url{https://www.typescriptlang.org/docs/home.html} 
+\url{https://github.com/MarcoLeko/Promises-vs.-Observables.git} \\
+\url{https://github.com/MarcoLeko/Angular-Firebase-App.git}
 \end{center}
 
 \noindent
-In dieser Arbeit wird nur oberflächlich auf die Unterschiede der beiden Sprachen eingegangen. Des Weiteren sollte man von den Kernkonzepten der Promises und Observables schon mal gehört haben, da diese in der Arbeit gegenübergestellt werden.
+Zu beachten ist, dass vor dem Ausführen beider Projekte \textbf{Node.js} auf dem Rechner installiert sein muss, um den integrierten Paket-Manager \textbf{npm} nutzen zu können. Da rxjs nicht von vornherein von Javascript mitgeliefert wird, wird eine sog. \glqq  Third-Party Library\grqq{} dafür benötigt. Daraufhin muss in dem Root-Verzeichnis beider Projekte \textbf{npm install} ausgeführt werden, um die jeweiligen Abhängigkeiten dieser Libraries herunterzuladen. Node.js kann man unter folgendem Link herunterladen:
 
-\subsection{Typescript}
-Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie \textit{(\glqq{}Type\grqq{} zu deutsch: Typ)} ist eine typisierte Form der Skriptsprache Javascript. In Typescript ist es Standard, jede Variable, Funktion und Funktionsparameter im Vorfeld zu typisieren. Mit dem Typescript Compiler werden Dateien mit dem Suffix *.ts in *.js überführt.
+\begin{center}
+\url{https://nodejs.org/en/}
+\end{center}
 
-\subsubsection{Beispiel}
+\section{Grundlagen}
 
-\begin{figure}[h!]
+Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie \textit{(\glqq{}Type\grqq{} zu deutsch: Typ)} ist eine typisierte Form der Skriptsprache Javascript. Mit dem Typescript Compiler werden Dateien mit dem Suffix *.ts in *.js überführt.
+
+\subsection{Beispiel}
+
+\begin{figure}[H]
 \begin{lstlisting}
 class Greeter {
     greeting: string;
@@ -36,7 +56,7 @@ class Greeter {
 \noindent
 Im oberen Code-Schnipsel wurden die variablen und die Klassenmethoden nach Typescript-Standard deklariert. Diese Typen werden beim übersetzen in Javascript ignoriert. Der Kompiler einer Entwicklungsumgebung prüft dann, ob beim übergeben eines Parameters in den Konstruktor ein numerischer oder Boolean-Wert eingesetzt wird. Dies wird dann als ein Fehler erkannt. Der Kompiler übersetzt auch nicht direkt deklarierte Typen. Wie in diesem Fall wird erkannt, dass die Methode greet() einen String-Wert zurückgibt.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \begin{lstlisting}
 var Greeter = (function () {
     function Greeter(message) {
@@ -54,80 +74,72 @@ var Greeter = (function () {
 \noindent
 In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Klassen-Methode greet() und des Konstruktors. Sowohl Klassen (erst ab ECMAScript2015 verfügbar) als auch Interfaces werden in Javascript nicht genutzt.
 
-\subsubsection{Kompiler}
+\subsection{Kompiler}
+
 In einer tsconfig.json Datei können die Kompiler-Optionen für Typescript gesetzt werden. Zudem können Root-Dateien definiert und ausgeschlossen werden. Die Auflistung einer tsconfig.json Datei in einem Verzeichnis zeigt, dass es sich hierbei um das Root-Verzeichnis des Projekts handelt. Ein Beispiel für die Konfiguration einer solchen Datei könnte wie folgt aussehen: 
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{lstlisting}
 {
-    "compilerOptions": {
-        "module": "system",
-        "noImplicitAny": true,
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "outFile": "../../built/local/tsc.js",
-        "sourceMap": true
-    },
-    "include": [
-        "src/**/*"
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "declaration": false,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "typeRoots": [
+      "node_modules/@types"
     ],
-    "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
-    ]
-}  
+    "downlevelIteration": true
+  },
+  "include": [
+    "src/**/*"
+  ]
+} 
 \end{lstlisting}
-\caption{tsconfig.json \cite{tsconfig}}
+\caption{Auflistung ist unter der \textbf{tsconfig.json} Datei im Projekt Promises-vs.-Observables zu finden}
 \end{figure}
 
 \noindent
-Hier kann z.B. mit der Regel \glqq noImplicitAny\grqq{} festgelegt werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any deklariert.
-\noindent
-Die Konfiguration dieser Datei betrifft Kompilier-Fehler. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen. Zudem wird in jedem Fall eine Javascript-Datei erstellt, auch wenn der Kompiler einen Fehler anzeigt. Diese Datei ist potenziell auch lauffähig.\\\\
-\noindent
-Da Syntaktisch alles was auf Javascript geschrieben wird, auch valider Typescript Code ist, kann man Typescript als Superset von Javascript bezeichnen. Demzufolge kann man die Nutzung von statische Typen, Klassen und Interfaces als Konvention betrachten.
-
-\subsubsection{Entwicklung}
-Im Laufe der Zeit findet Typescript immer mehr Beliebtheit in Unternehmensprojekten. Entwicklerteams können durch die Typisierung schneller Bugs am Code erkennen und durch den modularen Aufbau, den Typescript ermöglicht, die Organisation und Dokumentation von großen Projekten verbessern. Diese Tendenz wird von der Entwicklerplattform Stackoverflow untermauert, die in einer Umfrage die beliebtesten Programmiersprachen der Entwickler prüfte.
-Dabei ist folgendes rausgekommen:
+Hier kann z.B. mit der Regel \glqq noImplicitAny\grqq{} festgelegt werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any deklariert. Kompilefehler.\cite{tsconfig} Zusätzlich ist die Einstellung der Javascript Version möglich. In diesem Fall wird \textbf{EcmaSprict2018} genutzt, dadurch ist die Nutzung neuester Features möglich. Die Konfiguration dieser Datei betrifft nur Fehler beim erstellen eines Kompilats. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen. Zudem wird in jedem Fall eine Javascript-Datei erstellt, auch wenn der Kompiler einen Fehler anzeigt. Diese Datei ist potenziell auch lauffähig. Um Typescript zu Kompilieren muss im Terminal unter dem Verzeichnis einer Typescript-Datei \textbf{tsc} eingegeben werden. In den für die Bachelorarbeit genutzten Code-Projekte werden die Skripte von npm ausgeführt um die Applikation zu starten. Die Konfiguration eines Start-Skript sieht wie folgt aus:
 
 \begin{figure}[H]
-\centering
-\includegraphics[height=6cm]{stackoverflow-typescript-popularity}
-\caption{Prozentualer Anteil der Entwickler die Interesse an neuen Technologien zeigen und weiter mit neuen Technologien arbeiten möchten. Jahr: 2017 \cite{typescript-survey}}
+\begin{lstlisting}
+  ...
+  "scripts": {
+    "start": "webpack --watch",
+    "build": "webpack"
+  }, 
+\end{lstlisting}
+\caption{Auflistung ist unter der \textbf{package.json} Datei im Projekt Promises-vs.-Observables zu finden}
 \end{figure}
 
-\subsection{Aufbau}
-Diese Bachelorarbeit wird aus zwei Code-Projekten bestehen. Während das erste Projekt nur im Kern die Ausführung von asynchronen Verarbeitungsprozessen präsentiert (mit der Hilfe von simulierten Anwendungsbeispielen), wird das zweite Projekt eine Singlepage-Applikation darstellen und praxisnahe Beispiele anwenden. Dies soll mit dem Framework Angular und Google Firebase als DaaS bewerkstelligt werden. Das zweite Projekt wird im zweiten Teil der Arbeit näher vorgestellt. Die Repositories für beide Projekte sind zu finden unter: 
-
-\begin{center}
-\url{https://github.com/MarcoLeko/Promises-vs.-Observables.git} \\
-\url{https://github.com/MarcoLeko/Angular-Firebase-App.git}
-\end{center}
+\noindent
+Wie man hier sehen kann führt \textbf{npm run start} nicht tsc aus, sondern \textbf{webpack --watch} aus. Webpack ist ein sog. \textbf{Module-Loader}. Mit ihm ist es Möglich verschiedene Typescript Klassen/Interfaces/Funktionen aus verschiedene Dateien zu importieren und exportieren. Da Third-Party Libraries in der Applikation genutzt werden, die Klassen und Methoden mitliefern, ist die Nutzung von Module-Loaders unabdingbar. Zudem wird mit Hilfe von Webpack Typescript-Dateien (je nach Konfiguration), inklusive aller involvierten Importe und Exporte, zu einer zentralen Javascript-Datei gebündelt. In der Webpack Konfiguration muss lediglich eine Eingangsdatei definiert werden. Mit der Einstellung --watch werden Veränderung des Codes automatisch erkannt. Das heißt, wenn Änderungen im Code vorgenommen werden, erstellt Webpack ein neues Bündel. Nach dem Kompilieren muss nur noch die HTML-Seite geöffnet werden.\\\\
 
 \noindent
-Zu beachten ist, dass vor dem Ausführen beider Projekte \textbf{Node.js} auf dem Rechner installiert sein muss, um den integrierten Paket-Manager \textbf{npm} nutzen zu können. Da rxjs nicht von vornherein von Javascript mitgeliefert wird, wird eine sog. \glqq  Third-Party Library\grqq{} dafür benötigt. Daraufhin muss in dem Root-Verzeichnis beider Projekte \textbf{npm install} ausgeführt werden, um die jeweiligen Abhängigkeiten dieser Libraries herunterzuladen. Node.js kann man unter folgendem Link herunterladen:
+Um mehr von Typescript und z.B. dessen Nutzung mit Module-Loaders zu erfahren, sollte die offizielle Dokumentation von Microsoft durchgegangen werden.
 
 \begin{center}
-\url{https://nodejs.org/en/}
+\url{https://www.typescriptlang.org/docs/home.html} 
 \end{center}
 
-\subsection{Zielsetzung}
-Ziel der Arbeit ist die Betrachtung und Aufbereitung des Einsatzes von Sprachmitteln zur asynchronen Verarbeitung in Typescript in einer Form, die Einsteigern in die Thematik hilft, die unterschiedlichen Konzepte voneinander abzugrenzen und richtig einzusetzen. Dazu soll asynchrone Verarbeitung insgesamt anhand brauchbarer und für den Einsatz von Typescript typischer Szenarien motiviert werden. Es werden die zur Verfügung stehenden Sprachmittel Promises und Observables mit ihren jeweiligen Features vorgestellt. Dabei soll nach dem Vorstellen der beiden Kernkonzepte im zweiten Teil der Arbeit \glqq Best Practice\grqq{}-Beispiele vorgeführt werden. Nach dem Lesen dieser Arbeit soll der Leser ein gewisses Verständnis dafür gewonnen haben, welche der vorgestellten Sprachmitteln für welchen Anwendungsfall sinnvoller erscheint. 
-
 \subsection{Terminologie}
-Um die Abgrenzung von verschiedenen asynchronen Sprachmitteln zu beherrschen, muss vorerst geklärt werden, was Asynchronität bedeutet.
 
-\subsubsection{Einführung}
+Um die Abgrenzung von verschiedenen asynchronen Sprachmitteln zu beherrschen, muss vorerst geklärt werden, was Asynchronität bedeutet.\\\\
+\noindent
 Der zentrale Teil eines Computers, welches Programme und einzelne Schritte zum Ausführen bringt, ist der Prozessor. Die Geschwindigkeit in der eine Schleife von einem Programm ausgeführt wird, hängt von der Geschwindigkeit des Prozessors ab. Programme interagieren jedoch mit Operationen außerhalb des Zuständigkeitsbereiches eines Prozessors, wie z.B. die Kommunikation über ein Netzwerk oder Abfragen von Daten von der Festplatte. Solche Operationen hängen von anderen Ressourcen ab und brauchen Zeit. In solchen Szenarien wäre es unvorteilhaft, wenn der Prozessor, anstatt andere Operationen in der Zwischenzeit auszuführen, im Leerlauf stecken würde. Genau für solche Aufgaben ist das Betriebssystem da. Das Betriebssystem sorgt dafür, dass Kapazitäten des Prozessors auf parallel laufende Programme wechselt, während es auf die Antwort von ausgeführten Operationen wartet. Es entstehen dabei verschiedene \glqq Threads\grqq{}. Und hier kommt die Asynchronität ins Spiel:
 
 \subsubsection{Asynchronität}
+
 Ein \textbf{asynchrones} Programmiermodell erlaubt multiple Abläufe zum selben Zeitpunkt. Wenn eine Aktion ausgeführt wird, läuft das Programm in einem anderen \glqq Thread\grqq{} weiter. Sollte die Operation fertig gestellt sein, wird das Programm informiert und liefert das Ergebnis zurück. Ein Beispiel dafür wäre das Suchen von Dateien auf einer Festplatte.\cite{asynchronitaet} \\
 
 \subsubsection{Synchronität}
+
 In einem \textbf{synchronen} Programmiermodell entstehen Abläufe sequenziell. Wenn eine Funktion mit einer zeitintensiven Aktion abgerufen wird, wird das Ergebnis erst nach dem Beenden der Operation zurückgegeben. In diesem Zeitintervall werden keine Nebenoperationen ausgeführt.\cite{asynchronitaet} \\
 
 \subsubsection{Beispiel}
+
 Die Wiedergabe mehrerer Meldungen in einem Browser:
 
 \begin{figure}[H]
@@ -194,9 +206,10 @@ Das Ergebnis sieht wie folgt aus:
 
 \noindent
 Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
- \begin{center}
-     Promises-vs.-Observables$\,\to\,$ webpack.config.js
- \end{center}
+
+\begin{center}
+    Promises-vs.-Observables$\,\to\,$ webpack.config.js
+\end{center}
 
 \begin{figure}[h!]
 \begin{lstlisting}
@@ -206,11 +219,8 @@ module.exports = {
     ...
 }
 \end{lstlisting}
-\caption{Hier sollte die Typescript Datei sync-vs-async.ts als Eingangspunkt definiert werden.}
+\caption{Hier sollte vor dem Starten des Projekts die Typescript Datei sync-vs-async.ts als Eingangspunkt definiert werden.}
 \end{figure}
-
-\noindent
-Nun kann man mit dem Befehl \textbf{npm run start} die Eingangsdatei gebündelt werden. Webpack kompiliert alle importierten Module dieser Datei und erstellt eine zentrale Endversion vom Kompilat in Javascript-Format. Anschließend muss nur noch die HTML-Seite geöffnet werden. \\
 
 \noindent
 Zusammenfassend kann man also sagen, dass in dem synchronen Modell implizit auf die Aktionen gewartet wird, und in dem asynchronen Modell explizit. Als Diagramm abgebildet führt der Browser die Methoden wie folgt aus:
@@ -223,7 +233,7 @@ Zusammenfassend kann man also sagen, dass in dem synchronen Modell implizit auf 
 \end{center}
 
 \noindent
-Das angeführte Beispiel hat mit der Funktion setTimeout eine asynchrone Operation ausgeführt. Funktionen die als Parameter andere Funktionen übergeben werden, nennt man auch \textbf{callback function} - Rückruffunktionen. Es gibt jedoch auch andere Ansätze der asynchronen Prozessverarbeitung. Diese sind unter anderem \textbf{Promises}.
+Das angeführte Beispiel hat mit der Funktion setTimeout eine asynchrone Operation ausgeführt. Funktionen die als Parameter andere Funktionen übergeben werden, nennt man auch \textbf{Callback function} - Rückruffunktionen. Es gibt jedoch auch andere Ansätze der asynchronen Prozessverarbeitung.
 
 
 
