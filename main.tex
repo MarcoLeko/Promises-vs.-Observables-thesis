@@ -18,31 +18,40 @@
 \usepackage[dvipsnames]{xcolor} % Package for adding colors
 \usepackage{textcomp} % Package for using arrows
 
-\definecolor{lightgray}{rgb}{.94,.94,.94}
-\lstdefinelanguage{JavaScript}{
-  keywords={typeof, new, true, false, function, return, null, switch, var, if, in, while, do, else, case, break, class, export, boolean, throw, implements, import, this, constructor, string, number, public, private, static, const, var, let, void},
-  keywordstyle=\color{orange}\bfseries,
-  identifierstyle=\color{black},
-  sensitive=false,
-  comment=[l]{//},
-  morecomment=[s]{/*}{*/},
-  commentstyle=\color{OliveGreen}\ttfamily,
-  stringstyle=\color{OliveGreen}\ttfamily,
-  morestring=[b]',
-  morestring=[b]"
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{main-color}{rgb}{0.6627, 0.7176, 0.7764}
+\definecolor{back-color}{rgb}{0.1686, 0.1686, 0.1686}
+
+\lstdefinelanguage{JavaScript}
+{
+  keywords = {typeof, new, true, false, function, return, null, switch, var, if, in, while, do, else, case, break, class, export, boolean, throw, implements, import, this, constructor, string, number, public, private, static, const, var, let, void},
+  morekeywords = [2]{class, export, boolean, throw, implements, import, this, interface},
+  morekeywords = [3]{Promise, Observable},
+  morekeywords = [4]{log},
+  otherkeywords = {;},
+  comment = [l]{//},
+  morecomment = [s]{/*}{*/},
+  morestring = [b]',
+  morestring = [b]",
 }
 
-\lstset{
-   language=JavaScript,
-   backgroundcolor=\color{lightgray},
-   extendedchars=true,
-   basicstyle=\footnotesize\ttfamily,
-   showstringspaces=false,
-   showspaces=false,
-   tabsize=2,
-   breaklines=true,
-   showtabs=false,
-   captionpos=b
+\lstset
+{
+  language= JavaScript,
+  commentstyle = {\color{OliveGreen}},
+  stringstyle = {\color{green}},
+  keywordstyle = {\color{orange}\bfseries},
+  keywordstyle = [2]{\color{orange}},
+  keywordstyle = [3]{\color{purple}},
+  keywordstyle = [4]{\color{lime}},
+  keywordstyle = [5]{\color{orange}},
+  basicstyle = {\ttfamily \color{main-color}},
+  backgroundcolor = {\color{back-color}},    
+  sensitive = false,
+  breaklines = true,
+  showstringspaces= false,
+  showspaces= false,
+  extendedchars= true
 }
 
 \begin{document}
