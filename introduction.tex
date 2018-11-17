@@ -140,7 +140,22 @@ In einem \textbf{synchronen} Programmiermodell entstehen Abläufe sequenziell. W
 
 \subsubsection{Beispiel}
 
-Die Wiedergabe mehrerer Meldungen in einem Browser:
+Die Wiedergabe mehrerer Meldungen in einem Browser. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
+
+\begin{center}
+    Promises-vs.-Observables$\,\to\,$ webpack.config.js
+\end{center}
+
+\begin{figure}[H]
+\begin{lstlisting}
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/sync-vs-async.ts',
+    ...
+}
+\end{lstlisting}
+\caption{Hier sollte vor dem Starten des Projekts die Typescript Datei sync-vs-async.ts als Eingangspunkt definiert werden.}
+\end{figure}
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -214,24 +229,6 @@ Das Ergebnis sieht wie folgt aus:
 \centering
 \includegraphics[width=12cm, height=6cm]{synchronous-vs-asynchronous}
 \caption{Die Asynchronous Klasse gibt Nachricht 3 aus bevor Nachricht 2 ausgegeben wird.}
-\end{figure}
-
-\noindent
-Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
-
-\begin{center}
-    Promises-vs.-Observables$\,\to\,$ webpack.config.js
-\end{center}
-
-\begin{figure}[H]
-\begin{lstlisting}
-module.exports = {
-    mode: 'development',
-    entry: './src/modules/sync-vs-async.ts',
-    ...
-}
-\end{lstlisting}
-\caption{Hier sollte vor dem Starten des Projekts die Typescript Datei sync-vs-async.ts als Eingangspunkt definiert werden.}
 \end{figure}
 
 \noindent

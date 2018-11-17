@@ -225,16 +225,215 @@ get('story.json').then(function(response) {
 })
 \end{lstlisting}
 \end{figure}
-\subsection{Operatoren}
 
-Der Unterschied ist minimal, aber extrem hilfreich. Da Promise-Fehlschläge zu der nächsten then Methode in den fehlgeschlagen Callback weiterlaufen (oder in die catch Methode, wenn vorhanden). Mit then(func1, func2) werden entweder die erste Funktion oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen wenn die erste Funktion fehlschlägt. Dies ist nur Möglich da, die Funktionen in unterschiedlichen Stellen der Verkettung liegen.
+\noindent
+Der Unterschied ist minimal, aber extrem hilfreich. Da Promise-Fehlschläge zu der nächsten then Methode in den fehlgeschlagen Callback weiterlaufen (oder in die catch Methode, wenn vorhanden). Mit then(func1, func2) werden entweder die erste Funktion oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen wenn die erste Funktion fehlschlägt. Dies ist nur Möglich da, die Funktionen in unterschiedlichen Stellen der Verkettung liegen.\\\\
 
+\noindent
+Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Diese bestehen aus vier Methoden:
 
-\begin{enumerate} 
+\begin{itemize}
+\item Promise.reject()
+\item Promise.reject()
 \item Promise.all()
 \item Promise.race() 
-\item Promise.reject()
-\end{enumerate}
+\end{itemize}
+
+Die ersten beiden Methoden helfen beim Kreieren eines eingeschlagenen oder fehlgeschlagenen Promises:
+
+\begin{figure}[H]
+\begin{lstlisting}
+const third = Promise.reject('I reject on purpose!');
+
+third.catch(function(err: string) {
+    console.log('Reason of failure: ' + err);
+});
+\end{lstlisting}
+\caption{introduction.ts}
+\end{figure}
+
+\noindent
+Bei den anderen beiden Methoden handelt es sich um Hilfe-Methoden Promises besser zu handhaben. Beispielsweise wenn es darum geht multiple Promises auszuführen hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array von Promises zu lagern und dann alle Promises aufeinmal aufzurufen. In dem nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt.\\
+
+\noindent
+Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
+
+ \begin{center}
+     Promises-vs.-Observables$\,\to\,$ webpack.config.js
+ \end{center}
+
+\begin{figure}[H]
+\begin{lstlisting}
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/modules/stories.ts',
+    ...
+}
+\end{lstlisting}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{lstlisting}
+export interface Post {
+    userId: string;
+    id: string;
+    title: string;
+    body: string;
+}
+
+export class HTTP {
+
+    public makeRequest(url: string): Promise<XMLHttpRequestResponseType | string> {
+        return new Promise((resolve, reject) => {
+            const req = new XMLHttpRequest();
+            req.open('GET', url);
+
+            req.onload = () => {
+                if (req.status === 200) {
+                    this.fakeLatency(3000 * Math.random())
+                        .then(() => resolve(req.response));
+                } else {
+                    reject(Error(req.statusText));
+                }
+            };
+
+            req.onerror = () => {
+                reject(Error('Network Error'));
+            };
+
+            req.send();
+        });
+    }
+
+    private fakeLatency(ms: number) {
+        return new Promise((resolve) =>
+            setTimeout(resolve, ms));
+    }
+}
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}
+class Story extends HTTP {
+
+    public static BASE_URL = 'https://jsonplaceholder.typicode.com/';
+    public spinnerElement: HTMLElement = document.createElement('div');
+    public storyElement: HTMLElement = document.createElement('div');
+
+    constructor() {
+        super();
+        this.spinnerElement.innerHTML =
+            `<svg class="spinner" viewBox="0 0 100 100" width="20" height="20">
+                <circle cx="50" cy="50" r="42" transform="rotate(-90,50,50)" />
+             </svg>`;
+    }
+
+    public getAllStories(): Promise<XMLHttpRequestResponseType | string> {
+        const relativeUrl: string = 'posts';
+        return this.makeRequest(Story.BASE_URL + relativeUrl);
+    }
+
+    // Range of possible chapters: 0 < chapter <= 99
+    public getChapter(chapter: number): Promise<XMLHttpRequestResponseType | string> {
+        return this.makeRequest(`${Story.BASE_URL}posts/${chapter.toString()}`);
+    }
+
+\end{lstlisting}
+\end{figure}
+\begin{figure}[H]
+\begin{lstlisting}
+    public spawn(result: XMLHttpRequestResponseType): void {
+        let posts = JSON.parse(result);
+        if (posts instanceof Array === false) {
+            posts = [posts] as Post[];
+        }
+        for (const post of posts) {
+            this.storyElement.innerHTML +=
+                `<h1>${post.title}</h1>
+                    <div class="story-info"><i>ID: Post-${post.id}</i></div>
+                <div><p>${post.body}.</p></div>`;
+        }
+    }
+
+    public displayFinished() {
+        const done: Node = document.createElement('div');
+        done.textContent = 'All done!';
+        document.body.appendChild(done);
+    }
+}
+
+const story = new Story();
+document.body.appendChild(story.storyElement);
+document.body.appendChild(story.spinnerElement);
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}
+story.getAllStories()
+    .then((response: XMLHttpRequestResponseType) => story.spawn(response))
+    .then(() => {
+        story.displayFinished();
+        story.spinnerElement.style.display = 'none';
+    });
+
+story.getChapter(1)
+    .then((response1: XMLHttpRequestResponseType) => {
+        story.spawn(response1);
+    })
+    .then(() => story.getChapter(2)
+        .then((response2: XMLHttpRequestResponseType) => {
+            story.spawn(response2);
+        }))
+    .then(() => story.getChapter(3)
+        .then((response3: XMLHttpRequestResponseType) => {
+            story.spawn(response3);
+        }))
+    .then(() => story.getChapter(4)
+        .then((response4: XMLHttpRequestResponseType) => {
+            story.spawn(response4);
+        }))
+    .then(() => story.getChapter(5)
+        .then((response5: XMLHttpRequestResponseType) => {
+            story.spawn(response5);
+        }))
+    .finally(() => {
+        story.displayFinished();
+        story.spinnerElement.style.display = 'none';
+    });
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}
+const promises: Array<Promise<void>> = [];
+
+for (const n of [1, 2, 3, 4, 5]) {
+    promises.push(story.getChapter(n)
+        .then((response: XMLHttpRequestResponseType) => {
+            story.spawn(response);
+        }));
+}
+
+Promise.all(promises).finally(() => {
+    story.displayFinished();
+    story.spinnerElement.style.display = 'none';
+});
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}
+Promise.race(promises).finally(() => {
+    story.displayFinished();
+    story.spinnerElement.style.display = 'none';
+});
+\end{lstlisting}
+\end{figure}
+
+
 
 \subsection{Promise Verkettung}
 **Anwendungsbeispiel anzeigen**
