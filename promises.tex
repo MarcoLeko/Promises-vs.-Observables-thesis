@@ -4,9 +4,9 @@ Javascript/Typescript ist grundsätzlich eine sequenziell ausführende Skriptspr
 
 \begin{figure}[H]
 \begin{lstlisting}
-img1.callThisIfLoadedOrWhenLoaded(/** Callback 1 **/ () => {
+img1.callThisIfLoadedOrWhenLoaded(/** Callback 1 **/ function() {
   // Add Eventlistener to change the background
-}).orIfFailedCallThis(/** Callback 2 **/ () => {
+}).orIfFailedCallThis(/** Callback 2 **/ function() {
   // Show error msg for the user
 });
 \end{lstlisting}
@@ -17,9 +17,9 @@ Und genau das bieten \textbf{Promises} in einer übersichtlichen Form.
 
 \begin{figure}[H]
 \begin{lstlisting}
-img1.ready().then(() => {
+img1.ready().then(function() {
   // Add Eventlistener to change the background
-}).catch(() => {
+}).catch(function() {
   // Show error msg for the user
 });
 \end{lstlisting}
@@ -56,12 +56,12 @@ Und genauso ist das Verhalten der Promises in Javascript. Dabei gibt es zwei gru
 
 \begin{figure}[H]
 \begin{lstlisting}
-new Promise( /* executor */ (resolve, reject)  => { ... } );
+new Promise( /* executor */ function(resolve, reject) { ... } );
 \end{lstlisting}
 \caption{Erzeugung einer neuen Promise-Instanz}
 \end{figure}
 
-Der Konstruktor nimmt eine Funktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders, bei einem unerwartetem Fehler, ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
+Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders, bei einem unerwartetem Fehler, ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
 
 \noindent
 Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
@@ -83,7 +83,7 @@ module.exports = {
 \begin{figure}[H]
 \begin{lstlisting}
 const keepsHisWord = true;
-const first = new Promise((resolve, reject) => {
+const first = new Promise(function(resolve, reject) {
     if (keepsHisWord) {
         resolve('Promises kept!');
     } else {
@@ -111,7 +111,7 @@ export interface FakeHttpResponse {
     message: string;
 }
 
-const second = new Promise<FakeHttpResponse>((resolve, reject) => {
+const second = new Promise<FakeHttpResponse>(function(resolve, reject) {
     setTimeout(() => {
         resolve({
             code: '200',
@@ -135,16 +135,100 @@ Im oberen Beispiel wird der Promise vorbehaltlos nach zehn Sekunden aufgelöst, 
 \end{figure}
 
 \noindent
-Wie man nun gesehen hat kann der Promise-Status entweder auf \textbf{pending}, \textbf{resolved} oder \textbf{rejected} laufen. Im Status pending ist der Ausgang der Aktion noch ungewiss und deshalb der Promise-Wert undefined. Ändert sich der Status bzw. ist die Aktion zum Promise eingeschlagen oder fehlgeschlagen, ist der Status \textbf{settled}. Grundsätzlich läuft ein Promise also vom pending in den settled Status.
+Wie man nun gesehen hat kann der Promise-Status entweder auf \textbf{pending}, \textbf{resolved} oder \textbf{rejected} laufen. Im Status pending ist der Ausgang der Aktion noch ungewiss und deshalb der Promise-Wert undefined. Ändert sich der Status bzw. ist die Aktion zum Promise eingeschlagen oder fehlgeschlagen, ist der Status \textbf{settled}. Grundsätzlich läuft ein Promise also vom pending in den settled Status. In der nächsten Sektion wird auf das Verarbeiten von Promises näher eingegangen.
 
-\begin{enumerate} 
-\item Pending Ausgang des Promises ist noch(!) ungewiss
-\item Resolved Die Aktion die zum Promise verlief schlug ein
-\item Rejected Die Aktion die zum Promise verlief schlug fehl
-\item Settled - Die Aktion ist entweder fehlgeschlagen oder eingeschlagen
-\end{enumerate}
+\subsubsection{Verarbeiten von Promises}
 
+Nochmal zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Einschlagen oder Fehlschlagen einer asynchronen Operation, einschließlich des eingetroffenen Wertes. \\
+
+\noindent
+Ein solches Objekt bietet \textbf{statische} Methoden und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Instanz eines Promise-Objekts aufgerufen werden können. Es gibt drei Prototyp-Methoden. Alle der folgenden Methoden lassen sich unter einem Promise-Event einordnen.
+Zur Wiederholung der verschiedenen Promise-Events:
+
+\begin{itemize} 
+\item Pending: Der Ausgang des Promises ist noch(!) ungewiss.
+\item Resolved: Die Aktion, die zum Promise verlief, schlug ein.
+\item Rejected: Die Aktion, die zum Promise verlief, schlug fehl.
+\item Settled: Die Aktion ist entweder fehlgeschlagen oder eingeschlagen - jedoch abgeschlossen.
+\end{itemize}
+
+\noindent
+Eine oder mehrere der drei Prototyp-Methoden werden aufgerufen wenn ein Promise in den settled Zustand übergelaufen ist:
+
+\begin{itemize}
+
+\begin{figure}[H]
+\item \begin{lstlisting}
+Promise.prototype.catch(onRejected)
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\item \begin{lstlisting}
+Promise.prototype.then(onFulfilled, onRejected)
+\end{lstlisting}
+\end{figure}
+ 
+\begin{figure}[H]
+\item \begin{lstlisting} 
+Promise.prototype.finally(onFinally)
+\end{lstlisting}
+\end{figure}
+ 
+\end{itemize}
+
+\noindent
+Die untenstehende Grafik stellt den Ablauf für die \textbf{then} und \textbf{catch} Methoden. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally} an ein Promise Objekt angebunden wird, wird diese Callback-Funktion in jedem Fall aufgerufen, wenn der Promise in den settled Zustand eingetreten ist, unabhängig davon ob der Promise \textbf{eingeschlagen} oder \textbf{fehlgeschlagen} ist.
+
+
+\begin{figure}[H]
+\includegraphics[width=12cm, height=6cm]{Promises-workflow}
+\caption{Ablauf eines Promise-Operation \cite{promise-executor}}
+\end{figure}
+
+\noindent
+Wie in der Grafik zusehen ist kann die Methode then 2 Argumente als Parameter entgegennehmen - einen für das einschlagen der Operation und einen für das fehlschlagen.
+
+Ein Beispiel dafür wäre:
+
+\begin{figure}[H]
+\begin{lstlisting}
+get('story.json').then(function(response) {
+  console.log("Success!", response);
+}, function(error) {
+  console.log("Failed!", error);
+})
+\end{lstlisting}
+\caption{Error-Handling ohne catch. \cite{callback-vs-promises}}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}
+get('story.json').then(function(response) {
+  console.log("Success!", response);
+}).catch(function(error) {
+  console.log("Failed!", error);
+})
+\end{lstlisting}
+\caption{Error-Handling mit catch. \cite{callback-vs-promises}}
+\end{figure}
+
+\noindent
+Die catch Methode führt dabei keine zusätzlichen Operationen aus als die obere Variante. Sie macht den Code lediglich lesbarer. Wichtig zu beachten ist, dass innerhalb einer Executor-Funktion \textbf{niemals} beide Argumente gemeinsam eintreffen können. Sie verhalten sich exklusiv. Deshalb ist das letztere Beispiel im Verhalten vergleichbar mit diesem Beispiel:
+
+\begin{figure}[H]
+\begin{lstlisting}
+get('story.json').then(function(response) {
+  console.log("Success!", response);
+}).then(undefined, function(error) {
+  console.log("Failed!", error);
+})
+\end{lstlisting}
+\end{figure}
 \subsection{Operatoren}
+
+Der Unterschied ist minimal, aber extrem hilfreich. Da Promise-Fehlschläge zu der nächsten then Methode in den fehlgeschlagen Callback weiterlaufen (oder in die catch Methode, wenn vorhanden). Mit then(func1, func2) werden entweder die erste Funktion oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen wenn die erste Funktion fehlschlägt. Dies ist nur Möglich da, die Funktionen in unterschiedlichen Stellen der Verkettung liegen.
+
 
 \begin{enumerate} 
 \item Promise.all()

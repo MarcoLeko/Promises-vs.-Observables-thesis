@@ -144,46 +144,58 @@ Die Wiedergabe mehrerer Meldungen in einem Browser:
 
 \begin{figure}[H]
 \begin{lstlisting}
-export class Notifications {
+export class Print {
 
     public msg(msg: string): void {
         document.body.innerHTML +=
             `<div class="alert" role="alert">${msg}</div>` as string;
     }
-}
 
-class Synchronous extends Notifications {
+    public time(begin: number, end: number, css: string) {
+        document.body.innerHTML += `<div class="time-box ${css}">time: ${end - begin}ms</div>`;
+    }
+}
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}
+class Synchronous extends Print {
+
+    public printAndTrackTime() {
+        const begin = window.performance.now();
+        this.printMessages();
+        const end = window.performance.now();
+        this.time(begin, end, 'sync');
+    }
 
     private printMessages(): void {
         this.msg('Hey Im message Nr. 1!');
         this.msg('Hey Im message Nr. 2 !');
         this.msg('Hey Im message Nr. 3 !');
     }
+}
+
+class Asynchronous extends Print {
 
     public printAndTrackTime() {
         const begin = window.performance.now();
         this.printMessages();
         const end = window.performance.now();
-        document.body.innerHTML += `<div class="time-box sync">Synchronous: ${end - begin}ms</div>`;
+        this.time(begin, end, 'async');
     }
-}
-
-class Asynchronous extends Notifications {
 
     private printMessages(): void {
         this.msg('Hey Im message Nr. 1 !');
         setTimeout(() => this.msg('Hey Im message Nr. 2 !'), 50);
         this.msg('Hey Im message Nr. 3!');
     }
-
-    public printAndTrackTime() {
-        const begin = window.performance.now();
-        this.printMessages();
-        const end = window.performance.now();
-        document.body.innerHTML += `<div class="time-box async">Asynchronous: ${end - begin}ms</div>`;
-    }
 }
+\end{lstlisting}
+\end{figure}
 
+\begin{figure}[H]
+\begin{lstlisting}
 const sync = new Synchronous();
 const async = new Asynchronous();
 
@@ -195,12 +207,12 @@ async.printAndTrackTime();
 \end{figure}
 
 \noindent
-Diese Datei enthält drei Klassen. Während \textbf{Notifications} als Basisklasse eine Methode für das Addieren einer Nachricht in die HTML-Dom bereitstellt, rufen die abgeleiteten Klassen \textbf{Synchronous} und \textbf{Asynchronous} die Nachricht in verschiedener Weise auf. In der Klasse Synchronous werden die HTML-Elemente sequenziell in die Dom eingefügt. In der Asynchronous Klasse dagegen wird nur die erste und dritte Nachricht sequenziell ausgeführt. Die zweite Nachricht wird mit einer Verzögerung von 50 Millisekunden in einem neuen Zeitfenster veranlasst. Ein neuer Thread entsteht. Währenddessen wird schon die nächste Operation ausgeführt. Um die Zeit zurückzuverfolgen wurde ein Timer vor der Anzeige der HTML-Elemente gestartet. Dieser wird gestoppt sobald alle Nachrichten innerhalb dieser Methode aufgerufen wurden. Auffallend ist, dass die Methode in der synchronen Ausführung stets länger braucht als die asynchrone Ausführung. Das liegt daran, dass in der asynchronen Ausführung die Zeit nach dem Ausführen der dritten Nachricht und vor dem Ausführen der zweiten Nachricht gestoppt wird, da die zweite Nachricht sich in einem anderen Zeitfenster befindet. Somit wartet der Timer im asynchronen Modell immer nur auf zwei Nachrichten, während das synchrone Modell auf drei Nachrichten wartet.
+Diese Datei enthält drei Klassen. Während \textbf{Print} als Basisklasse eine Methode für das Addieren einer Nachricht in die HTML-Dom bereitstellt, rufen die abgeleiteten Klassen \textbf{Synchronous} und \textbf{Asynchronous} die Nachricht in verschiedener Weise auf. In der Klasse Synchronous werden die HTML-Elemente sequenziell in die Dom eingefügt. In der Asynchronous Klasse dagegen wird nur die erste und dritte Nachricht sequenziell ausgeführt. Die zweite Nachricht wird mit einer Verzögerung von 50 Millisekunden in einem neuen Zeitfenster veranlasst. Ein neuer Thread entsteht. Währenddessen wird schon die nächste Operation ausgeführt. Um die Zeit zurückzuverfolgen wurde ein Timer vor der Anzeige der HTML-Elemente gestartet. Dieser wird gestoppt sobald alle Nachrichten innerhalb dieser Methode aufgerufen wurden. Auffallend ist, dass die Methode in der synchronen Ausführung stets länger braucht als die asynchrone Ausführung. Das liegt daran, dass in der asynchronen Ausführung die Zeit nach dem Ausführen der dritten Nachricht und vor dem Ausführen der zweiten Nachricht gestoppt wird, da die zweite Nachricht sich in einem anderen Zeitfenster befindet. Somit wartet der Timer im asynchronen Modell immer nur auf zwei Nachrichten, während das synchrone Modell auf drei Nachrichten wartet.
 Das Ergebnis sieht wie folgt aus:
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=12cm, height=4cm]{synchronous-vs-asynchronous}
+\includegraphics[width=12cm, height=6cm]{synchronous-vs-asynchronous}
 \caption{Die Asynchronous Klasse gibt Nachricht 3 aus bevor Nachricht 2 ausgegeben wird.}
 \end{figure}
 
@@ -228,7 +240,7 @@ Zusammenfassend kann man also sagen, dass in dem synchronen Modell implizit auf 
 \begin{center}
 \begin{figure}[H]
 \includegraphics[width=12cm]{synchron-vs-asynchron-diagramm}
-\caption{Rot: Browser führt die Methode aus - Blau: Browser wartet}
+\caption{Ablauf der ausgeführten Operationen im Browser}
 \end{figure}
 \end{center}
 
