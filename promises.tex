@@ -155,7 +155,7 @@ Zur Wiederholung der verschiedenen Promise-Events:
 \noindent
 Eine oder mehrere der drei Prototyp-Methoden werden aufgerufen wenn ein Promise in den settled Zustand übergelaufen ist:
 
-\begin{itemize}
+\begin{description}
 
 \begin{figure}[H]
 \item \begin{lstlisting}
@@ -175,7 +175,7 @@ Promise.prototype.finally(onFinally)
 \end{lstlisting}
 \end{figure}
  
-\end{itemize}
+\end{description}
 
 \noindent
 Die untenstehende Grafik stellt den Ablauf für die \textbf{then} und \textbf{catch} Methoden. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally} an ein Promise Objekt angebunden wird, wird diese Callback-Funktion in jedem Fall aufgerufen, wenn der Promise in den settled Zustand eingetreten ist, unabhängig davon ob der Promise \textbf{eingeschlagen} oder \textbf{fehlgeschlagen} ist.
@@ -187,7 +187,7 @@ Die untenstehende Grafik stellt den Ablauf für die \textbf{then} und \textbf{ca
 \end{figure}
 
 \noindent
-Wie in der Grafik zusehen ist kann die Methode then 2 Argumente als Parameter entgegennehmen - einen für das einschlagen der Operation und einen für das fehlschlagen.
+Wie in der Grafik zusehen ist, kann die Methode then zwei Argumente als Parameter entgegennehmen - einen für das einschlagen der Operation und einen für das fehlschlagen.
 
 Ein Beispiel dafür wäre:
 
@@ -227,19 +227,20 @@ get('story.json').then(function(response) {
 \end{figure}
 
 \noindent
-Der Unterschied ist minimal, aber extrem hilfreich. Da Promise-Fehlschläge zu der nächsten then Methode in den fehlgeschlagen Callback weiterlaufen (oder in die catch Methode, wenn vorhanden). Mit then(func1, func2) werden entweder die erste Funktion oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen wenn die erste Funktion fehlschlägt. Dies ist nur Möglich da, die Funktionen in unterschiedlichen Stellen der Verkettung liegen.\\\\
+Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich da, die Funktionen in unterschiedlichen Stellen der Verkettung liegen.\\\\
 
 \noindent
 Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Diese bestehen aus vier Methoden:
 
 \begin{itemize}
-\item Promise.reject()
+\item Promise.resolve()
 \item Promise.reject()
 \item Promise.all()
 \item Promise.race() 
 \end{itemize}
 
-Die ersten beiden Methoden helfen beim Kreieren eines eingeschlagenen oder fehlgeschlagenen Promises:
+\noindent
+Die ersten beiden Methoden sind Hilfemethoden, die beim Kreieren eines eingeschlagenen oder fehlgeschlagenen Promises genutzt werden:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -253,7 +254,7 @@ third.catch(function(err: string) {
 \end{figure}
 
 \noindent
-Bei den anderen beiden Methoden handelt es sich um Hilfe-Methoden Promises besser zu handhaben. Beispielsweise wenn es darum geht multiple Promises auszuführen hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array von Promises zu lagern und dann alle Promises aufeinmal aufzurufen. In dem nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt.\\
+Die anderen beiden Methoden helfen Promises leichter zu verarbeiten. Beispielsweise, wenn es darum geht multiple Promises auszuführen, hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array zu lagern und dann die nötigen Aktionen mit der Sammlung von Promises auszuführen. In dem nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt.\\
 
 \noindent
 Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
@@ -370,6 +371,7 @@ document.body.appendChild(story.spinnerElement);
 \end{lstlisting}
 \end{figure}
 
+Trotz des großen Code-Abschnitts kommt dieses Beispiel einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  \textbf{makeRequest()} eine Methode zur Verfügung, die eine HTTP-Anfrage gegen einen Endpunkt macht. Die Methode \textbf{fakeLatency()} simuliert eine Verzögerung der Datenübertragung, wie es sie auch unter Anderem auf dem mobile Internet gibt. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten zur Verfügung stellt. Dies kann für Prototyping oder zum Aufzeigen von Beispielen praktisch sein. Darüberhinaus werden mit \textbf{getAllStories()} und \textbf{getChapter()} zwei Methoden definiert, die eine Anfrage gegen zwei verschiedene Endpunkte machen.  Sollte ein Anforderungsfall sein alle Stories aufeinmal anzuzeigen, würde der Code Hierfür wie folgt aussehen:
 \begin{figure}[H]
 \begin{lstlisting}
 story.getAllStories()
@@ -378,7 +380,14 @@ story.getAllStories()
         story.displayFinished();
         story.spinnerElement.style.display = 'none';
     });
+\end{lstlisting}
+\end{figure}
 
+\noindent
+Hier werden zunächst alle mit einem einzigen Aufruf geholt und daraufhin im Browser abgebildet. Mit finally wird der Lade-Icon ausgeblendet und eine Nachricht angezeigt, dass alle Stories abgebildet wurden. Sollte jedoch ein Anwendungsfall sein, dass nur fünf Stories im Browser angezeigt werden sollen, könnte der Code hierfür so aussehen: 
+
+\begin{figure}[H]
+\begin{lstlisting}
 story.getChapter(1)
     .then((response1: XMLHttpRequestResponseType) => {
         story.spawn(response1);
@@ -406,6 +415,9 @@ story.getChapter(1)
 \end{lstlisting}
 \end{figure}
 
+\noindent
+Mit diesem Code-Beispiel wird schnell Klar, dass eine Promise-Verkettung mit mehr als zwei Ketten unübersichtlich ist. In diesem Fall  werden fünf Kapitel nacheinander angefragt und im Browser angezeigt. Es gibt aber auch eine zweite Variante: 
+
 \begin{figure}[H]
 \begin{lstlisting}
 const promises: Array<Promise<void>> = [];
@@ -424,6 +436,8 @@ Promise.all(promises).finally(() => {
 \end{lstlisting}
 \end{figure}
 
+Promise.all() gibt ein einzelnes Promise zurück, dass einschlägt wenn alle Promises innerhalb der Promise-Sammlung einschlagen. Sollte ein Promise fehlschlagen, wird dieser Ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel ausgeführt werden.
+
 \begin{figure}[H]
 \begin{lstlisting}
 Promise.race(promises).finally(() => {
@@ -433,21 +447,13 @@ Promise.race(promises).finally(() => {
 \end{lstlisting}
 \end{figure}
 
-
-
-\subsection{Promise Verkettung}
-**Anwendungsbeispiel anzeigen**
-
 \subsection{Async await}
 **Funktionsweise und Vorteile**
-
-\subsubsection{Anwendungsfall}
 
 \begin{enumerate} 
 \item Source code Beispiel zeigen mit async await
 \item Wie wandle ich z.b. eine verkettete (unlesbare) Promise-Verkettung in async await um 
 \item Gegenüberstellung
-\item Browser kompatibilität
 \end{enumerate}
 
 
