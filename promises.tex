@@ -1,6 +1,6 @@
 \section{Promises}
 
-Javascript/Typescript ist grundsätzlich eine sequenziell ausführende Skriptsprache. Das heißt,  dass zwei Bits eines Skripts nicht im gleichen Augenblick ausführbar sind. Sie müssen nacheinander ausgeführt werden. Im Browser können neben Javascript, auch CSS aktualisiert oder der Einfluss von außen, wie User-Interaktionen, ausgeführt werden. Und jede Operation verlangsamt die Andere. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks gesehen. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Mit Callbacks kann man beispielsweise User-Events gut steuern. Ein User drückt auf die Enter-Taste und nach dem Event wird eine Funktionalität aufgerufen. Diese können in multiplen Ausführungen geschehen. Sollten jedoch Events von anderen Ressourcen abhängen, wie z.B. das Event darf erst eine Funktionalität \glqq{}feuern\grqq{} wenn das Bild im Browser geladen ist. Und sollte das Bild nicht geladen sein, sollte eine entsprechende Fehlermeldung angezeigt werden. Der Code hierfür würde wie folgt aussehen:
+Javascript/Typescript ist grundsätzlich eine single-threaded ausführende Skriptsprache. Das heißt, dass zwei Bits eines Skripts nicht im gleichen Augenblick ausgeführt werden. Sie werden nacheinander ausgeführt. Der Browser verarbeitet neben Javascript, auch CSS Aktualisierungen oder User-Interaktionen und jede Operation verlangsamt die Andere. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks gesehen. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Mit Callbacks kann man beispielsweise User-Events steuern. Drückt ein User auf die Enter-Taste, wird nach dem Event wird eine Aktion gestartet. Diese können in multiplen Ausführungen entstehen. Sollten jedoch Events von anderen Ressourcen abhängen, wie z.B. das Event darf erst eine Aktion \glqq{}feuern\grqq{}, wenn das Bild im Browser geladen ist und sollte das Bild nicht geladen sein, wird eine entsprechende Fehlermeldung angezeigt. Dann würde der Code so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -23,17 +23,16 @@ img1.ready().then(function() {
   // Show error msg for the user
 });
 \end{lstlisting}
-\caption{Beispiel inspiriert von Google-Developer-Docs \cite{callback-vs-promises}}
+\caption{Fiktives Beispiel - sollte die DOM eine Methode ready() bereitstellen \cite{callback-vs-promises}}
 \end{figure}
 
 \noindent
-Im Gegensatz zu Callbacks sind Promises an einer einzelner asynchronen erfolgreichen/fehlgeschlagenen Interaktion interessiert und weniger wann die Interaktion stattgefunden hat. Promises sind danach gerichtet wie man mit Ergebnis der Interaktion umgeht. 
-Doch was genau sind Promises? \\
+Im Gegensatz zu Callbacks sind Promises an einer einzelner asynchronen erfolgreichen/fehlgeschlagenen Interaktion interessiert und weniger wann die Interaktion stattgefunden hat. Promises sind danach gerichtet wie man mit Ergebnis der Interaktion umgeht. Man kann also sagen, dass Promises ein Event-basiertes Monitoring-Tool sind.
 
 \subsection{Funktionsweise}
 
 \noindent
-Sie \textit{(\glqq{}Promises\grqq{} zu deutsch: Versprechen)} in Javascript verhalten sich ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
+Promises \textit{(zu deutsch: Versprechen)}  verhalten sich in Javascript ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
 
 \noindent
 Das heißt:
@@ -43,7 +42,7 @@ Das heißt:
     
     \item Ein Versprechen kann eingehalten oder gebrochen werden.
     
-    \item Wurde ein Versprechen nicht eingehalten, möchte man den Grund für die Nichteinhaltung wissen um darauffolgend zu handeln.
+    \item Wurde ein Versprechen nicht eingehalten, möchte man den Grund für die Nichteinhaltung wissen, um darauffolgend zu handeln.
     
     \item Beim Zeitpunkt eines Versprechens hat man nur die Absicherung. Man kann damit erstmal noch nichts anfangen. Es kann nur geplant werden was nach dem Einhalten des Versprechens gemacht wird. Dementsprechend kann man auch Maßnahmen setzen beim Nichteinhalten dieser Absicherung.
     
@@ -96,7 +95,7 @@ console.log(first);
 \end{figure}
 
 \noindent
-Dieser Promise löst sich auf Anhieb auf und der Status gelangt in den resolved Zustand, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status rejected entsprechen. Der Initialstatus eines Promise wird im nächsten Beispiel verdeutlicht:
+Dieser Promise löst sich auf Anhieb auf und der Status landet in den resolved Zustand, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status rejected entsprechen. Der Initialstatus eines Promise wird im nächsten Beispiel verdeutlicht:
 
 \begin{figure}[H]
 \centering
@@ -126,7 +125,7 @@ setTimeout(() => console.log(second), 10 * 1000);
 \end{figure}
 
 \noindent
-Im oberen Beispiel wird der Promise vorbehaltlos nach zehn Sekunden aufgelöst, solange ist der Status ausstehend (pending). Nachdem der Promise aufgelöst wurde, werden Status und Wert aktualisiert. Dabei können nicht nur primitive Typen wie number, boolean oder string zurückgegeben werden, sondern auch generierte und komplexe Typen. Mit anderen Worten: Promises sind generisch.
+Im oberen Beispiel wird der Promise vorbehaltlos nach zehn Sekunden aufgelöst, solange ist der Status ausstehend (pending). Nachdem der Promise aufgelöst wurde, werden Status und Wert aktualisiert. Dabei können nicht nur primitive Typen wie number, boolean oder string zurückgegeben werden, sondern auch Objekt-Typen und komplexe Typen. Mit anderen Worten: Promises sind generisch.
 
 \begin{figure}[H]
 \centering
@@ -139,10 +138,7 @@ Wie man nun gesehen hat kann der Promise-Status entweder auf \textbf{pending}, \
 
 \subsubsection{Verarbeiten von Promises}
 
-Nochmal zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Einschlagen oder Fehlschlagen einer asynchronen Operation, einschließlich des eingetroffenen Wertes. \\
-
-\noindent
-Ein solches Objekt bietet \textbf{statische} Methoden und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Instanz eines Promise-Objekts aufgerufen werden können. Es gibt drei Prototyp-Methoden. Alle der folgenden Methoden lassen sich unter einem Promise-Event einordnen.
+Nochmal zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Einschlagen oder Fehlschlagen einer asynchronen Operation, einschließlich des eingetroffenen Wertes. Ein solches Objekt bietet \textbf{statische} Methoden und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Instanz eines Promise-Objekts aufgerufen werden können. Es gibt drei Prototyp-Methoden. Alle der folgenden Methoden lassen sich unter einem Promise-Event einordnen.
 Zur Wiederholung der verschiedenen Promise-Events:
 
 \begin{itemize} 
@@ -178,7 +174,7 @@ Promise.prototype.finally(onFinally)
 \end{description}
 
 \noindent
-Die untenstehende Grafik stellt den Ablauf für die \textbf{then} und \textbf{catch} Methoden. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally} an ein Promise Objekt angebunden wird, wird diese Callback-Funktion in jedem Fall aufgerufen, wenn der Promise in den settled Zustand eingetreten ist, unabhängig davon ob der Promise \textbf{eingeschlagen} oder \textbf{fehlgeschlagen} ist.
+Die untenstehende Grafik zeigt den Ablauf für das Eintreten der Events und wann die Methoden \textbf{then()} und \textbf{catch()} genutzt werden. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally} an ein Promise Objekt angebunden wird, wird diese Callback-Funktion in jedem Fall aufgerufen, wenn der Promise in den settled Zustand eingetreten ist, unabhängig davon ob der Promise \textbf{eingeschlagen} oder \textbf{fehlgeschlagen} ist.
 
 
 \begin{figure}[H]
@@ -187,9 +183,7 @@ Die untenstehende Grafik stellt den Ablauf für die \textbf{then} und \textbf{ca
 \end{figure}
 
 \noindent
-Wie in der Grafik zusehen ist, kann die Methode then zwei Argumente als Parameter entgegennehmen - einen für das einschlagen der Operation und einen für das fehlschlagen.
-
-Ein Beispiel dafür wäre:
+Dabei kann die then() Methode zwei Argumente als Parameter entgegennehmen - einen für das einschlagen der Operation und einen für das fehlschlagen. Ein Beispiel dafür wäre:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -214,7 +208,7 @@ get('story.json').then(function(response) {
 \end{figure}
 
 \noindent
-Die catch Methode führt dabei keine zusätzlichen Operationen aus als die obere Variante. Sie macht den Code lediglich lesbarer. Wichtig zu beachten ist, dass innerhalb einer Executor-Funktion \textbf{niemals} beide Argumente gemeinsam eintreffen können. Sie verhalten sich exklusiv. Deshalb ist das letztere Beispiel im Verhalten vergleichbar mit diesem Beispiel:
+Im Gegensatz zur oberen Variante führt die catch() Methode keine zusätzlichen Operationen aus. Sie macht den Code lediglich semantisch lesbarer. Wichtig zu beachten ist, dass innerhalb einer Executor-Funktion \textbf{niemals} beide Argumente gemeinsam eintreffen können. Sie verhalten sich exklusiv. Deshalb ist das letztere Beispiel im Verhalten vergleichbar mit diesem Beispiel:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -227,20 +221,17 @@ get('story.json').then(function(response) {
 \end{figure}
 
 \noindent
-Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich da, die Funktionen in unterschiedlichen Stellen der Verkettung liegen.\\\\
-
-\noindent
-Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Diese bestehen aus vier Methoden:
+Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Diese bestehen aus vier Methoden:
 
 \begin{itemize}
 \item Promise.resolve()
 \item Promise.reject()
+\item Promise.race()
 \item Promise.all()
-\item Promise.race() 
 \end{itemize}
 
 \noindent
-Die ersten beiden Methoden sind Hilfemethoden, die beim Kreieren eines eingeschlagenen oder fehlgeschlagenen Promises genutzt werden:
+Die ersten beiden Methoden werden genutzt um einen eingeschlagenen oder fehlgeschlagenen Promises zu simulieren:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -254,10 +245,7 @@ third.catch(function(err: string) {
 \end{figure}
 
 \noindent
-Die anderen beiden Methoden helfen Promises leichter zu verarbeiten. Beispielsweise, wenn es darum geht multiple Promises auszuführen, hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array zu lagern und dann die nötigen Aktionen mit der Sammlung von Promises auszuführen. In dem nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt.\\
-
-\noindent
-Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
+Die anderen beiden Methoden helfen Promises leichter zu verarbeiten. Beispielsweise, wenn es darum geht multiple Promises auszuführen, hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array zu lagern und dann die nötigen Aktionen mit der Sammlung von Promises auszuführen. In dem nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt.Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
 
  \begin{center}
      Promises-vs.-Observables$\,\to\,$ webpack.config.js
@@ -371,12 +359,14 @@ document.body.appendChild(story.spinnerElement);
 \end{lstlisting}
 \end{figure}
 
-Trotz des großen Code-Abschnitts kommt dieses Beispiel einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  \textbf{makeRequest()} eine Methode zur Verfügung, die eine HTTP-Anfrage gegen einen Endpunkt macht. Die Methode \textbf{fakeLatency()} simuliert eine Verzögerung der Datenübertragung, wie es sie auch unter Anderem auf dem mobile Internet gibt. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten zur Verfügung stellt. Dies kann für Prototyping oder zum Aufzeigen von Beispielen praktisch sein. Darüberhinaus werden mit \textbf{getAllStories()} und \textbf{getChapter()} zwei Methoden definiert, die eine Anfrage gegen zwei verschiedene Endpunkte machen.  Sollte ein Anforderungsfall sein alle Stories aufeinmal anzuzeigen, würde der Code Hierfür wie folgt aussehen:
+\noindent
+Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  \textbf{makeRequest()} eine Methode zur Verfügung, die eine HTTP-Anfrage gegen einen übergebenen Endpunkt macht. Die Methode \textbf{fakeLatency()} simuliert eine Verzögerung der Datenübertragung, wie es sie unter Anderem auch auf dem mobile Internet gibt. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Darüberhinaus werden mit \textbf{getAllStories()} und \textbf{getChapter()} zwei Methoden definiert, die eine Anfrage gegen zwei verschiedene Endpunkte machen.  Sollte ein Anforderungsfall sein alle Stories aufeinmal anzuzeigen, würde der Code Hierfür wie folgt aussehen:
+
 \begin{figure}[H]
 \begin{lstlisting}
 story.getAllStories()
     .then((response: XMLHttpRequestResponseType) => story.spawn(response))
-    .then(() => {
+    .finally(() => {
         story.displayFinished();
         story.spinnerElement.style.display = 'none';
     });
@@ -384,7 +374,7 @@ story.getAllStories()
 \end{figure}
 
 \noindent
-Hier werden zunächst alle mit einem einzigen Aufruf geholt und daraufhin im Browser abgebildet. Mit finally wird der Lade-Icon ausgeblendet und eine Nachricht angezeigt, dass alle Stories abgebildet wurden. Sollte jedoch ein Anwendungsfall sein, dass nur fünf Stories im Browser angezeigt werden sollen, könnte der Code hierfür so aussehen: 
+Hier werden zunächst alle Kapitel mit einem einzigen Aufruf am Endpunkt angefragt und daraufhin im Browser abgebildet. Ist der Promise in den settled Zustand angelangt, wird mit finally der Lade-Icon ausgeblendet und eine Nachricht angezeigt, dass alle Stories abgebildet wurden. Sollte jedoch ein Anwendungsfall sein, dass nur fünf Stories im Browser angezeigt werden sollen, könnte der Code hierfür so aussehen: 
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -416,7 +406,7 @@ story.getChapter(1)
 \end{figure}
 
 \noindent
-Mit diesem Code-Beispiel wird schnell Klar, dass eine Promise-Verkettung mit mehr als zwei Ketten unübersichtlich ist. In diesem Fall  werden fünf Kapitel nacheinander angefragt und im Browser angezeigt. Es gibt aber auch eine zweite Variante: 
+Mit diesem Code-Beispiel wird schnell Klar, dass eine Promise-Verkettung mit mehr als zwei Ketten unübersichtlich ist. In diesem Fall werden fünf Kapitel nacheinander angefragt und im Browser angezeigt. Da die Aufrufe in dem verkettetem Konstrukt voneinander abhängig sind, addiert sich die Zeit die gebraucht wird, um ein Kapitel anzufragen und abzubilden. Sind die Kapitel unabhängig voneinander und spielt die Reihenfolge zur Darstellung keine Rolle, dann gibt es eine zweite Variante: 
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -436,7 +426,17 @@ Promise.all(promises).finally(() => {
 \end{lstlisting}
 \end{figure}
 
-Promise.all() gibt ein einzelnes Promise zurück, dass einschlägt wenn alle Promises innerhalb der Promise-Sammlung einschlagen. Sollte ein Promise fehlschlagen, wird dieser Ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel ausgeführt werden.
+\noindent
+Promise.all() gibt ein einzelnes Promise zurück, dass einschlägt wenn alle Promises innerhalb des übergebenen Promise-Arrays einschlagen sind oder das übergebene Argument keine Promises enthält. Die Promises werden nach der Reihenfolge ihres Einschlagens aufgerufen.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=12cm]{promises-zeitstrahl}
+\caption{Die Nachrichten werden in der Reihenfolge: 3, 5, 2, 1 und 4 abgebildet.}
+\end{figure}
+
+\noindent
+Sollte ein Promise fehlschlagen, wird dieser Ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race() gibt ein Promise zurück, dass einschlägt oder fehlschlägt, sobald das erste Promise des Übergebenen Promise-Arrays einschlägt oder fehlschlägt.\cite{versprechen}
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -445,7 +445,11 @@ Promise.race(promises).finally(() => {
     story.spinnerElement.style.display = 'none';
 });
 \end{lstlisting}
+\caption{Es wird nur ein Kapitel mit der Nachricht \glqq All done!\grqq{} angezeigt.}
 \end{figure}
+
+ \noindent
+ Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig entstehende asynchrone Events genutzt werden sollten. Resolve() wird mit der then() Methode verarbeitet und reject() mit der catch() Methode gefangen. Finally() sollte nur genutzt werden, wenn eine Aktion unabhängig von beiden Events eintreten soll. Der zurückgegebene Typ einer Promise Methode ist immer ein Promise-Objekt, unabhängig davon ob es sich um eine statische- oder einer Prototyp-Methode handelt. Promises bieten mit Promise.all() und Promise.race() Hilfemethoden an, um Promise leichter zu verarbeiten.
 
 \subsection{Async await}
 **Funktionsweise und Vorteile**
