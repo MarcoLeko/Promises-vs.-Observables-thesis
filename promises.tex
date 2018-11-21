@@ -403,6 +403,7 @@ story.getChapter(1)
         story.spinnerElement.style.display = 'none';
     });
 \end{lstlisting}
+\caption{Promise-Verkettung mit sechs Promises}
 \end{figure}
 
 \noindent
@@ -452,12 +453,129 @@ Promise.race(promises).finally(() => {
  Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig entstehende asynchrone Events genutzt werden sollten. Resolve() wird mit der then() Methode verarbeitet und reject() mit der catch() Methode gefangen. Finally() sollte nur genutzt werden, wenn eine Aktion unabhängig von beiden Events eintreten soll. Der zurückgegebene Typ einer Promise Methode ist immer ein Promise-Objekt, unabhängig davon ob es sich um eine statische- oder einer Prototyp-Methode handelt. Promises bieten mit Promise.all() und Promise.race() Hilfemethoden an, um Promise leichter zu verarbeiten.
 
 \subsection{Async await}
-**Funktionsweise und Vorteile**
+Bei einer asynchronen Funktion handelt es sich um eine Funktion die dank einer Eventschleife asynchron operiert. Bei einer Eventschleife werden auf Events gewartet bis diese auftreten. Innerhalb dieser Funktion wird implizit ein Promise genutzt, um asynchron ein Ergebnis zu liefern. Die Stärke jedoch von \textbf{async} ist die Syntax und der strukturelle Aufbau einer solchen asynchronen Operation. Diese lässt den Code synchron aussehen.\cite{async-await} Ein einfaches Beispiel:
 
-\begin{enumerate} 
-\item Source code Beispiel zeigen mit async await
-\item Wie wandle ich z.b. eine verkettete (unlesbare) Promise-Verkettung in async await um 
-\item Gegenüberstellung
-\end{enumerate}
+\begin{figure}[H]
+\begin{lstlisting}
+function hello() {
+    return 'world';
+}
+\end{lstlisting}
+\caption{Funktion gibt explizit und implizit ein string zurück.}
+\end{figure}
 
+\begin{figure}[H]
+\begin{lstlisting}
+async function hello() {
+    return 'world';
+}
+\end{lstlisting}
+\caption{Funktion gibt explizit ein string und implizit Promise\textless string\textgreater zurück.}
+\end{figure}
 
+\noindent
+Der async Ausdruck zwingt also eine Funktion ein Promise zurückzugeben. Um explizit und implizit ein Promise\textless string\textgreater zu verwenden, könnte man beispielsweise ein Promise.resolve('world') ausliefern. Eine asynchrone Funktion kann zudem einen \textbf{await} Ausdruck enthalten. Dies lässt die asynchrone Funktion pausieren bis der übergebene Promise eingeschlagen ist. Daraufhin wird die Ausführung der Funktion mit dem zurückgegeben Wert des Promise fortgesetzt. Ein await ist nur valide einsetzbar innerhalb einer async Funktion. Ein einfaches Beispiel zum Verständnis:\\
+
+\subsubsection{Funktionsweise}
+
+\noindent
+Vor dem Ausführen des Beispiels sollte wieder die introduction.ts als Eingangsdatei in der webpack.config.js definiert werden.
+
+\begin{figure}[H]
+\begin{lstlisting}
+const keepsHisWord = true;
+const first = new Promise(function(resolve, reject) {
+    if (keepsHisWord) {
+        resolve('Promises kept!');
+    } else {
+        reject('Promise NOT kept!');
+    }
+});
+
+async function getHisWord() {
+    const keptWord = await first;
+    console.log(keptWord);
+}
+\end{lstlisting}
+\end{figure}
+
+\noindent
+In diesem Code-Block wird das Beispiel von unserem ersten Promise genutzt. Wie man nun sehen kann wird mit dem await Ausdruck eine Konstante gebildet um den Promise-Wert, der zurückgegeben wird, weiterzunutzen. Man muss nicht mehr ...then(res =\textgreater console.log(res)) ausführen, um auf den Wert des Promise-Objekts zuzugreifen. Async await führt das entpacken des Promise-Objekts automatisch aus. Nun kann sich die Fragen stellen: Was passiert wenn ein Promise fehlschlägt? Wie bekommt man den Wert des Objekts bei einem Fehlschlag? \\
+
+\noindent
+Ähnlich wie bei Java oder Swift gibt es auch in Javascript ein \textbf{try-catch}-Block. Wenn ein Promise fehlschlägt, wird eine Exception geworfen. Diese kann daraufhin mit dem catch-Block gefangen werden. Code-technisch würde dies so aussehen:
+
+\begin{figure}[H]
+\begin{lstlisting}
+const third = Promise.reject('I reject on purpose!');
+
+async function getNotHisWord() {
+    try {
+        const keepNotHisWord = await third;
+        console.log(keepNotHisWord);
+    } catch (e) {
+        console.log('Jack said: ' + e);
+    }
+}
+
+getNotHisWord();
+\end{lstlisting}
+\caption{Die Konsole wird niemals keepNotHisWord in der Konsole ausgeben, da innerhalb des await Konstrukts eine Exception geworfen wird.}
+\end{figure}
+
+\noindent
+Wie man nun sehen kann wird der Code syntaktisch so geschrieben als, würde dieser synchron ausgeführt werden. Dies führt zu einer erheblichen Steigerung der Code-Lesbarkeit und verhindert Verschachtelungen wie man sie oben gesehen hat (siehe Abb. 17). Solche langen Promise-Verschachtelungen werden unter Entwicklern auch als \glqq{}Promise-Hell\grqq{} bezeichnet, da sie oft schwer nachvollziehbar sind in ihren Abhängigkeiten. Um auf unser ursprüngliches Beispiel mit der Promise-Verkettung zurückzukommen würde der Code mit async-await so aussehen:\\
+
+\noindent
+Vor dem Ausführen des Beispiels sollte wieder die stories.ts als Eingangsdatei in der webpack.config.js definiert werden.
+
+\begin{figure}[H]
+\begin{lstlisting}
+async function getFirstFiveChapter() {
+    try {
+        for (const n of [1, 2, 3, 4 , 5]) {
+            const chapter = await story.getChapter(n);
+            story.spawn(chapter as XMLHttpRequestResponseType);
+        }
+    } finally {
+        story.spinnerElement.style.display = 'none';
+        story.displayFinished();
+    }
+}
+
+getFirstFiveChapter();
+\end{lstlisting}
+\caption{Die Methode verhält sich genau so wie in Abb. 17}
+\end{figure}
+
+Die Promise-Verkettung wurde mithilfe von async await aufgelöst und es es wird mit dem await Konstrukt implizit auf die Promise Auflösung gewartet, daraufhin wird weiter in der Schleife iteriert. Zudem bietet der try-catch-Block auch finally an. Ähnlich wie bei der Promise-Prototyp Methode wird in dem finally-Block vorrangeschreitet unabhängig vom Ausgang des try-catch-Blocks.\\\\
+
+\subsubsection{Einsetzen wenn sinnvoll}
+
+Beim Einsetzen von async await muss sich vor Augen führen welchen Anwendungsfall man vor sich hat und ob ein Einsatz als Solches Sinn ergibt. Kommt man wieder zum Fall, man möchte die ersten fünf Kapitel in die DOM laden völlig unabhängig voneinander würde der Code hierfür so aussehen:
+
+\begin{figure}[H]
+\begin{lstlisting}
+async function getStoryAndPrint(chapter: number) {
+    const res = await story.getChapter(chapter);
+    story.spawn(res as XMLHttpRequestResponseType);
+}
+
+async function getFirstFiveStoriesInParallel() {
+    try {
+        const promises = [];
+
+        for (const n of [1, 2, 3, 4, 5]) {
+            promises.push(getStoryAndPrint(n));
+        }
+
+        await Promise.all(promises);
+    } finally {
+        story.spinnerElement.style.display = 'none';
+        story.displayFinished();
+    }
+}
+
+getFirstFiveStoriesInParallel();
+\end{lstlisting}
+\end{figure}
