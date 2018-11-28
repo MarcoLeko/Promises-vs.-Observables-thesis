@@ -1,38 +1,12 @@
 \section{Promises}
 
-Javascript/Typescript ist grundsätzlich eine single-threaded ausführende Skriptsprache. Das heißt, dass zwei Bits eines Skripts nicht im gleichen Augenblick ausgeführt werden. Sie werden nacheinander ausgeführt. Der Browser verarbeitet neben Javascript, auch CSS Aktualisierungen oder User-Interaktionen und jede Operation verlangsamt die Andere. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks gesehen. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Mit Callbacks kann man beispielsweise User-Events steuern. Drückt ein User auf die Enter-Taste, wird nach dem Event wird eine Aktion gestartet. Diese können in multiplen Ausführungen entstehen. Sollten jedoch Events von anderen Ressourcen abhängen, wie z.B. das Event darf erst eine Aktion \glqq{}feuern\grqq{}, wenn das Bild im Browser geladen ist und sollte das Bild nicht geladen sein, wird eine entsprechende Fehlermeldung angezeigt. Dann würde der Code so aussehen:
-
-\begin{figure}[H]
-\begin{lstlisting}
-img1.callThisIfLoadedOrWhenLoaded(/** Callback 1 **/ function() {
-  // Add Eventlistener to change the background
-}).orIfFailedCallThis(/** Callback 2 **/ function() {
-  // Show error msg for the user
-});
-\end{lstlisting}
-\end{figure}
-
-\noindent
-Und genau das bieten \textbf{Promises} in einer übersichtlichen Form.
-
-\begin{figure}[H]
-\begin{lstlisting}
-img1.ready().then(function() {
-  // Add Eventlistener to change the background
-}).catch(function() {
-  // Show error msg for the user
-});
-\end{lstlisting}
-\caption{Fiktives Beispiel - sollte die DOM eine Methode ready() bereitstellen \cite{callback-vs-promises}}
-\end{figure}
-
-\noindent
-Im Gegensatz zu Callbacks sind Promises an einer einzelner asynchronen erfolgreichen/fehlgeschlagenen Interaktion interessiert und weniger wann die Interaktion stattgefunden hat. Promises sind danach gerichtet wie man mit Ergebnis der Interaktion umgeht. Man kann also sagen, dass Promises ein Event-basiertes Monitoring-Tool sind.
+Javascript/Typescript ist grundsätzlich eine single-threaded ausführende Skriptsprache. Das heißt, dass zwei Bits eines Skripts nicht im gleichen Augenblick ausgeführt werden. Sie werden nacheinander ausgeführt. Der Browser verarbeitet neben Javascript, auch CSS Aktualisierungen oder User-Interaktionen und jede Operation verlangsamt die Andere. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks gesehen. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Mit Callbacks kann man beispielsweise User-Events steuern. Drückt ein User auf die Enter-Taste, wird nach dem Event wird eine Aktion gestartet. Diese können in multiplen Ausführungen entstehen.
+Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann ganz schnell zu unübersichtlichem Code führen, wenn diese mit Callbacks eingebaut wurden (siehe Abb. 9). Im Gegensatz zu Callbacks sind Promises an einer einzelner asynchronen erfolgreichen/fehlgeschlagenen Interaktion interessiert und weniger wann die Interaktion stattgefunden hat. Promises (mit ECMAScript 2015 eingeführt) sind danach gerichtet wie man mit Ergebnis der Interaktion umgeht.
 
 \subsection{Funktionsweise}
 
 \noindent
-Promises \textit{(zu deutsch: Versprechen)}  verhalten sich in Javascript ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
+Promises \textit{(zu deutsch: Versprechen)} verhalten sich in Javascript ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
 
 \noindent
 Das heißt:
@@ -73,7 +47,7 @@ Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
 \begin{lstlisting}
 module.exports = {
     mode: 'development',
-    entry: './src/modules/modules/introduction.ts',
+    entry: './src/modules/promises/introduction.ts',
     ...
 }
 \end{lstlisting}
@@ -255,7 +229,7 @@ Die anderen beiden Methoden helfen Promises leichter zu verarbeiten. Beispielswe
 \begin{lstlisting}
 module.exports = {
     mode: 'development',
-    entry: './src/modules/modules/stories.ts',
+    entry: './src/modules/promises/stories.ts',
     ...
 }
 \end{lstlisting}

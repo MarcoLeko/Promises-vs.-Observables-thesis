@@ -1,17 +1,31 @@
-\section{Observables}
+\section{Reactive Programming}
+In diesem Kapitel geht es rund um das Verstehen von \textbf{Reactive Programming}. Da es im Netz nur wenig Material zum Einstieg gibt bzw. das Thema nur oberflächlich angekratzt wird und die offizielle Dokumentation nur den Wenigsten zum Einleuchten bringt. Wird in dieser Arbeit die Herausforderung sein, die gesamte Architektur hinter den Observables zu erklären.
+Sollte man von reactive Programming noch nichts gehört haben, dann wird die größte Schwierigkeit dabei sein in \glqq{}reactive\grqq{} zu denken.
 
 \subsection{Funktionsweise}
-**Erklärung**
+Wenn es um reactive Programming geht, handelt es sich um das Entwickeln mit asynchronen Datenflüsse. Dabei können Datenflüsse aus verschiedensten Operationen entstehen wie z.B. Klick-Events, Variablen, Cache etc. Dabei kann man sich in diesem Datenfluss einhängen und entsprechend reagieren. Die Library \textbf{Reactive Extension for Javascript} (kurz: RxJS) bietet eine enorme Menge an Funktionen diese Datenflüsse zu bearbeiten/manipulieren. Diese Funktionen komplett abzudecken wird diese Arbeit unmöglich sein, jedoch wird nach dem behandeln dieser Sektion ein gewisses Grundverständnis für neue Operatoren entstehen und wie diese in Folge anzuwenden sind. Um einen Einblick zu gewähren, wird auf User-Events von einem Input-Feld eingegangen.
 
-\subsection{Hot Observables}
-**Erklärung + Beispiel**
+\noindent
+Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
 
-\subsection{Cold Observables}
-**Erklärung + Beispiel**
+ \begin{center}
+     Promises-vs.-Observables$\,\to\,$ webpack.config.js
+ \end{center}
 
-\subsection{Umwandlung Cold Observable zu Hot Observable}
-**Hier wird ein Beispiel dargestellt.**
+\begin{figure}[H]
+\begin{lstlisting}
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/observables/introduction.ts',
+    ...
+}
+\end{lstlisting}
+\end{figure}
 
+Da für es RxJS üblich ist für Operationsflüsse in Marbles-Diagramme darzustellen, werden diese in der Arbeit auch herangezogen.
+
+\subsection{Unicast vs. Multicast}
+\subsection{Hot Observables vs. Cold Observables}
 \subsection{Operatoren}
 \begin{enumerate} 
 \item map, forEach, reduce (Operatoren ähnlich wie bei Arrays)

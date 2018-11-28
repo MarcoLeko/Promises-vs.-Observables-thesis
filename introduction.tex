@@ -3,7 +3,7 @@
 \section{Einführung}
 
 Javascript ist im Aufwind mehr denn je. Sie ist die meist genutzte Programmiersprache unter Entwickler. Laut der jährlichen Umfrage von Stackoverflow im Jahr 2018 belegte sie zum sechsten mal in Folge den ersten Platz.\cite{programming-language-survey} Doch woher kommt dieser Erfolg? \\
-Wenn es um das Web geht, war Javascript in der Webentwicklung schon immer Vorreiter. Doch diese Sprache hat seine Stärken auch in der Vielfalt seiner Einsatzmöglichkeiten. Wie mit dem Framework Node.js, dass ab 2009 in Erscheinung getreten ist, war es Möglich Server-seitigen Javascript-Code zu implementieren. Dies hatte zur Folge, dass man sich nicht mit multiplen Programmiersprachen auseinandersetzen musste. Man hatte eine Vereinheitlichung in seiner Code-Basis für seine Applikation gefunden. Zudem bietet Node.js mit npm als Paketmanager die größte Auswahl an Open-Source-Libraries. Ein Weiter Punkt ist die Multi-Plattform-Kompatibilität die Javascript z.B. mit dem Framework React offenbart. Mit diesen Framework ist es Möglich mit einer Code-Basis sowohl Web-Anwendungen als auch Apps auf mobile Geräte zu entwickeln. Da Javascript's Kompilierung vom Betriebssystem unabhängig ist, ist der Übergang von der Webentwicklung zur Mobile-Entwicklung reibungslos. Und genau das bietet auch Typescript. Da Typescript ein sog. \textbf{Superset} von Javascript ist, kann jeder Code von Javascript auch in Typescript interpretiert werden. Der Unterschied zu Typescript und Javascript liegt in ihrer statischen Typisierung. Das bedeutet, dass Variablen, Methoden und Funktionsparameter im Vorfeld mit einem Typ versehen werden. Aufgrund dessen können Bugs am Code schneller erkannt werden. Zudem lässt sich diese Sprache leicht modular aufbauen. Dadurch können Entwicklerteams in Unternehmensprojekte die Code-Struktur besser organisieren und dokumentieren.\\\\
+Wenn es um das Web geht, war Javascript in der Webentwicklung schon immer Vorreiter. Doch diese Sprache hat seine Stärken auch in der Vielfalt seiner Einsatzmöglichkeiten. Wie mit dem Framework Node.js, dass ab 2009 in Erscheinung getreten ist, war es Möglich Server-seitigen Javascript-Code zu implementieren. Dies hatte zur Folge, dass man sich nicht mit multiplen Programmiersprachen auseinandersetzen musste. Man hatte eine Vereinheitlichung in seiner Code-Basis für seine Applikation gefunden. Zudem bietet Node.js mit npm als Paketmanager die größte Auswahl an Open-Source-Libraries. Ein Weiter Punkt ist die Multi-Plattform-Kompatibilität die Javascript z.B. mit dem Framework Angular offenbart. Mit diesen Framework ist es Möglich mit einer Code-Basis sowohl Web-Anwendungen als auch Apps auf mobile Geräte zu entwickeln. Da Javascript's Kompilierung vom Betriebssystem unabhängig ist, ist der Übergang von der Webentwicklung zur Mobile-Entwicklung reibungslos. Und genau das bietet auch Typescript. Da Typescript ein sog. \textbf{Superset} von Javascript ist, kann jeder Code von Javascript auch in Typescript interpretiert werden. Der Unterschied zu Typescript und Javascript liegt in ihrer statischen Typisierung. Das bedeutet, dass Variablen, Methoden und Funktionsparameter im Vorfeld mit einem Typ versehen werden. Aufgrund dessen können Bugs am Code schneller erkannt werden. Zudem lässt sich diese Sprache leicht modular aufbauen. Dadurch können Entwicklerteams in Unternehmensprojekte die Code-Struktur besser organisieren und dokumentieren.\\\\
 
 \noindent
 Doch mit der Vielfalt steigt auch die Komplexität der Sprache. Besonders da Javascript nicht nur synchron ausführbar ist, sondern auch asynchron. Entwickler bekommen mit dieser Sprache verschiedene Optionen, der asynchronen Datenverarbeitung in Form von Callbacks, Promises und Streams zur Verfügung. Die Einsatzmöglichkeiten können in einem Projekt variieren, jedoch welcher Ansatz in welcher Situation besser geeignet ist, ist besonders für Entwickler mit wenig Erfahrung schwer zu erkennen.
@@ -14,7 +14,7 @@ Doch mit der Vielfalt steigt auch die Komplexität der Sprache. Besonders da Jav
 Ziel der Arbeit ist die Betrachtung und Aufbereitung des Einsatzes von Sprachmitteln zur asynchronen Verarbeitung in Typescript in einer Form, die Einsteigern in die Thematik hilft, die unterschiedlichen Konzepte voneinander abzugrenzen und richtig einzusetzen. Dazu soll asynchrone Verarbeitung insgesamt anhand brauchbarer und für den Einsatz von Typescript typischer Szenarien motiviert werden. Es werden die zur Verfügung stehenden Sprachmittel Callbacks (im Kurzen), Promises und Observables mit ihren jeweiligen Features vorgestellt. Dabei soll nach dem Vorstellen der Kernkonzepte im zweiten Teil der Arbeit eine Single-Page Applikation mit \glqq Best Practice\grqq{}-Beispiele vorgeführt werden. Nach dem Lesen dieser Arbeit soll der Leser ein gewisses Verständnis dafür gewonnen haben, welche der vorgestellten Sprachmitteln für welchen Anwendungsfall sinnvoller erscheint.\\\\
 
 \noindent
-Zielgruppe dieser Arbeit sind Personen, die Grundkenntnisse in der Sprache Javascript/Typescript vorweisen können. Des Weiteren sollte man von den Modell der asynchronen Datenverarbeitung wie Callbacks, Promises und Oberservables schon mal gehört haben, da diese in der Arbeit gegenübergestellt werden.
+Zielgruppe dieser Arbeit sind Personen, die Grundkenntnisse in der Sprache Javascript/Typescript vorweisen können. Des Weiteren sollte man von dem Modell der asynchronen Datenverarbeitung wie Callbacks, Promises und Oberservables schon mal gehört haben, da diese in der Arbeit gegenübergestellt werden.
 
 \subsection{Aufbau}
 
@@ -26,7 +26,7 @@ Diese Bachelorarbeit wird aus zwei Code-Projekten bestehen. Während das erste P
 \end{center}
 
 \noindent
-Zu beachten ist, dass vor dem Ausführen beider Projekte \textbf{Node.js} auf dem Rechner installiert sein muss, um den integrierten Paket-Manager \textbf{npm} nutzen zu können. Da rxjs nicht von vornherein von Javascript mitgeliefert wird, wird eine sog. \glqq  Third-Party Library\grqq{} dafür benötigt. Daraufhin muss in dem Root-Verzeichnis beider Projekte \textbf{npm install} ausgeführt werden, um die jeweiligen Abhängigkeiten dieser Libraries herunterzuladen. Node.js kann man unter folgendem Link herunterladen:
+Zu beachten ist, dass vor dem Ausführen beider Projekte \textbf{Node.js} auf dem Rechner installiert sein muss, um den integrierten Paket-Manager \textbf{npm} nutzen zu können. Da \textbf{RxJS} nicht von vornherein von Javascript mitgeliefert wird, wird eine sog. \glqq  Third-Party Library\grqq{} dafür benötigt. Daraufhin muss in dem Root-Verzeichnis beider Projekte \textbf{npm install} ausgeführt werden, um die jeweiligen Abhängigkeiten dieser Libraries herunterzuladen. Node.js kann man unter folgendem Link herunterladen:
 
 \begin{center}
 \url{https://nodejs.org/en/}
@@ -137,114 +137,3 @@ Ein \textbf{asynchrones} Programmiermodell erlaubt multiple Abläufe zum selben 
 \subsubsection{Synchronität}
 
 In einem \textbf{synchronen} Programmiermodell entstehen Abläufe sequenziell. Wenn eine Funktion mit einer zeitintensiven Aktion abgerufen wird, wird das Ergebnis erst nach dem Beenden der Operation zurückgegeben. In diesem Zeitintervall werden keine Nebenoperationen ausgeführt.\cite{asynchronitaet} \\
-
-\subsubsection{Beispiel}
-
-Die Wiedergabe mehrerer Meldungen in einem Browser. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
-
-\begin{center}
-    Promises-vs.-Observables$\,\to\,$ webpack.config.js
-\end{center}
-
-\begin{figure}[H]
-\begin{lstlisting}
-module.exports = {
-    mode: 'development',
-    entry: './src/modules/sync-vs-async.ts',
-    ...
-}
-\end{lstlisting}
-\caption{Hier sollte vor dem Starten des Projekts die Typescript Datei sync-vs-async.ts als Eingangspunkt definiert werden.}
-\end{figure}
-
-\begin{figure}[H]
-\begin{lstlisting}
-export class Print {
-
-    public msg(msg: string): void {
-        document.body.innerHTML +=
-            `<div class="alert" role="alert">${msg}</div>` as string;
-    }
-
-    public time(begin: number, end: number, css: string) {
-        document.body.innerHTML += `<div class="time-box ${css}">time: ${end - begin}ms</div>`;
-    }
-}
-\end{lstlisting}
-\end{figure}
-
-\begin{figure}[H]
-\begin{lstlisting}
-class Synchronous extends Print {
-
-    public printAndTrackTime() {
-        const begin = window.performance.now();
-        this.printMessages();
-        const end = window.performance.now();
-        this.time(begin, end, 'sync');
-    }
-
-    private printMessages(): void {
-        this.msg('Hey Im message Nr. 1!');
-        this.msg('Hey Im message Nr. 2 !');
-        this.msg('Hey Im message Nr. 3 !');
-    }
-}
-
-class Asynchronous extends Print {
-
-    public printAndTrackTime() {
-        const begin = window.performance.now();
-        this.printMessages();
-        const end = window.performance.now();
-        this.time(begin, end, 'async');
-    }
-
-    private printMessages(): void {
-        this.msg('Hey Im message Nr. 1 !');
-        setTimeout(() => this.msg('Hey Im message Nr. 2 !'), 50);
-        this.msg('Hey Im message Nr. 3!');
-    }
-}
-\end{lstlisting}
-\end{figure}
-
-\begin{figure}[H]
-\begin{lstlisting}
-const sync = new Synchronous();
-const async = new Asynchronous();
-
-sync.printAndTrackTime();
-document.body.innerHTML += '<hr>';
-async.printAndTrackTime();
-\end{lstlisting}
-\caption{sync-vs.-async.ts}
-\end{figure}
-
-\noindent
-Diese Datei enthält drei Klassen. Während \textbf{Print} als Basisklasse eine Methode für das Addieren einer Nachricht in die HTML-Dom bereitstellt, rufen die abgeleiteten Klassen \textbf{Synchronous} und \textbf{Asynchronous} die Nachricht in verschiedener Weise auf. In der Klasse Synchronous werden die HTML-Elemente sequenziell in die Dom eingefügt. In der Asynchronous Klasse dagegen wird nur die erste und dritte Nachricht sequenziell ausgeführt. Die zweite Nachricht wird mit einer Verzögerung von 50 Millisekunden in einem neuen Zeitfenster veranlasst. Ein neuer Thread entsteht. Währenddessen wird schon die nächste Operation ausgeführt. Um die Zeit zurückzuverfolgen wurde ein Timer vor der Anzeige der HTML-Elemente gestartet. Dieser wird gestoppt sobald alle Nachrichten innerhalb dieser Methode aufgerufen wurden. Auffallend ist, dass die Methode in der synchronen Ausführung stets länger braucht als die asynchrone Ausführung. Das liegt daran, dass in der asynchronen Ausführung die Zeit nach dem Ausführen der dritten Nachricht und vor dem Ausführen der zweiten Nachricht gestoppt wird, da die zweite Nachricht sich in einem anderen Zeitfenster befindet. Somit wartet der Timer im asynchronen Modell immer nur auf zwei Nachrichten, während das synchrone Modell auf drei Nachrichten wartet.
-Das Ergebnis sieht wie folgt aus:
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=12cm, height=6cm]{synchronous-vs-asynchronous}
-\caption{Die Asynchronous Klasse gibt Nachricht 3 aus bevor Nachricht 2 ausgegeben wird.}
-\end{figure}
-
-\noindent
-Zusammenfassend kann man also sagen, dass in dem synchronen Modell implizit auf die Aktionen gewartet wird, und in dem asynchronen Modell explizit. Als Diagramm abgebildet führt der Browser die Methoden wie folgt aus:
-
-\begin{center}
-\begin{figure}[H]
-\includegraphics[width=12cm]{synchron-vs-asynchron-diagramm}
-\caption{Ablauf der ausgeführten Operationen im Browser}
-\end{figure}
-\end{center}
-
-\noindent
-Das angeführte Beispiel hat mit der Funktion setTimeout eine asynchrone Operation ausgeführt. Funktionen die als Parameter andere Funktionen übergeben werden, nennt man auch \textbf{Callback function} - Rückruffunktionen. Es gibt jedoch auch andere Ansätze der asynchronen Prozessverarbeitung.
-
-
-
-
-
