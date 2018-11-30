@@ -2,12 +2,11 @@
 
 \section{Einführung}
 
-Javascript ist im Aufwind mehr denn je. Sie ist die meist genutzte Programmiersprache unter Entwickler. Laut der jährlichen Umfrage von Stackoverflow im Jahr 2018 belegte sie zum sechsten mal in Folge den ersten Platz.\cite{programming-language-survey} Doch woher kommt dieser Erfolg? \\
-Wenn es um das Web geht, war Javascript in der Webentwicklung schon immer Vorreiter. Doch diese Sprache hat seine Stärken auch in der Vielfalt seiner Einsatzmöglichkeiten. Wie mit dem Framework Node.js, dass ab 2009 in Erscheinung getreten ist, war es Möglich Server-seitigen Javascript-Code zu implementieren. Dies hatte zur Folge, dass man sich nicht mit multiplen Programmiersprachen auseinandersetzen musste. Man hatte eine Vereinheitlichung in seiner Code-Basis für seine Applikation gefunden. Zudem bietet Node.js mit npm als Paketmanager die größte Auswahl an Open-Source-Libraries. Ein Weiter Punkt ist die Multi-Plattform-Kompatibilität die Javascript z.B. mit dem Framework Angular offenbart. Mit diesen Framework ist es Möglich mit einer Code-Basis sowohl Web-Anwendungen als auch Apps auf mobile Geräte zu entwickeln. Da Javascript's Kompilierung vom Betriebssystem unabhängig ist, ist der Übergang von der Webentwicklung zur Mobile-Entwicklung reibungslos. Und genau das bietet auch Typescript. Da Typescript ein sog. \textbf{Superset} von Javascript ist, kann jeder Code von Javascript auch in Typescript interpretiert werden. Der Unterschied zu Typescript und Javascript liegt in ihrer statischen Typisierung. Das bedeutet, dass Variablen, Methoden und Funktionsparameter im Vorfeld mit einem Typ versehen werden. Aufgrund dessen können Bugs am Code schneller erkannt werden. Zudem lässt sich diese Sprache leicht modular aufbauen. Dadurch können Entwicklerteams in Unternehmensprojekte die Code-Struktur besser organisieren und dokumentieren.\\\\
+Javascript ist im Aufwind mehr denn je. Sie ist die meist genutzte Programmiersprache unter Entwickler. Laut der diesjährigen Umfrage von Stackoverflow belegte sie zum sechsten mal in Folge den ersten Platz.\cite{programming-language-survey} Doch woher kommt dieser Erfolg? \\
+Wenn es um das Web geht, war Javascript in der Webentwicklung schon immer Vorreiter. Doch diese Sprache hat seine Stärken auch in der Vielfalt seiner Einsatzmöglichkeiten. Wie mit dem Framework Node.js, dass ab 2009 in Erscheinung getreten ist, war es Möglich Server-seitigen Javascript-Code zu implementieren. Dies hatte zur Folge, dass man sich nicht mit multiplen Programmiersprachen auseinandersetzen musste. Man hatte eine Vereinheitlichung in seiner Code-Basis gefunden. Zudem bietet Node.js mit npm als Paketmanager die größte Auswahl an Open-Source-Libraries. Ein weiterer Punkt ist die Multi-Plattform-Kompatibilität die Javascript z.B. mit dem Framework Angular offenbart. Mit diesen Framework ist es Möglich mit einer Code-Basis sowohl Web-Anwendungen als auch Apps auf mobile Geräte zu entwickeln. Da Javascript's Kompilierung vom Betriebssystem unabhängig ist, ist der Übergang von der Webentwicklung zur mobilen Entwicklung reibungslos. Und genau das bietet auch Typescript. Da Typescript ein sog. \textbf{Superset} von Javascript ist, kann jeder Code von Javascript auch in Typescript interpretiert werden. Der Unterschied zu Typescript und Javascript liegt in ihrer statischen Typisierung. Das bedeutet, dass Variablen, Methoden und Funktionsparameter im Vorfeld mit einem Typ versehen werden. Aufgrund dessen können Bugs am Code schneller erkannt werden. Zudem lässt sich diese Sprache leicht modular aufbauen. Dadurch können Entwicklerteams in Unternehmensprojekte die Code-Struktur besser organisieren und dokumentieren.\\\\
 
 \noindent
 Doch mit der Vielfalt steigt auch die Komplexität der Sprache. Besonders da Javascript nicht nur synchron ausführbar ist, sondern auch asynchron. Entwickler bekommen mit dieser Sprache verschiedene Optionen, der asynchronen Datenverarbeitung in Form von Callbacks, Promises und Streams zur Verfügung. Die Einsatzmöglichkeiten können in einem Projekt variieren, jedoch welcher Ansatz in welcher Situation besser geeignet ist, ist besonders für Entwickler mit wenig Erfahrung schwer zu erkennen.
-
 
 \subsection{Zielsetzung}
 
@@ -26,7 +25,7 @@ Diese Bachelorarbeit wird aus zwei Code-Projekten bestehen. Während das erste P
 \end{center}
 
 \noindent
-Zu beachten ist, dass vor dem Ausführen beider Projekte \textbf{Node.js} auf dem Rechner installiert sein muss, um den integrierten Paket-Manager \textbf{npm} nutzen zu können. Da \textbf{RxJS} nicht von vornherein von Javascript mitgeliefert wird, wird eine sog. \glqq  Third-Party Library\grqq{} dafür benötigt. Daraufhin muss in dem Root-Verzeichnis beider Projekte \textbf{npm install} ausgeführt werden, um die jeweiligen Abhängigkeiten dieser Libraries herunterzuladen. Node.js kann man unter folgendem Link herunterladen:
+Zu beachten ist, dass vor dem Ausführen beider Projekte \textbf{Node.js} auf dem Rechner installiert sein muss, um den integrierten Paket-Manager \textbf{npm} nutzen zu können. Da \textbf{RxJS} nicht von vornherein von Javascript mitgeliefert wird, wird eine sog. \glqq Third-Party Library\grqq{} dafür benötigt. Daraufhin muss in dem Root-Verzeichnis beider Projekte \textbf{npm install} ausgeführt werden, um die jeweiligen Abhängigkeiten dieser Libraries herunterzuladen. Node.js kann man unter folgendem Link herunterladen:
 
 \begin{center}
 \url{https://nodejs.org/en/}
@@ -34,7 +33,7 @@ Zu beachten ist, dass vor dem Ausführen beider Projekte \textbf{Node.js} auf de
 
 \section{Grundlagen}
 
-Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie ist eine typisierte Form der Skriptsprache Javascript. Mit dem Typescript Compiler werden Dateien mit dem Suffix *.ts in *.js überführt.
+Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie ist eine typisierte Form der Skriptsprache Javascript. Besonders Javascript-Entwickler sträubten sich Anfangs mit der Sprache auseinanderzusetzen. Die Stärke von Javascript liegt in ihrer Flexibilität und der Tatsache nicht mehr code schreiben zu müssen als man braucht. Doch den Kompromiss den man mit Typescript eingeht, zahlt sich am Ende mit dem Zuwachs der Projektgröße aus. Da der Typescript Kompiler bereits Fehler beim Kompilieren erkennt, stellt sich die Frage, ob man lieber Fehler beim Entwickeln oder in Produktion eines Projekts entdecken möchte. Dabei ist das \textbf{Tooling} der größte Vorteil von Typescript. Wenn man mit Typ-Annotationen oder mit Libraries, die streng typisiert sind, arbeitet, wird der Code von der Entwicklungsumgebung automatisch dokumentiert. Das heißt beim Entwickeln mit einem Code-Editor wird nicht zusätzlich verlangt, die Dokumentation der benötigten Library zu öffnen, um jede einzelne Methode zu sehen. Wenn man nun von einem reinen Javascript Hintergrund kommt, gibt es so gut wie keine Lernkurve die Sprache zu bewältigen. Das liegt daran, dass jeder valide Code von Javascript auch in Typescript ausführbar ist. Der Lernprozess steigt mit zunehmender Nutzung.
 
 \subsection{Beispiel}
 
@@ -53,9 +52,6 @@ class Greeter {
 \caption{Typescript Klasse \cite{typescript-example}}
 \end{figure}
 
-\noindent
-Im oberen Code-Schnipsel wurden die variablen und die Klassenmethoden nach Typescript-Standard deklariert. Diese Typen werden beim übersetzen in Javascript ignoriert. Der Kompiler einer Entwicklungsumgebung prüft dann, ob beim übergeben eines Parameters in den Konstruktor ein numerischer oder Boolean-Wert eingesetzt wird. Dies wird dann als ein Fehler erkannt. Der Kompiler übersetzt auch nicht direkt deklarierte Typen. Wie in diesem Fall wird erkannt, dass die Methode greet() einen String-Wert zurückgibt.
-
 \begin{figure}[H]
 \begin{lstlisting}
 var Greeter = (function () {
@@ -72,17 +68,27 @@ var Greeter = (function () {
 \end{figure}
 
 \noindent
-In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Klassen-Methode greet() und des Konstruktors. Sowohl Klassen (erst ab ECMAScript2015 verfügbar) als auch Interfaces werden in Javascript nicht genutzt.
+Typescript selbst kann nicht selbständig ausgeführt werden. Das heißt in einem Browser oder auf einem Server wird unter Umständen immer noch Javascript genutzt. Mit dem Typescript Compiler werden daher Dateien mit dem Suffix *.ts in *.js überführt. Im oberen Code-Schnipsel wurden die variablen und die Klassenmethoden nach Typescript-Standard deklariert. Diese Typen werden beim transpilieren in Javascript ignoriert. Der Kompiler prüft dann, ob beim übergeben eines Parameters in den Konstruktor ein string Wert eingesetzt wird. Wenn nicht, wird dies als ein Fehler erkannt. In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Methode greet() und des Konstruktors. Zudem werden auch nicht direkt deklarierte (implizite) Typen übersetzt. Wie in diesem Fall wird erkannt, dass die Methode greet() einen String-Wert zurückgibt. Ungleich wie mit Java oder C\# gewährleistet Typescript aus der streng typisierten Welt rauszufahren.
+
+\begin{figure}[H]
+\begin{lstlisting}
+let count: any = 23;
+
+count = 'Oops transformed to string!'
+\end{lstlisting}
+\end{figure}
+
+\noindent
+Der Kompiler würde hierbei keinen Fehler anzeigen. Obwohl im Idealfall auf die \textbf{any}-Notation verzichtet werden sollte, bietet es trotzdem Javascripts Flexibilität. 
 
 \subsection{Kompiler}
-
-In einer tsconfig.json Datei können die Kompiler-Optionen für Typescript gesetzt werden. Zudem können Root-Dateien definiert und ausgeschlossen werden. Die Auflistung einer tsconfig.json Datei in einem Verzeichnis zeigt, dass es sich hierbei um das Root-Verzeichnis des Projekts handelt. Ein Beispiel für die Konfiguration einer solchen Datei könnte wie folgt aussehen: 
+Ein großer Vorteil von Typescript ist die Möglichkeit die aktuelle Javascript/Ecmascript Version anzuwenden, da es mit Typescript möglich ist, auf verschiedene Javascript-Versionen zu übersetzen. Diese Konfiguration wird mit Hilfe einer \textbf{tsconfig.json} Datei bewältigt. Die Auflistung einer solchen Datei zeigt, dass es sich hierbei um das Root-Verzeichnis des Projekts handelt. Hier können die Kompiler-Optionen für Typescript gesetzt werden oder Dateien von der Übersetzung ein- oder ausgeschlossen werden. Ein Beispiel für die Konfiguration einer solchen Datei könnte wie folgt aussehen: 
 
 \begin{figure}[H]
 \begin{lstlisting}
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "esnext",
     "module": "commonjs",
     "declaration": false,
     "sourceMap": true,
@@ -97,11 +103,11 @@ In einer tsconfig.json Datei können die Kompiler-Optionen für Typescript geset
   ]
 } 
 \end{lstlisting}
-\caption{Auflistung ist unter der \textbf{tsconfig.json} Datei im Projekt Promises-vs.-Observables zu finden}
+\caption{Auflistung einer tsconfig.json Datei}
 \end{figure}
 
 \noindent
-Hier kann z.B. mit der Regel \glqq noImplicitAny\grqq{} festgelegt werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any deklariert. Kompilefehler.\cite{tsconfig} Zusätzlich ist die Einstellung der Javascript Version möglich. In diesem Fall wird \textbf{EcmaSprict2018} genutzt, dadurch ist die Nutzung neuester Features möglich. Die Konfiguration dieser Datei betrifft nur Fehler beim erstellen eines Kompilats. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen. Zudem wird in jedem Fall eine Javascript-Datei erstellt, auch wenn der Kompiler einen Fehler anzeigt. Diese Datei ist potenziell auch lauffähig. Um Typescript zu Kompilieren muss im Terminal unter dem Verzeichnis einer Typescript-Datei \textbf{tsc} eingegeben werden. In den für die Bachelorarbeit genutzten Code-Projekte werden die Skripte von npm ausgeführt um die Applikation zu starten. Die Konfiguration eines Start-Skript sieht wie folgt aus:
+Hier kann z.B. mit der Regel \glqq noImplicitAny\grqq{} festgelegt werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any deklariert. Dies würde zu einem Kompilefehler führen.\cite{tsconfig} Mit dem Wert \glqq target\grqq{} ist die Einstellung der Javascript Version möglich. Dadurch wird bestimmt, nach welcher Version transpiliert werden muss. Wenn der Wert nicht bestimmt ist, wird standardmäßig nach es3 übersetzt. Zu erwähnen ist, dass nicht alle Browser kompatibel mit Javascripts neuester Features sind. In diesem Fall wird \textbf{esnext} genutzt, um auf die neuste Version zuzugreifen. Die Konfiguration dieser Datei betrifft nur Fehler beim erstellen eines Kompilats. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen. Zudem wird in jedem Fall eine Javascript-Datei erstellt, auch wenn der Kompiler einen Fehler anzeigt. Diese Datei ist potenziell auch lauffähig. Um Typescript zu Kompilieren muss im Terminal unter dem Verzeichnis einer Typescript-Datei \textbf{tsc} eingegeben werden. In den für die Bachelorarbeit genutzten Code-Projekte werden die Skripte von npm ausgeführt um die Applikation zu starten. Die Konfiguration eines Start-Skript sieht wie folgt aus:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -111,14 +117,11 @@ Hier kann z.B. mit der Regel \glqq noImplicitAny\grqq{} festgelegt werden, dass 
     "build": "webpack"
   }, 
 \end{lstlisting}
-\caption{Auflistung ist unter der \textbf{package.json} Datei im Projekt Promises-vs.-Observables zu finden}
+\caption{Auflistung ist unter der \textbf{package.json} Datei zu finden}
 \end{figure}
 
 \noindent
-Wie man hier sehen kann führt \textbf{npm run start} nicht tsc aus, sondern \textbf{webpack --watch} aus. Webpack ist ein sog. \textbf{Module-Loader}. Mit ihm ist es Möglich verschiedene Typescript Klassen/Interfaces/Funktionen aus verschiedene Dateien zu importieren und exportieren. Da Third-Party Libraries in der Applikation genutzt werden, die Klassen und Methoden mitliefern, ist die Nutzung von Module-Loaders unabdingbar. Zudem wird mit Hilfe von Webpack Typescript-Dateien (je nach Konfiguration), inklusive aller involvierten Importe und Exporte, zu einer zentralen Javascript-Datei gebündelt. In der Webpack Konfiguration muss lediglich eine Eingangsdatei definiert werden. Mit der Einstellung --watch werden Veränderung des Codes automatisch erkannt. Das heißt, wenn Änderungen im Code vorgenommen werden, erstellt Webpack ein neues Bündel. Nach dem Kompilieren muss nur noch die HTML-Seite geöffnet werden.\\\\
-
-\noindent
-Um mehr von Typescript und z.B. dessen Nutzung mit Module-Loaders zu erfahren, sollte die offizielle Dokumentation von Microsoft durchgegangen werden.
+Wie man hier sehen kann führt \textbf{npm run start} nicht tsc aus, sondern \textbf{webpack --watch} aus. Webpack ist ein sog. \textbf{Module-Loader}. Mit ihm ist es Möglich Klassen/Interfaces/Funktionen zu im- und exportieren. Da Third-Party Libraries in der Applikation genutzt werden, die Klassen und Methoden mitliefern, ist die Nutzung von Module-Loaders unabdingbar. Zudem wird mit Hilfe von Webpack Typescript-Dateien (je nach Konfiguration), inklusive aller involvierten Importe und Exporte, zu einer zentralen Javascript-Datei gebündelt. In der Webpack Konfiguration muss lediglich eine Eingangsdatei definiert werden. Mit der Einstellung --watch werden Veränderung des Codes in Echtzeit kompiliert. Sollten nun Änderungen im Code vorgenommen werden, erstellt Webpack ein neues Bündel. Nach dem Kompilieren muss nur noch die HTML-Seite geöffnet werden. Um mehr von Typescript und z.B. dessen Nutzung mit Module-Loaders zu erfahren, sollte die offizielle Dokumentation von Microsoft durchgegangen werden.
 
 \begin{center}
 \url{https://www.typescriptlang.org/docs/home.html} 
@@ -127,6 +130,7 @@ Um mehr von Typescript und z.B. dessen Nutzung mit Module-Loaders zu erfahren, s
 \subsection{Terminologie}
 
 Um die Abgrenzung von verschiedenen asynchronen Sprachmitteln zu beherrschen, muss vorerst geklärt werden, was Asynchronität bedeutet.\\\\
+
 \noindent
 Der zentrale Teil eines Computers, welches Programme und einzelne Schritte zum Ausführen bringt, ist der Prozessor. Die Geschwindigkeit in der eine Schleife von einem Programm ausgeführt wird, hängt von der Geschwindigkeit des Prozessors ab. Programme interagieren jedoch mit Operationen außerhalb des Zuständigkeitsbereiches eines Prozessors, wie z.B. die Kommunikation über ein Netzwerk oder Abfragen von Daten von der Festplatte. Solche Operationen hängen von anderen Ressourcen ab und brauchen Zeit. In solchen Szenarien wäre es unvorteilhaft, wenn der Prozessor, anstatt andere Operationen in der Zwischenzeit auszuführen, im Leerlauf stecken würde. Genau für solche Aufgaben ist das Betriebssystem da. Das Betriebssystem sorgt dafür, dass Kapazitäten des Prozessors auf parallel laufende Programme wechselt, während es auf die Antwort von ausgeführten Operationen wartet. Es entstehen dabei verschiedene \glqq Threads\grqq{}. Und hier kommt die Asynchronität ins Spiel:
 
