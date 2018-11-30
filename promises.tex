@@ -384,7 +384,7 @@ Sollte ein Promise fehlschlagen, wird dieser Ebenfalls fehlschlagen mit der Fehl
 
 \begin{figure}[H]
 \begin{lstlisting}
-Promise.race(promises).finally(() => {
+Promise.race(chapters).finally(() => {
     story.displayFinished();
     story.spinnerElement.style.display = 'none';
 });
@@ -478,7 +478,7 @@ Vor dem Ausführen des Beispiels sollte wieder die stories.ts als Eingangsdatei 
 
 \begin{figure}[H]
 \begin{lstlisting}
-async function getFirstFiveChapter() {
+async function getFirstSections() {
     try {
         for (const n of [1, 2, 3]) {
             const chapter = await story.getChapter(n);
@@ -490,7 +490,7 @@ async function getFirstFiveChapter() {
     }
 }
 
-getFirstFiveChapter();
+getFirstSections();
 \end{lstlisting}
 \caption{Die Methode verhält sich genau so wie in Abb. 17}
 \end{figure}
@@ -509,11 +509,11 @@ async function getStoryAndPrint(chapter: number) {
     story.spawn(res as XMLHttpRequestResponseType);
 }
 
-async function getFirstFiveStoriesInParallel() {
+async function getFirstSectionsInParallel() {
     try {
         const promises = [];
 
-        for (const n of [1, 2, 3, 4, 5]) {
+        for (const n of [1, 2, 3]) {
             promises.push(getStoryAndPrint(n));
         }
 
@@ -524,7 +524,7 @@ async function getFirstFiveStoriesInParallel() {
     }
 }
 
-getFirstFiveStoriesInParallel();
+getFirstSectionsInParallel();
 \end{lstlisting}
 \end{figure}
 
