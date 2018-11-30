@@ -1,7 +1,6 @@
 \section{Promises}
 
-Javascript/Typescript ist grundsätzlich eine single-threaded ausführende Skriptsprache. Das heißt, dass zwei Bits eines Skripts nicht im gleichen Augenblick ausgeführt werden. Sie werden nacheinander ausgeführt. Der Browser verarbeitet neben Javascript, auch CSS Aktualisierungen oder User-Interaktionen und jede Operation verlangsamt die Andere. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks gesehen. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Mit Callbacks kann man beispielsweise User-Events steuern. Drückt ein User auf die Enter-Taste, wird nach dem Event wird eine Aktion gestartet. Diese können in multiplen Ausführungen entstehen.
-Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann ganz schnell zu unübersichtlichem Code führen, wenn diese mit Callbacks eingebaut wurden (siehe Abb. 9). Im Gegensatz zu Callbacks sind Promises an einer einzelner asynchronen erfolgreichen/fehlgeschlagenen Interaktion interessiert und weniger wann die Interaktion stattgefunden hat. Promises (mit ECMAScript 2015 eingeführt) sind danach gerichtet wie man mit Ergebnis der Interaktion umgeht.
+Ein Promise repräsentiert ein Objekt der noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, weil Die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen diesen Prozess asynchron aus. Das Prinzip der asynchronen Verarbeitung, bringt dabei Komplexität nach sich. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. 9). Mit Promises können voneinander abhängige Events übersichtlich dargestellt werden. Dank der Promise-Verkettung ist es auch möglich Fehlerbehandlungen übersichtlich abzudecken. Während bei Callbacks der Fokus darin liegt, in welcher Reihenfolge die Funktion aufgerufen werden, sind Promises (mit ECMAScript 2015 eingeführt) danach gerichtet wie man mit Ergebnis der Interaktion umgeht.
 
 \subsection{Funktionsweise}
 
@@ -23,18 +22,18 @@ Das heißt:
 \end{enumerate}
 
 \noindent
-Und genauso ist das Verhalten der Promises in Javascript. Dabei gibt es zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
+Dabei gibt es zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
 
 \subsubsection{Erstellen eines Promises}
 
 \begin{figure}[H]
 \begin{lstlisting}
-new Promise( /* executor */ function(resolve, reject) { ... } );
+new Promise( /* executor */ (resolve, reject) => { ... } );
 \end{lstlisting}
 \caption{Erzeugung einer neuen Promise-Instanz}
 \end{figure}
 
-Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders, bei einem unerwartetem Fehler, ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
+Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders, bei einem Fehler, ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
 
 \noindent
 Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
@@ -56,7 +55,7 @@ module.exports = {
 \begin{figure}[H]
 \begin{lstlisting}
 const keepsHisWord = true;
-const first = new Promise(function(resolve, reject) {
+const resolveRightAway = new Promise((resolve, reject) => {
     if (keepsHisWord) {
         resolve('Promises kept!');
     } else {
@@ -64,12 +63,12 @@ const first = new Promise(function(resolve, reject) {
     }
 });
 
-console.log(first);
+console.log(resolveRightAway);
 \end{lstlisting}
 \end{figure}
 
 \noindent
-Dieser Promise löst sich auf Anhieb auf und der Status landet in den resolved Zustand, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status rejected entsprechen. Der Initialstatus eines Promise wird im nächsten Beispiel verdeutlicht:
+Dieser Promise springt auf Anhieb vom pending in den resolved Zustand, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status rejected entsprechen. Der Initialstatus eines Promise wird im nächsten Beispiel verdeutlicht:
 
 \begin{figure}[H]
 \centering
@@ -84,7 +83,7 @@ export interface FakeHttpResponse {
     message: string;
 }
 
-const second = new Promise<FakeHttpResponse>(function(resolve, reject) {
+const pendingPromise = new Promise<FakeHttpResponse>((resolve, reject) => {
     setTimeout(() => {
         resolve({
             code: '200',
@@ -93,8 +92,8 @@ const second = new Promise<FakeHttpResponse>(function(resolve, reject) {
     }, 10 * 1000);
 });
 
-console.log(second);
-setTimeout(() => console.log(second), 10 * 1000);
+console.log(pendingPromise);
+setTimeout(() => console.log(pendingPromise), 10 * 1000);
 \end{lstlisting}
 \end{figure}
 
@@ -108,7 +107,7 @@ Im oberen Beispiel wird der Promise vorbehaltlos nach zehn Sekunden aufgelöst, 
 \end{figure}
 
 \noindent
-Wie man nun gesehen hat kann der Promise-Status entweder auf \textbf{pending}, \textbf{resolved} oder \textbf{rejected} laufen. Im Status pending ist der Ausgang der Aktion noch ungewiss und deshalb der Promise-Wert undefined. Ändert sich der Status bzw. ist die Aktion zum Promise eingeschlagen oder fehlgeschlagen, ist der Status \textbf{settled}. Grundsätzlich läuft ein Promise also vom pending in den settled Status. In der nächsten Sektion wird auf das Verarbeiten von Promises näher eingegangen.
+Wie man nun gesehen hat kann ein Promise Objekt den Status  \textbf{pending}, \textbf{resolved} oder \textbf{rejected} haben. Im Status pending ist der Ausgang der Aktion noch ungewiss und deshalb der Promise-Wert undefined. Ändert sich der Status bzw. ist die Aktion zum Promise eingetroffen oder fehlgeschlagen, ist der Status \textbf{settled}. Grundsätzlich läuft ein Promise also vom pending in den settled Status. In der nächsten Sektion wird auf das Verarbeiten von Promises näher eingegangen.
 
 \subsubsection{Verarbeiten von Promises}
 
@@ -119,7 +118,7 @@ Zur Wiederholung der verschiedenen Promise-Events:
 \item Pending: Der Ausgang des Promises ist noch(!) ungewiss.
 \item Resolved: Die Aktion, die zum Promise verlief, schlug ein.
 \item Rejected: Die Aktion, die zum Promise verlief, schlug fehl.
-\item Settled: Die Aktion ist entweder fehlgeschlagen oder eingeschlagen - jedoch abgeschlossen.
+\item Settled: Die Aktion ist entweder fehlgeschlagen oder eingetroffen - jedoch abgeschlossen.
 \end{itemize}
 
 \noindent
@@ -148,7 +147,7 @@ Promise.prototype.finally(onFinally)
 \end{description}
 
 \noindent
-Die untenstehende Grafik zeigt den Ablauf für das Eintreten der Events und wann die Methoden \textbf{then()} und \textbf{catch()} genutzt werden. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally} an ein Promise Objekt angebunden wird, wird diese Callback-Funktion in jedem Fall aufgerufen, wenn der Promise in den settled Zustand eingetreten ist, unabhängig davon ob der Promise \textbf{eingeschlagen} oder \textbf{fehlgeschlagen} ist.
+Die untenstehende Grafik zeigt den Ablauf für das Eintreten der Events und wann die Methoden \textbf{then()} und \textbf{catch()} genutzt werden. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally} an ein Promise Objekt angebunden wird, wird diese Callback-Funktion in jedem Fall aufgerufen,  unabhängig davon ob der Promise \textbf{eingetroffen} oder \textbf{fehlgeschlagen} ist.
 
 
 \begin{figure}[H]
@@ -161,10 +160,10 @@ Dabei kann die then() Methode zwei Argumente als Parameter entgegennehmen - eine
 
 \begin{figure}[H]
 \begin{lstlisting}
-get('story.json').then(function(response) {
-  console.log("Success!", response);
+get('story.json').then((response) => {
+  console.log('Success!', response);
 }, function(error) {
-  console.log("Failed!", error);
+  console.log('Failed!', error);
 })
 \end{lstlisting}
 \caption{Error-Handling ohne catch. \cite{callback-vs-promises}}
@@ -172,10 +171,10 @@ get('story.json').then(function(response) {
 
 \begin{figure}[H]
 \begin{lstlisting}
-get('story.json').then(function(response) {
-  console.log("Success!", response);
-}).catch(function(error) {
-  console.log("Failed!", error);
+get('story.json').then((response) => {
+  console.log('Success!', response);
+}).catch((error) => {
+  console.log('Failed!', error);
 })
 \end{lstlisting}
 \caption{Error-Handling mit catch. \cite{callback-vs-promises}}
@@ -186,10 +185,10 @@ Im Gegensatz zur oberen Variante führt die catch() Methode keine zusätzlichen 
 
 \begin{figure}[H]
 \begin{lstlisting}
-get('story.json').then(function(response) {
-  console.log("Success!", response);
-}).then(undefined, function(error) {
-  console.log("Failed!", error);
+get('story.json').then((response) => {
+  console.log('Success!', response);
+}).then(undefined, (error) => {
+  console.log('Failed!', error);
 })
 \end{lstlisting}
 \end{figure}
@@ -205,13 +204,13 @@ Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelange
 \end{itemize}
 
 \noindent
-Die ersten beiden Methoden werden genutzt um einen eingeschlagenen oder fehlgeschlagenen Promises zu simulieren:
+Die ersten beiden Methoden werden genutzt um einen eingetroffenen oder fehlgeschlagenen Promises zu simulieren:
 
 \begin{figure}[H]
 \begin{lstlisting}
-const third = Promise.reject('I reject on purpose!');
+const rejectedPromise = Promise.reject('I reject on purpose!');
 
-third.catch(function(err: string) {
+rejectedPromise.catch((err: string) => {
     console.log('Reason of failure: ' + err);
 });
 \end{lstlisting}
@@ -219,7 +218,7 @@ third.catch(function(err: string) {
 \end{figure}
 
 \noindent
-Die anderen beiden Methoden helfen Promises leichter zu verarbeiten. Beispielsweise, wenn es darum geht multiple Promises auszuführen, hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array zu lagern und dann die nötigen Aktionen mit der Sammlung von Promises auszuführen. In dem nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt.Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
+Die anderen beiden Methoden helfen Promises leichter zu verarbeiten. Beispielsweise, wenn es darum geht multiple Promises auszuführen, hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array zu lagern und dann die nötigen Aktionen mit der Sammlung von Promises auszuführen. Im nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
 
  \begin{center}
      Promises-vs.-Observables$\,\to\,$ webpack.config.js
@@ -275,15 +274,9 @@ export class HTTP {
 class Story extends HTTP {
 
     public static BASE_URL = 'https://jsonplaceholder.typicode.com/';
-    public spinnerElement: HTMLElement = document.createElement('div');
-    public storyElement: HTMLElement = document.createElement('div');
 
     constructor() {
         super();
-        this.spinnerElement.innerHTML =
-            `<svg class="spinner" viewBox="0 0 100 100" width="20" height="20">
-                <circle cx="50" cy="50" r="42" transform="rotate(-90,50,50)" />
-             </svg>`;
     }
 
     public getAllStories(): Promise<XMLHttpRequestResponseType | string> {
@@ -291,15 +284,10 @@ class Story extends HTTP {
         return this.makeRequest(Story.BASE_URL + relativeUrl);
     }
 
-    // Range of possible chapters: 0 < chapter <= 99
     public getChapter(chapter: number): Promise<XMLHttpRequestResponseType | string> {
         return this.makeRequest(`${Story.BASE_URL}posts/${chapter.toString()}`);
     }
 
-\end{lstlisting}
-\end{figure}
-\begin{figure}[H]
-\begin{lstlisting}
     public spawn(result: XMLHttpRequestResponseType): void {
         let posts = JSON.parse(result);
         if (posts instanceof Array === false) {
@@ -314,17 +302,15 @@ class Story extends HTTP {
     }
 
     public displayFinished() {
-        document.body.innerHTML += '<div>All done!</div>';
+        document.body.innerHTML += '<div>Done!</div>';
     }
 
 const story = new Story();
-document.body.appendChild(story.storyElement);
-document.body.appendChild(story.spinnerElement);
 \end{lstlisting}
 \end{figure}
 
 \noindent
-Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  \textbf{makeRequest()} eine Methode zur Verfügung, die eine HTTP-Anfrage gegen einen übergebenen Endpunkt macht. Die Methode \textbf{fakeLatency()} simuliert eine Verzögerung der Datenübertragung, wie es sie unter Anderem auch auf dem mobile Internet gibt. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Darüberhinaus werden mit \textbf{getAllStories()} und \textbf{getChapter()} zwei Methoden definiert, die eine Anfrage gegen zwei verschiedene Endpunkte machen.  Sollte ein Anforderungsfall sein alle Stories aufeinmal anzuzeigen, würde der Code Hierfür wie folgt aussehen:
+Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  \textbf{makeRequest()} eine Methode zur Verfügung, die eine HTTP-Anfrage gegen einen übergebenen Endpunkt macht. Die Methode \textbf{fakeLatency()} simuliert eine Verzögerung der Datenübertragung. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Darüberhinaus werden mit \textbf{getAllStories()} und \textbf{getChapter()} zwei Methoden definiert, die eine Anfrage gegen zwei verschiedene Endpunkte machen. Sollte ein Anwendungsfall sein alle Stories aufeinmal anzuzeigen, würde der Code Hierfür wie folgt aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -338,7 +324,7 @@ story.getAllStories()
 \end{figure}
 
 \noindent
-Hier werden zunächst alle Kapitel mit einem einzigen Aufruf am Endpunkt angefragt und daraufhin im Browser abgebildet. Ist der Promise in den settled Zustand angelangt, wird mit finally der Lade-Icon ausgeblendet und eine Nachricht angezeigt, dass alle Stories abgebildet wurden. Sollte jedoch ein Anwendungsfall sein, dass nur fünf Stories im Browser angezeigt werden sollen, könnte der Code hierfür so aussehen: 
+Hier werden zunächst alle Kapitel mit einem einzigen Aufruf am Endpunkt angefragt und daraufhin im Browser abgebildet. Ist der Promise in den settled Zustand angelangt, wird mit finally der Lade-Icon ausgeblendet und eine Nachricht angezeigt, dass alle Stories abgebildet wurden. Sollte jedoch ein Anwendungsfall sein, dass nur drei Stories im Browser angezeigt werden sollen, könnte der Code hierfür so aussehen: 
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -354,14 +340,6 @@ story.getChapter(1)
         .then((response3: XMLHttpRequestResponseType) => {
             story.spawn(response3);
         }))
-    .then(() => story.getChapter(4)
-        .then((response4: XMLHttpRequestResponseType) => {
-            story.spawn(response4);
-        }))
-    .then(() => story.getChapter(5)
-        .then((response5: XMLHttpRequestResponseType) => {
-            story.spawn(response5);
-        }))
     .finally(() => {
         story.displayFinished();
         story.spinnerElement.style.display = 'none';
@@ -371,20 +349,20 @@ story.getChapter(1)
 \end{figure}
 
 \noindent
-Mit diesem Code-Beispiel wird schnell Klar, dass eine Promise-Verkettung mit mehr als zwei Ketten unübersichtlich ist. In diesem Fall werden fünf Kapitel nacheinander angefragt und im Browser angezeigt. Da die Aufrufe in dem verkettetem Konstrukt voneinander abhängig sind, addiert sich die Zeit die gebraucht wird, um ein Kapitel anzufragen und abzubilden. Sind die Kapitel unabhängig voneinander und spielt die Reihenfolge zur Darstellung keine Rolle, dann gibt es eine zweite Variante: 
+Mit diesem Beispiel wird schnell Klar, dass eine Promise-Verkettung mit mehr als zwei Ketten den Code in die Länge zieht. In diesem Fall werden drei Kapitel nacheinander angefragt und im Browser angezeigt. Da die Aufrufe in dem verkettetem Konstrukt voneinander abhängig sind, addiert sich die Zeit die gebraucht wird, um ein Kapitel anzufragen und abzubilden. Sind die Kapitel unabhängig voneinander und spielt die Reihenfolge zur Darstellung keine Rolle, dann gibt es eine zweite Variante: 
 
 \begin{figure}[H]
 \begin{lstlisting}
-const promises: Array<Promise<void>> = [];
+const chapters: Array<Promise<void>> = [];
 
-for (const n of [1, 2, 3, 4, 5]) {
-    promises.push(story.getChapter(n)
+for (const n of [1, 2, 3]) {
+    chapters.push(story.getChapter(n)
         .then((response: XMLHttpRequestResponseType) => {
             story.spawn(response);
         }));
 }
 
-Promise.all(promises).finally(() => {
+Promise.all(chapters).finally(() => {
     story.displayFinished();
     story.spinnerElement.style.display = 'none';
 });
@@ -393,16 +371,16 @@ Promise.all(promises).finally(() => {
 \end{figure}
 
 \noindent
-Promise.all() gibt ein einzelnes Promise zurück, dass einschlägt wenn alle Promises innerhalb des übergebenen Promise-Arrays einschlagen sind oder das übergebene Argument keine Promises enthält. Die Promises werden nach der Reihenfolge ihres Einschlagens aufgerufen.
+Promise.all() gibt ein einzelnes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays einschlagen sind oder das übergebene Argument keine Promises enthält. Die Promises werden nach der Reihenfolge ihres Einschlagens aufgerufen.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=12cm]{promises-zeitstrahl}
-\caption{Die Nachrichten werden in der Reihenfolge: 3, 5, 2, 1 und 4 abgebildet.}
+\includegraphics[width=12cm]{promise-zeitstrahl}
+\caption{Die Nachrichten werden in der Reihenfolge: 1, 3 und 2 abgebildet.}
 \end{figure}
 
 \noindent
-Sollte ein Promise fehlschlagen, wird dieser Ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race() gibt ein Promise zurück, dass einschlägt oder fehlschlägt, sobald das erste Promise des Übergebenen Promise-Arrays einschlägt oder fehlschlägt.\cite{versprechen}
+Sollte ein Promise fehlschlagen, wird dieser Ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race() gibt ein Promise zurück, dass eintrifft oder fehlschlägt, sobald das erste Promise des Übergebenen Promise-Arrays eingetroffen oder fehlgeschlagen ist.\cite{versprechen}
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -411,11 +389,11 @@ Promise.race(promises).finally(() => {
     story.spinnerElement.style.display = 'none';
 });
 \end{lstlisting}
-\caption{Es wird nur ein Kapitel mit der Nachricht \glqq All done!\grqq{} angezeigt.}
+\caption{Es wird nur ein Kapitel mit der Nachricht \glqq Done!\grqq{} angezeigt.}
 \end{figure}
 
  \noindent
- Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig entstehende asynchrone Events genutzt werden sollten. Resolve() wird mit der then() Methode verarbeitet und reject() mit der catch() Methode gefangen. Finally() sollte nur genutzt werden, wenn eine Aktion unabhängig von beiden Events eintreten soll. Der zurückgegebene Typ einer Promise Methode ist immer ein Promise-Objekt, unabhängig davon ob es sich um eine statische- oder einer Prototyp-Methode handelt. Promises bieten mit Promise.all() und Promise.race() Hilfemethoden an, um Promise leichter zu verarbeiten.
+ Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig auftretende asynchrone Events genutzt werden sollten. Resolve() wird mit der then() Methode verarbeitet und reject() mit der catch() Methode gefangen. Finally() sollte nur genutzt werden, wenn eine Aktion unabhängig von beiden Events eintreten soll. Der zurückgegebene Typ einer Promise Methode ist immer ein Promise-Objekt, unabhängig davon ob es sich um eine statische- oder einer Prototyp-Methode handelt. Aufgrund dessen lassen sich Promises leicht verketten. Promises bieten mit Promise.all() und Promise.race() Hilfemethoden an, um Promise leichter zu verarbeiten.
 
 \subsection{Async await}
 Bei einer \textbf{async} Funktion handelt es sich um eine Funktion, die dank einer Eventschleife asynchron operiert. In einer Eventschleife werden auf Events gewartet bis diese auftreten. Innerhalb dieser Funktion wird implizit ein Promise genutzt. Die Stärke von async ist die Syntax und der strukturelle Aufbau einer solchen asynchronen Operation. Diese lässt den Code synchron aussehen.\cite{async-await} Ein einfaches Beispiel:
@@ -439,7 +417,7 @@ async function hello() {
 \end{figure}
 
 \noindent
-Der async Ausdruck zwingt also eine Funktion ein Promise zurückzugeben. Um explizit und implizit ein Promise\textless string\textgreater zu verwenden, könnte man beispielsweise ein Promise.resolve('world') ausliefern. Eine asynchrone Funktion kann zudem einen \textbf{await} Ausdruck enthalten. Dies lässt die asynchrone Funktion pausieren bis der übergebene Promise eingeschlagen ist. Daraufhin wird die Ausführung der Funktion mit dem zurückgegeben Wert des Promise fortgesetzt. Ein await ist nur valide einsetzbar innerhalb einer async Funktion. Ein einfaches Beispiel zum Verständnis:\\
+Der async Ausdruck an einer Funktion wandelt den Rückgabetyp T ein Promise\textless T\textgreater um. Um explizit und implizit ein Promise\textless string\textgreater zu verwenden, könnte man beispielsweise ein Promise.resolve('world') ausliefern. Eine asynchrone Funktion kann zudem einen \textbf{await} Ausdruck enthalten. Dies lässt die asynchrone Funktion pausieren bis der übergebene Promise eingetroffen ist. Daraufhin wird die Ausführung der Funktion mit dem zurückgegeben Wert des Promise fortgesetzt. Ein await ist nur innerhalb einer async Funktion valide einsetzbar. Ein einfaches Beispiel zum Verständnis:\\
 
 \subsubsection{Funktionsweise}
 
@@ -449,7 +427,7 @@ Vor dem Ausführen des Beispiels sollte wieder die introduction.ts als Eingangsd
 \begin{figure}[H]
 \begin{lstlisting}
 const keepsHisWord = true;
-const first = new Promise(function(resolve, reject) {
+const resolveRightAway = new Promise((resolve, reject) => {
     if (keepsHisWord) {
         resolve('Promises kept!');
     } else {
@@ -458,25 +436,27 @@ const first = new Promise(function(resolve, reject) {
 });
 
 async function getHisWord() {
-    const keptWord = await first;
-    console.log(keptWord);
+    const keptWord = await resolveRightAway;
+    console.log('Jack, ' + keptWord);
 }
+
+getHisWord();
 \end{lstlisting}
 \end{figure}
 
 \noindent
-In diesem Code-Block wird das Beispiel von unserem ersten Promise genutzt. Wie man nun sehen kann wird mit dem await Ausdruck eine Konstante gebildet um den Promise-Wert, der zurückgegeben wird, weiterzunutzen. Man muss nicht mehr mit der then()-Methode den Promise entpacken, um auf den Wert des Promise-Objekts zuzugreifen. Async await greift direkt auf den Wert zu. Nun kann sich die Fragen stellen: Was passiert wenn ein Promise fehlschlägt? Wie bekommt man den Wert des Objekts bei einem Fehlschlag? \\
+In diesem Code-Block wird das erste Promise Beispiel genutzt. Wie man nun sehen kann wird an dem await Ausdruck eine Konstante gebildet um den Promise-Wert, der zurückgegeben wird, weiterzunutzen. Man muss nicht mehr mit der then()-Methode den Promise entpacken, um auf den Wert des Promise-Objekts zuzugreifen. Async await greift direkt auf den Wert zu. Nun kann sich die Fragen stellen: Was passiert wenn ein Promise fehlschlägt? Wie bekommt man den Wert des Objekts bei einem Fehlschlag? \\
 
 \noindent
 Ähnlich wie bei Java oder Swift gibt es auch in Javascript ein \textbf{try-catch}-Block. Wenn ein Promise fehlschlägt, wird eine Exception geworfen.\cite{async-await-heise} Diese kann daraufhin mit dem catch-Block gefangen werden. Code-technisch würde dies so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}
-const third = Promise.reject('I reject on purpose!');
+const rejectedPromise = Promise.reject('I reject on purpose!');
 
 async function getNotHisWord() {
     try {
-        const keepNotHisWord = await third;
+        const keepNotHisWord = await rejectedPromise;
         console.log(keepNotHisWord);
     } catch (e) {
         console.log('Jack said: ' + e);
@@ -484,12 +464,14 @@ async function getNotHisWord() {
 }
 
 getNotHisWord();
+
+getNotHisWord();
 \end{lstlisting}
 \caption{Die Konsole wird niemals keepNotHisWord ausgeben, da innerhalb des await Konstrukts eine Exception geworfen wird.}
 \end{figure}
 
 \noindent
-Dabei wird der Code syntaktisch so geschrieben, als würde dieser synchron ausgeführt werden. Dies führt zu einer erheblichen Steigerung der Code-Lesbarkeit und verhindert Verschachtelungen wie man sie oben gesehen hat (siehe Abb. 17). Solche langen Promise-Verschachtelungen werden unter Entwicklern auch als \glqq{}Promise-Hell\grqq{} bezeichnet, da sie oft schwer nachvollziehbar sind in ihren Abhängigkeiten. Um auf unser ursprüngliches Beispiel mit der Promise-Verkettung zurückzukommen, würde der Code mit async-await so aussehen:\\
+Dabei wird der Code syntaktisch so geschrieben, als würde dieser synchron ausgeführt werden. Dies führt zu einer erheblichen Steigerung der Lesbarkeit und verhindert Verschachtelungen wie man sie oben gesehen hat (siehe Abb. 17). Solche langen Promise-Verschachtelungen werden unter Entwicklern auch als \glqq{}Promise-Hell\grqq{} bezeichnet, da sie den Code in die Länge ziehen. Um auf unser ursprüngliches Beispiel mit der Promise-Verkettung zurückzukommen, würde der Code mit async-await so aussehen:\\
 
 \noindent
 Vor dem Ausführen des Beispiels sollte wieder die stories.ts als Eingangsdatei in der webpack.config.js definiert werden.
@@ -498,7 +480,7 @@ Vor dem Ausführen des Beispiels sollte wieder die stories.ts als Eingangsdatei 
 \begin{lstlisting}
 async function getFirstFiveChapter() {
     try {
-        for (const n of [1, 2, 3, 4 , 5]) {
+        for (const n of [1, 2, 3]) {
             const chapter = await story.getChapter(n);
             story.spawn(chapter as XMLHttpRequestResponseType);
         }
@@ -514,7 +496,7 @@ getFirstFiveChapter();
 \end{figure}
 
 \noindent
-Die Promise-Verkettung wurde mithilfe von async await aufgelöst und es es wird mit dem await Konstrukt auf die Promise Auflösung gewartet. Daraufhin wird weiter in der Schleife iteriert. Zudem bietet der try-catch-Block auch finally an. Ähnlich wie bei der Promise-Prototyp Methode wird unabhängig vom Ausgang des try-catch-Blocks in dem finally-Block vorrangeschreitet.\\\\
+Die Promise-Verkettung wurde mithilfe von async await aufgelöst und es es wird mit dem await Konstrukt auf die Promise Auflösung gewartet. Daraufhin wird weiter in der Schleife iteriert. Zudem bietet der try-catch-Block auch finally an. Ähnlich wie bei der Promise-Prototyp Methode wird unabhängig vom Ausgang des try-catch-Blocks in dem finally-Block vorrangeschreitet.
 
 \subsubsection{Einsetzen wenn sinnvoll}
 
@@ -547,6 +529,6 @@ getFirstFiveStoriesInParallel();
 \end{figure}
 
 \noindent
-Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zu Abbildung 18. Die einzigen sequentielle Abhängigkeiten bestehen zwischen story.getChapter() und story.spawn(). Es kann erst dann Kapitel in die DOM geladen werden, sobald die Daten von der API ankommen. Die Stärke von async await kommt erst dann zur Geltung, wenn asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass Funktionen mit dem Präfix \textbf{async} ein Promise-Objekt zurückgeben. Selbst wenn explizit ein primitiver Typ zurückgegeben wird, stellt async sicher, dass dieser Typ in ein Promise umgewandelt wird. \textbf{Await} blockiert die Ausführung einer asynchronen Funktion, bis die blockierende Aktion eingeschlagen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts \textbf{try-catch}-Block angewendet werden. Es sollte unterschieden werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Deshalb sollte man Acht geben bei der Nutzung von async await innerhalb Schleifen oder Iteratoren. Sollten mehrere await-Promises parallel ausgeführt werden, können diese als Array in einem Promise.all() übergeben werden.
+Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zu Abbildung 18. Die einzigen sequentielle Abhängigkeiten bestehen zwischen story.getChapter() und story.spawn(). Es kann erst dann Kapitel in die DOM geladen werden, sobald die Daten von der API ankommen. Die Stärke von async await kommt erst dann zur Geltung, wenn asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass Funktionen mit dem Präfix \textbf{async} ein Promise-Objekt zurückgeben. Selbst wenn explizit ein primitiver Typ zurückgegeben wird, stellt async sicher, dass dieser Typ in ein Promise umgewandelt wird. \textbf{Await} blockiert die Ausführung einer asynchronen Funktion, bis die blockierende Aktion eingetroffen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts \textbf{try-catch}-Block angewendet werden. Es sollte unterschieden werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Deshalb sollte man Acht geben bei der Nutzung von async await innerhalb Schleifen oder Iteratoren. Sollten mehrere await-Promises parallel ausgeführt werden, können diese als Array in einem Promise.all() übergeben werden.
 
 

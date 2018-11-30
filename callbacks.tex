@@ -1,12 +1,8 @@
 \section{Callbacks}
-Ein Ansatz der asynchronen Verarbeitung sind Callbacks. In Javascript sind Funktionen als Erste-Klasse-Objekte zu sehen. Aus diesem Grund ist es Möglich sie als Argumente in anderen Funktionen oder als Rückgabewert einzusetzen. Diese übergebenen Funktionen werden dann \glqq{}später\grqq{} innerhalb des Funktionsrumpfes aufgerufen. Wofür werden Callbacks benötigt? \\
+Javascript ist eine auf Events basierende Programmiersprache. Das bedeutet, anstatt auf blockierenden Code zu warten, führt Javascript Operationen weiter aus und reagiert wenn die Aktion fertig ist. Um sicherzustellen, dass Javascript auf die Fertigstellung von asynchronen Operationen wartet, wurden Callbacks eingeführt. Doch was genau sind Callbacks? \\
 
 \noindent
-Javascript ist eine auf Events basierende Programmiersprache. Das bedeutet, dass anstatt auf blockierenden Code zu warten, führt Javascript Operationen weiter aus und reagiert wenn die Aktion fertig ist. Um sicherzustellen, dass Javascript auf die Fertigstellung von asynchronen Operationen wartet, wurden Callbacks eingeführt.
-Callbacks, auch Rückruffunktionen genannt, ist die am meist verbreitetste Technik der funktionalen Programmierung in Javascript. Grundsätzlich werden in der funktionalen Programmierung Funktionen als Argumente genutzt. Das Paradigma des Funktionalen Programmierens nimmt in Javascript jedoch immer mehr ab.\cite{callbacks-intro}\\
-
-\noindent
-Funktion, die Callbacks nutzen, werden auch höherrangige Funktionen genannt. Sie nehmen Funktionen als Input-Parameter auf oder geben eine Funktion zurück - oder Beides. Javascript bietet mit Arrays eingebaute Rückrruffunktionen wie z.B:
+Sowohl in Javascript als auch in Typescript sind Funktionen als Erste-Klasse-Objekte zu sehen. Aus diesem Grund ist es Möglich sie als Argumente in anderen Funktionen oder als Rückgabewert einzusetzen. Diese übergebenen Funktionen heißen Callbacks und werden dann \glqq{}später\grqq{} innerhalb des Funktionsrumpfes aufgerufen. Callbacks, auch Rückruffunktionen genannt, ist die am meist verbreitetste Technik der funktionalen Programmierung in Javascript.\cite{callbacks-intro} Javascript bietet mit Arrays mitgelieferte Callbacks wie z.B:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -22,7 +18,7 @@ console.log(evenNumbers) // 2 4 6
 \end{figure}
 
 \noindent
-Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion die, die Filterkonditionen bestimmt. Dabei wird zuerst, dass Element aus der Liste entnommen und dann die Kondition geprüft.
+Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion die, die Filterkonditionen bestimmt. Dabei wird zuerst, dass Element aus der Liste entnommen und dann die Kondition geprüft. Wenn also eine Funktion als Parameter übergeben wird, wird diese nicht sofort ausgeführt. Eine Funktion die ein Callback als Input-Parameter annimmt, wird auch High-Order-Funktion genannt.
 
 \subsubsection{Beispiel}
 
@@ -73,17 +69,16 @@ class Asynchronous extends Print {
     }
 }
 
-const sync = new Synchronous();
-const async = new Asynchronous();
+const synchronous = new Synchronous();
+const asynchronous = new Asynchronous();
 
-sync.printMessages();
-document.body.innerHTML += '<hr>';
-async.printMessages();
+synchronous.printMessages();
+asynchronous.printMessages();
 \end{lstlisting}
 \end{figure}
 
 \noindent
-Diese Datei enthält drei Klassen. Während \textbf{Print} als Basisklasse eine Methode für das Addieren einer Nachricht in die HTML-Dom bereitstellt, rufen die abgeleiteten Klassen \textbf{Synchronous} und \textbf{Asynchronous} die Nachricht in verschiedener Weise auf. In der Klasse Synchronous werden die HTML-Elemente sequenziell in die Dom eingefügt. In der Asynchronous Klasse dagegen wird mit Hilfe der Callback-Funktion setTimeout() eine zeitintensive Rechenoperation simuliert. Das könnte zum Beispiel ein Aufruf an einem API-Endpunkt sein. Da setTimeout() die Antwortzeit verzögert, wird neuer Thread eröffnet. Währenddessen führt Javascript schon die nächste Operation aus. Aufgrund der zufällig ausgewählten Zeitverzögerung ist nie klar welche Nachricht als erstes ausgegeben wird. Das heißt die Callback-Aufrufe finden völlig unabhängig voneinander statt. Zeittechnisch bedeutet das, dass in dem synchronen Modell die Zeit für jede ausgeführte Operation addiert wird, während im asynchronen Modell die Zeitfenster völlig unabhängig voneinander laufen. Daraus sollte sich jedoch nicht zurückschließen lassen, dass synchrone Prozessabläufe länger oder schneller zum Verarbeiten brauchen.
+Diese Datei enthält drei Klassen. Während \textbf{Print} als Basisklasse eine Methode für das Addieren einer Nachricht in die HTML-Dom bereitstellt, rufen die abgeleiteten Klassen \textbf{Synchronous} und \textbf{Asynchronous} die Nachricht in verschiedener Weise auf. In der Klasse Synchronous werden die HTML-Elemente sequenziell in die Dom eingefügt. In der Asynchronous Klasse dagegen wird mit Hilfe der Callback-Funktion setTimeout() eine zeitintensive Operation simuliert. Das könnte zum Beispiel ein Aufruf an einem API-Endpunkt sein. Da setTimeout() eine Rückruffunktion ist, die die Antwortzeit verzögert, wird neuer Thread eröffnet. Währenddessen führt Javascript schon die nächste Operation aus. Aufgrund der zufällig ausgewählten Zeitverzögerung ist nie klar welche Nachricht als erstes ausgegeben wird. Das heißt die Callback-Aufrufe finden völlig unabhängig voneinander statt. Zeittechnisch bedeutet das, dass in dem synchronen Modell die Zeit für jede ausgeführte Operation addiert wird, während im asynchronen Modell die Zeitfenster völlig unabhängig voneinander laufen. Daraus sollte sich jedoch nicht zurückschließen lassen, dass synchrone Prozessabläufe länger oder schneller zum Verarbeiten brauchen.
 Das Ergebnis sieht wie folgt aus:
 
 \begin{figure}[H]
@@ -97,13 +92,13 @@ Zusammenfassend kann man also sagen, dass in dem synchronen Modell implizit auf 
 
 \begin{center}
 \begin{figure}[H]
-\includegraphics[width=12cm]{synchron-vs-asynchron-diagramm}
+\includegraphics[width=12cm]{synchron-vs-asynchron-diagram}
 \caption{Ablauf der ausgeführten Operationen im Browser}
 \end{figure}
 \end{center}
 
 \noindent
-Um zu gewährleisten, dass die Nachrichten trotz Verzögerung aufeinander warten und somit sequentiell ausgeführt werden, dann würde der Code so aussehen:
+Um zu gewährleisten, dass die Nachrichten trotz Verzögerung aufeinander warten und somit sequentiell ausgeführt werden, würde der Code so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -126,7 +121,7 @@ Um zu gewährleisten, dass die Nachrichten trotz Verzögerung aufeinander warten
 \end{figure}
 
 \noindent
-Hier werden mehrere Level von Callback-Funktionen ineinander geschachtelt, um die Abhängigkeiten der Aufrufe zu wahren. Sollte jetzt bei einer selbsterstellten Callback-Funktion ein zusätzliches Error-Handling berücksichtigt werden, wird die Nachvollziehbarkeit einer höherrangigen Funktion kaum noch gewährleistet. Der Code oben wird deshalb auch als Callback-Hell bezeichnet. Deshalb wurde für Abhängigkeiten zwischen asynchronen Events Promises eingeführt.
+Hier werden mehrere Level von Callback-Funktionen ineinander geschachtelt, um die Abhängigkeiten der Aufrufe zu wahren. Sollte jetzt bei einer selbsterstellten Callback-Funktion ein zusätzliches Error-Handling berücksichtigt werden, wird die Nachvollziehbarkeit einer höherrangigen Funktion kaum noch gewährleistet. Der Code oben wird deshalb auch als Callback-Hell bezeichnet.
 
 
 
