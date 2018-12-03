@@ -1,6 +1,6 @@
 \section{Promises}
 
-Ein Promise repräsentiert ein Objekt der noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, weil Die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen diesen Prozess asynchron aus. Das Prinzip der asynchronen Verarbeitung, bringt dabei Komplexität nach sich. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. 9). Mit Promises können voneinander abhängige Events übersichtlich dargestellt werden. Dank der Promise-Verkettung ist es auch möglich Fehlerbehandlungen übersichtlich abzudecken. Während bei Callbacks der Fokus darin liegt, in welcher Reihenfolge die Funktion aufgerufen werden, sind Promises (mit ECMAScript 2015 eingeführt) danach gerichtet wie man mit Ergebnis der Interaktion umgeht.
+Ein Promise repräsentiert ein Objekt das noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, da die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen Prozess asynchron aus. Das Prinzip der asynchronen Verarbeitung, bringt dabei Komplexität nach sich. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. 9). Mit Promises können voneinander abhängige Events übersichtlich dargestellt werden. Dank der Promise-Verkettung ist es auch möglich Fehlerbehandlungen übersichtlich abzudecken. Während bei Callbacks der Fokus darin liegt, in welcher Reihenfolge die Funktion aufgerufen werden, sind Promises (mit ECMAScript 2015 eingeführt) danach gerichtet wie man mit dem Ergebnis der Interaktion umgeht.
 
 \subsection{Funktionsweise}
 
@@ -33,7 +33,7 @@ new Promise( /* executor */ (resolve, reject) => { ... } );
 \caption{Erzeugung einer neuen Promise-Instanz}
 \end{figure}
 
-Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders, bei einem Fehler, ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
+Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders als bei einem Fehler ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
 
 \noindent
 Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
@@ -310,7 +310,7 @@ const story = new Story();
 \end{figure}
 
 \noindent
-Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  \textbf{makeRequest()} eine Methode zur Verfügung, die eine HTTP-Anfrage gegen einen übergebenen Endpunkt macht. Die Methode \textbf{fakeLatency()} simuliert eine Verzögerung der Datenübertragung. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Darüberhinaus werden mit \textbf{getAllStories()} und \textbf{getChapter()} zwei Methoden definiert, die eine Anfrage gegen zwei verschiedene Endpunkte machen. Sollte ein Anwendungsfall sein alle Stories aufeinmal anzuzeigen, würde der Code Hierfür wie folgt aussehen:
+Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  \textbf{makeRequest()} eine Methode zur Verfügung, die eine Http-Anfrage gegen einen übergebenen Endpunkt macht. Die Methode \textbf{fakeLatency()} simuliert eine Verzögerung der Datenübertragung. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Darüberhinaus werden mit \textbf{getAllStories()} und \textbf{getChapter()} zwei Methoden definiert, die eine Anfrage gegen verschiedene Endpunkte ausführen. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code hierfür wie folgt aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -349,7 +349,7 @@ story.getChapter(1)
 \end{figure}
 
 \noindent
-Mit diesem Beispiel wird schnell Klar, dass eine Promise-Verkettung mit mehr als zwei Ketten den Code in die Länge zieht. In diesem Fall werden drei Kapitel nacheinander angefragt und im Browser angezeigt. Da die Aufrufe in dem verkettetem Konstrukt voneinander abhängig sind, addiert sich die Zeit die gebraucht wird, um ein Kapitel anzufragen und abzubilden. Sind die Kapitel unabhängig voneinander und spielt die Reihenfolge zur Darstellung keine Rolle, dann gibt es eine zweite Variante: 
+Mit diesem Beispiel wird schnell deutlich, dass eine Promise-Verkettung mit mehr als zwei Ketten den Code in die Länge zieht. In diesem Fall werden drei Kapitel nacheinander angefragt und im Browser angezeigt. Da die Aufrufe in dem verkettetem Konstrukt voneinander abhängig sind, addiert sich die Zeit die gebraucht wird, um ein Kapitel anzufragen und abzubilden. Sind die Kapitel unabhängig voneinander und spielt die Reihenfolge zur Darstellung keine Rolle, dann gibt es eine zweite Variante: 
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -380,7 +380,7 @@ Promise.all() gibt ein einzelnes Promise zurück, dass eintrifft wenn alle Promi
 \end{figure}
 
 \noindent
-Sollte ein Promise fehlschlagen, wird dieser Ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race() gibt ein Promise zurück, dass eintrifft oder fehlschlägt, sobald das erste Promise des Übergebenen Promise-Arrays eingetroffen oder fehlgeschlagen ist.\cite{versprechen}
+Sollte ein Promise fehlschlagen, wird dieser ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race() gibt ein Promise zurück, dass eintrifft oder fehlschlägt, sobald das erste Promise des übergebenen Promise-Arrays eingetroffen oder fehlgeschlagen ist.\cite{versprechen}
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -435,7 +435,7 @@ story.getChapter(1)
 \end{figure}
 
 \noindent
-Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig auftretende asynchrone Events genutzt werden sollten. Resolve() wird mit der then() Methode verarbeitet und reject() mit der catch() Methode gefangen. Finally() sollte nur genutzt werden, wenn eine Aktion unabhängig von beiden Events eintreten soll. Der zurückgegebene Typ einer Promise Methode ist immer ein Promise-Objekt, unabhängig davon ob es sich um eine statische- oder einer Prototyp-Methode handelt. Aufgrund dessen lassen sich Promises leicht verketten. Promises bieten mit Promise.all() und Promise.race() Hilfemethoden an, um Promise leichter zu verarbeiten.
+Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig auftretende asynchrone Events genutzt werden sollten. Resolve() wird mit der then() Methode verarbeitet und reject() mit der catch() Methode gefangen. Finally() sollte nur genutzt werden, wenn eine Aktion unabhängig von beiden Events eintreten soll. Der zurückgegebene Typ einer Promise Methode ist immer ein Promise-Objekt, unabhängig davon ob es sich um eine statische- oder einer Prototyp-Methode handelt. Aufgrund dessen lassen sich Promises leicht verketten. Promises bieten mit Promise.all() und Promise.race() Hilfemethoden an, um mehrere Promises leichter zu verarbeiten.
 
 \subsection{Async await}
 Bei einer \textbf{async} Funktion handelt es sich um eine Funktion, die dank einer Eventschleife asynchron operiert. In einer Eventschleife werden auf Events gewartet bis diese auftreten. Innerhalb dieser Funktion wird implizit ein Promise genutzt. Die Stärke von async ist die Syntax und der strukturelle Aufbau einer solchen asynchronen Operation. Diese lässt den Code synchron aussehen.\cite{async-await} Ein einfaches Beispiel:
@@ -455,11 +455,11 @@ async function hello() {
     return 'world';
 }
 \end{lstlisting}
-\caption{Funktion gibt explizit ein string und implizit Promise\textless string\textgreater zurück.}
+\caption{Funktion gibt explizit ein string und implizit ein Promise\textless string\textgreater zurück.}
 \end{figure}
 
 \noindent
-Der async Ausdruck an einer Funktion wandelt den Rückgabetyp T ein Promise\textless T\textgreater um. Um explizit und implizit ein Promise\textless string\textgreater zu verwenden, könnte man beispielsweise ein Promise.resolve('world') ausliefern. Eine asynchrone Funktion kann zudem einen \textbf{await} Ausdruck enthalten. Dies lässt die asynchrone Funktion pausieren bis der übergebene Promise eingetroffen ist. Daraufhin wird die Ausführung der Funktion mit dem zurückgegeben Wert des Promise fortgesetzt. Ein await ist nur innerhalb einer async Funktion valide einsetzbar. Ein einfaches Beispiel zum Verständnis:\\
+Der async Ausdruck an einer Funktion wandelt den Rückgabetyp T in ein Promise\textless T\textgreater um. Um explizit und implizit ein Promise\textless string\textgreater zu verwenden, könnte man beispielsweise ein Promise.resolve('world') ausliefern. Eine asynchrone Funktion kann zudem einen \textbf{await} Ausdruck enthalten. Dies lässt die asynchrone Funktion pausieren bis der übergebene Promise eingetroffen ist. Daraufhin wird die Ausführung der Funktion mit dem zurückgegeben Wert des Promise fortgesetzt. Ein await ist nur innerhalb einer async Funktion valide einsetzbar. Ein einfaches Beispiel zum Verständnis:\\
 
 \subsubsection{Funktionsweise}
 
@@ -487,7 +487,7 @@ getHisWord();
 \end{figure}
 
 \noindent
-In diesem Code-Block wird das erste Promise Beispiel genutzt. Wie man nun sehen kann wird an dem await Ausdruck eine Konstante gebildet um den Promise-Wert, der zurückgegeben wird, weiterzunutzen. Man muss nicht mehr mit der then()-Methode den Promise entpacken, um auf den Wert des Promise-Objekts zuzugreifen. Async await greift direkt auf den Wert zu. Nun kann sich die Fragen stellen: Was passiert wenn ein Promise fehlschlägt? Wie bekommt man den Wert des Objekts bei einem Fehlschlag? \\
+In diesem Code-Block wird das erste Promise Beispiel genutzt. Wie man nun sehen kann wird an dem await Ausdruck eine Konstante gebildet um den Promise-Wert, der zurückgegeben wird, weiterzunutzen. Man muss nicht mehr mit der then()-Methode den Promise entpacken, um auf den Wert des Promise-Objekts zuzugreifen. Async await greift direkt auf den Wert zu. Nun kann man sich fragen: Was passiert wenn ein Promise fehlschlägt? Wie bekommt man den Wert des Promise-Objekts bei einem Fehlschlag? \\
 
 \noindent
 Ähnlich wie bei Java oder Swift gibt es auch in Javascript ein \textbf{try-catch}-Block. Wenn ein Promise fehlschlägt, wird eine Exception geworfen.\cite{async-await-heise} Diese kann daraufhin mit dem catch-Block gefangen werden. Code-technisch würde dies so aussehen:
@@ -504,8 +504,6 @@ async function getNotHisWord() {
         console.log('Jack said: ' + e);
     }
 }
-
-getNotHisWord();
 
 getNotHisWord();
 \end{lstlisting}
@@ -542,7 +540,7 @@ Die Promise-Verkettung wurde mithilfe von async await aufgelöst und es es wird 
 
 \subsubsection{Einsetzen wenn sinnvoll}
 
-Beim Einsetzen von async await muss sich vor Augen geführt werden, wann ein Einsatz als Solches Sinn ergibt. Kommt man wieder zum Anwendungsfall, man möchte die ersten fünf Kapitel völlig unabhängig voneinander in die DOM laden, würde der Code hierfür so aussehen:
+Beim Einsetzen von async await muss sich vor Augen geführt werden, wann ein Einsatz als solches Sinn ergibt. Kommt man wieder zum Anwendungsfall, man möchte die ersten fünf Kapitel völlig unabhängig voneinander in die DOM laden, würde der Code hierfür so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -571,6 +569,6 @@ getFirstSectionsInParallel();
 \end{figure}
 
 \noindent
-Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zu Abbildung 18. Die einzigen sequentielle Abhängigkeiten bestehen zwischen story.getChapter() und story.spawn(). Es kann erst dann Kapitel in die DOM geladen werden, sobald die Daten von der API ankommen. Die Stärke von async await kommt erst dann zur Geltung, wenn asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass Funktionen mit dem Präfix \textbf{async} ein Promise-Objekt zurückgeben. Selbst wenn explizit ein primitiver Typ zurückgegeben wird, stellt async sicher, dass dieser Typ in ein Promise umgewandelt wird. \textbf{Await} blockiert die Ausführung einer asynchronen Funktion, bis die blockierende Aktion eingetroffen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts \textbf{try-catch}-Block angewendet werden. Es sollte unterschieden werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Deshalb sollte man Acht geben bei der Nutzung von async await innerhalb Schleifen oder Iteratoren. Sollten mehrere await-Promises parallel ausgeführt werden, können diese als Array in einem Promise.all() übergeben werden.
+Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zu Abbildung 18. Die einzigen sequentielle Abhängigkeiten bestehen zwischen story.getChapter() und story.spawn(). Es kann erst dann Kapitel in die DOM geladen werden, sobald die Daten von der API ankommen. Die Stärke von async await kommt erst dann zur Geltung, wenn asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass Funktionen mit dem Präfix \textbf{async} ein Promise-Objekt zurückgeben. Selbst wenn explizit ein primitiver Typ zurückgegeben wird, stellt async sicher, dass dieser Typ in ein Promise umgewandelt wird. \textbf{Await} pausiert die Ausführung einer asynchronen Funktion, bis die blockierende Aktion eingetroffen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts \textbf{try-catch}-Block angewendet werden. Es sollte unterschieden werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Deshalb sollte man Acht geben bei der Nutzung von async await innerhalb Schleifen oder Iteratoren. Sollten mehrere await-Promises parallel ausgeführt werden, können diese als Array in einem Promise.all() übergeben werden.
 
 
