@@ -402,7 +402,7 @@ Promise.all(chapters).then((response) =>
 \end{figure}
 
 \noindent
-Ein Promise.all(iterable) kann dabei abhängig vom Übergabeparameter verschiedene Rückgabewerte haben. Sollte das eingegebene iterable Argument leer sein, wird Promise.all() synchron erfüllt. Wenn das eingegebene iterable Argument keine Promises enthält, kommt ein asynchron eingelöstes Promise heraus. In allen anderen Fällen gibt ein Promise.all() ein einzelnes ausstehendes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays eingetroffen sind. Die Rückgabewerte entsprechen dann der Reihenfolge der Promises, unabhängig von der Reihenfolge der Erfüllung.\cite{promise-all}
+Ein Promise.all() kann dabei abhängig vom Übergabeparameter verschiedene Rückgabewerte haben. Sollte das eingegebene iterable Argument leer sein, wird Promise.all() synchron erfüllt. Wenn das eingegebene iterable Argument keine Promises enthält, kommt ein asynchron eingelöstes Promise heraus. In allen anderen Fällen gibt ein Promise.all() ein einzelnes ausstehendes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays eingetroffen sind. Die Rückgabewerte entsprechen dann der Reihenfolge der Promises, unabhängig von der Reihenfolge der Erfüllung.\cite{promise-all}
 
 \noindent
 Sollte ein Promise fehlschlagen, wird dieser ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden.
@@ -414,7 +414,9 @@ Sollte ein Promise fehlschlagen, wird dieser ebenfalls fehlschlagen mit der Fehl
 \end{figure}
 
 \noindent
-Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race() gibt ein Promise zurück, dass eintrifft oder fehlschlägt, sobald das erste Promise des übergebenen Promise-Arrays eingetroffen oder fehlgeschlagen ist.\cite{versprechen}
+Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. 
+Promise.race(iterable) gibt ein erfolgreiches oder fehlgeschlagenes Promise zurück, sobald eines der Promises in dem iterable erfolgreich war oder fehlgeschlagen ist, entsprechend mit dem Wert dieses Promises.
+Wenn das übergebene iterable leer ist, wird die Promise für immer im Status pending verharren.\cite{promise-race}
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -557,8 +559,7 @@ Vor dem Ausführen des Beispiels sollte wieder die stories.ts als Eingangsdatei 
 async function getFirstSections() {
     try {
         for (const n of [1, 2, 3]) {
-            const chapter = await story.getChapter(n);
-            story.spawn(chapter);
+            story.spawn(await story.getChapter(n));
         }
     } finally {
         story.spinnerElement.style.display = 'none';
@@ -580,20 +581,14 @@ Beim Einsetzen von async await muss sich vor Augen geführt werden, wann ein Ein
 
 \begin{figure}[H]
 \begin{lstlisting}
-async function getStoryAndPrint(chapter: number) {
-    const res = await story.getChapter(chapter);
-    story.spawn(res);
-}
-
 async function getFirstSectionsInParallel() {
     try {
         const promises = [];
 
-        for (const n of [1, 2, 3]) {
-            promises.push(getStoryAndPrint(n));
-        }
+        [1, 2, 3].forEach(n => 
+        promises.push(story.getChapter(n)));
 
-        await Promise.all(promises);
+        story.spawn(await Promise.all(promises));
     } finally {
         story.spinnerElement.style.display = 'none';
         story.displayFinished();
@@ -605,6 +600,6 @@ getFirstSectionsInParallel();
 \end{figure}
 
 \noindent
-Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zu Abbildung 18. Die einzigen sequentielle Abhängigkeiten bestehen zwischen story.getChapter() und story.spawn(). Es kann erst dann Kapitel in die DOM geladen werden, sobald die Daten von der API ankommen. Die Stärke von async await kommt erst dann zur Geltung, wenn asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass Funktionen mit dem Präfix \textbf{async} ein Promise-Objekt zurückgeben. Selbst wenn explizit ein primitiver Typ zurückgegeben wird, stellt async sicher, dass dieser Typ in ein Promise umgewandelt wird. \textbf{Await} pausiert die Ausführung einer asynchronen Funktion, bis die blockierende Aktion eingetroffen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts \textbf{try-catch}-Block angewendet werden. Es sollte unterschieden werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Deshalb sollte man Acht geben bei der Nutzung von async await innerhalb Schleifen oder Iteratoren. Sollten mehrere await-Promises parallel ausgeführt werden, können diese als Array in einem Promise.all() übergeben werden.
+Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zu Abbildung 18. Die einzigen Abhängigkeiten bestehen zwischen story.getChapter() und story.spawn(). Es kann erst dann Kapitel in die DOM geladen werden, sobald die Daten von der API ankommen. Die Stärke von async await kommt erst dann zur Geltung, wenn asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass Funktionen mit dem Präfix \textbf{async} ein Promise-Objekt zurückgeben. Selbst wenn explizit ein primitiver Typ zurückgegeben wird, stellt async sicher, dass dieser Typ in ein Promise umgewandelt wird. \textbf{Await} pausiert die Ausführung einer asynchronen Funktion, bis die blockierende Aktion eingetroffen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts \textbf{try-catch}-Block angewendet werden. Es sollte unterschieden werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Deshalb sollte man Acht geben bei der Nutzung von async await innerhalb Schleifen oder Iteratoren. Sollten mehrere await-Promises parallel ausgeführt werden, können diese als Array in einem Promise.all() übergeben werden.
 
 
