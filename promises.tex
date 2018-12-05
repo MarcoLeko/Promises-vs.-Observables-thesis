@@ -1,6 +1,6 @@
 \section{Promises}
 
-Ein Promise repräsentiert ein Objekt das noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, da die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen Prozess asynchron aus. Das Prinzip der asynchronen Verarbeitung, bringt dabei Komplexität nach sich. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. 9). Mit Promises können voneinander abhängige Events übersichtlich dargestellt werden. Dank der Promise-Verkettung ist es auch möglich Fehlerbehandlungen übersichtlich abzudecken. Während bei Callbacks der Fokus darin liegt, in welcher Reihenfolge die Funktion aufgerufen werden, sind Promises (mit ECMAScript 2015 eingeführt) danach gerichtet wie man mit dem Ergebnis der Interaktion umgeht.
+Ein Promise repräsentiert ein Objekt das noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, da die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen Prozess asynchron aus. Das Prinzip der asynchronen Verarbeitung, bringt dabei Komplexität nach sich. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. 9). Mit Promises können voneinander abhängige Events übersichtlich dargestellt werden. Dank der Promise-Verkettung ist es auch möglich Fehlerbehandlungen übersichtlich abzudecken. Während bei Callbacks der Fokus darin liegt, in welcher Reihenfolge die Funktionen aufgerufen werden, sind Promises (mit ECMAScript 2015 eingeführt) danach gerichtet wie man mit dem Ergebnis der Interaktion umgeht.
 
 \subsection{Funktionsweise}
 
@@ -33,7 +33,7 @@ new Promise( /* executor */ (resolve, reject) => { ... } );
 \caption{Erzeugung einer neuen Promise-Instanz}
 \end{figure}
 
-Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders als bei einem Fehler ruft der Konstruktor die reject Funktion mit der jeweiligen Fehlernachricht auf. Zur Einführung ein einfaches Beispiel:\\
+Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders wird bei einem Fehler die reject Funktion mit der jeweiligen Fehlernachricht aufgerufen. Zur Einführung ein einfaches Beispiel:\\
 
 \noindent
 Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
@@ -68,13 +68,16 @@ console.log(resolveRightAway);
 \end{figure}
 
 \noindent
-Dieser Promise springt auf Anhieb vom pending in den resolved Zustand, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status rejected entsprechen. Der Initialstatus eines Promise wird im nächsten Beispiel verdeutlicht:
+Dieser Promise springt auf Anhieb vom pending in den resolved Zustand, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status rejected entsprechen.
 
 \begin{figure}[H]
 \centering
 \includegraphics{promise-beispiel-1}
 \caption{Promises haben einen Status und einen Wert}
 \end{figure}
+
+\noindent
+Der Initialstatus eines Promise wird im nächsten Beispiel verdeutlicht:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -111,12 +114,11 @@ Wie man nun gesehen hat kann ein Promise Objekt den Status  \textbf{pending}, \t
 
 \subsubsection{Verarbeiten von Promises}
 
-Nochmal zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Einschlagen oder Fehlschlagen einer asynchronen Operation, einschließlich des eingetroffenen Wertes. Ein solches Objekt bietet \textbf{statische} Methoden und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Instanz eines Promise-Objekts aufgerufen werden können. Es gibt drei Prototyp-Methoden. Alle der folgenden Methoden lassen sich unter einem Promise-Event einordnen.
-Zur Wiederholung der verschiedenen Promise-Events:
+Zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Eintreffen oder Fehlschlagen einer asynchronen Operation, einschließlich des entstandenen Wertes. Ein solches Objekt bietet \textbf{statische} Methoden und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Instanz eines Promise-Objekts aufgerufen werden können. Es gibt drei Prototyp-Methoden. Alle der folgenden Methoden lassen sich unter einem Promise-Event einordnen:
 
 \begin{itemize} 
 \item Pending: Der Ausgang des Promises ist noch(!) ungewiss.
-\item Resolved: Die Aktion, die zum Promise verlief, schlug ein.
+\item Resolved: Die Aktion, die zum Promise verlief, ist eingetroffen.
 \item Rejected: Die Aktion, die zum Promise verlief, schlug fehl.
 \item Settled: Die Aktion ist entweder fehlgeschlagen oder eingetroffen - jedoch abgeschlossen.
 \end{itemize}
@@ -239,7 +241,7 @@ module.exports = {
 \begin{lstlisting}
 export class HTTP {
 
-    public makeRequest(url: string): Promise<XMLHttpRequestResponseType | string> {
+    public makeRequest(url: string): Promise<string> {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest();
             req.open('GET', url);
@@ -279,29 +281,35 @@ class Story extends HTTP {
         super();
     }
 
-    public getAllStories(): Promise<XMLHttpRequestResponseType | string> {
+    public getAllStories(): Promise<string> {
         const relativeUrl: string = 'posts';
         return this.makeRequest(Story.BASE_URL + relativeUrl);
     }
 
-    public getChapter(chapter: number): Promise<XMLHttpRequestResponseType | string> {
+    public getChapter(chapter: number): Promise<string> {
         return this.makeRequest(`${Story.BASE_URL}posts/${chapter.toString()}`);
     }
 
-    public spawn(result: XMLHttpRequestResponseType): void {
-        let posts = JSON.parse(result);
-        if (posts instanceof Array === false) {
-            posts = [posts];
+    public spawn(result: string | string[]): void {
+        const chapter = [];
+
+        if (result instanceof Array === false) {
+            chapter.push(JSON.parse(result as string));
+        } else {
+            for (const post of result) {
+                chapter.push(JSON.parse(post));
+            }
         }
-        for (const post of posts) {
+
+        chapter.forEach(elm =>
             this.storyElement.innerHTML +=
-                `<h1>${post.title}</h1>
-                    <div class="story-info"><i>ID: Post-${post.id}</i></div>
-                <div><p>${post.body}.</p></div>`;
-        }
+                `<h1>${elm.title}</h1>
+                     <div class="story-info"><i>ID: Post-${elm.id}</i></div>
+                 <div><p>${elm.body}.</p></div>`
+        );
     }
 
-    public displayFinished() {
+    public displayFinished(): void {
         document.body.innerHTML += '<div>Done!</div>';
     }
 
@@ -315,10 +323,10 @@ Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse 
 \begin{figure}[H]
 \begin{lstlisting}
 story.getAllStories()
-    .then((response: XMLHttpRequestResponseType) => story.spawn(response))
+    .then((response) => story.spawn(response))
     .finally(() => {
-        story.displayFinished();
         story.spinnerElement.style.display = 'none';
+        story.displayFinished();
     });
 \end{lstlisting}
 \end{figure}
@@ -328,65 +336,93 @@ Hier werden zunächst alle Kapitel mit einem einzigen Aufruf am Endpunkt angefra
 
 \begin{figure}[H]
 \begin{lstlisting}
-story.getChapter(1)
-    .then((response1: XMLHttpRequestResponseType) => {
-        story.spawn(response1);
-    })
-    .then(() => story.getChapter(2)
-        .then((response2: XMLHttpRequestResponseType) => {
-            story.spawn(response2);
-        }))
-    .then(() => story.getChapter(3)
-        .then((response3: XMLHttpRequestResponseType) => {
-            story.spawn(response3);
-        }))
-    .finally(() => {
-        story.displayFinished();
-        story.spinnerElement.style.display = 'none';
-    });
+story.getChapter(1).then((response1) => // (*)
+    story.spawn(response1)
+).then(() => // (**)
+    story.getChapter(2).then((response2) => story.spawn(response2))
+).then(() => // (***)
+    story.getChapter(3).then((response3) => story.spawn(response3))
+).finally(() => { // (****)
+    story.spinnerElement.style.display = 'none';
+    story.displayFinished();
+});
 \end{lstlisting}
-\caption{Promise-Verkettung mit sechs Promises}
+\caption{Promise-Verkettung für sequentielle Ausführungen}
 \end{figure}
 
 \noindent
-Mit diesem Beispiel wird schnell deutlich, dass eine Promise-Verkettung mit mehr als zwei Ketten den Code in die Länge zieht. In diesem Fall werden drei Kapitel nacheinander angefragt und im Browser angezeigt. Da die Aufrufe in dem verkettetem Konstrukt voneinander abhängig sind, addiert sich die Zeit die gebraucht wird, um ein Kapitel anzufragen und abzubilden. Sind die Kapitel unabhängig voneinander und spielt die Reihenfolge zur Darstellung keine Rolle, dann gibt es eine zweite Variante: 
+In diesem Fall werden drei Kapitel nacheinander angefragt und im Browser angezeigt. Da die Aufrufe in dem verkettetem Konstrukt voneinander abhängig sind, addiert sich die Zeit die gebraucht wird, um ein Kapitel anzufragen und abzubilden. Die Idee dahinter ist, dass nach jedem Kapitelaufruf und -anzeige gewartet wird, bis diese fertig sind. Der Fluss sieht dabei so aus:
+
+\begin{enumerate}
+    \item Das initiale Promise wird aufgerufen und das Kapitel angezeigt
+    \item .then() wird aufgerufen und die nächste Sequenz gestartet -         diese endet erst, wenn die Operation innerhalb dieser Methode          erfüllt ist
+    \item Das nächste .then() wird initiiert...
+\end{enumerate}
+
+Das bedeutet .then() wartet auf die Aktionen innerhalb der Methode.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=12cm]{Promise-verkettung-stories.png}
+\end{figure}
+
+\noindent
+Selbst bei einer weiteren Verzögerung der Kapitel innerhalb der Kette, wäre immer noch gewährleistet, dass die Kapitel sequentiell ausgeführt werden:
+
+\begin{figure}[H]
+\begin{lstlisting}
+story.getChapter(1).then((response1) => // (*)
+    story.spawn(response1)
+).then(() => // (**)
+    new Promise(resolve => setTimeout(() => resolve(story.getChapter(2)), 5000))
+        .then((response2) => story.spawn(response2))
+).then() => ...
+\end{lstlisting}
+\end{figure}
+
+\noindent
+Obwohl die voneinander abhängigen Aufrufe in der Darstellung deutlich lesbarer als geschachtelte Callbacks sind, wird mit diesem Beispiel ebenfalls deutlich, dass Promise-Verkettungen den Code in die Länge ziehen können. Da die Kapitel unabhängig voneinander sind (es wird kein Wert innerhalb der Kette weitergereicht), gibt es eine zweite Variante: 
 
 \begin{figure}[H]
 \begin{lstlisting}
 const chapters: Array<Promise<void>> = [];
 
 for (const n of [1, 2, 3]) {
-    chapters.push(story.getChapter(n)
-        .then((response: XMLHttpRequestResponseType) => {
-            story.spawn(response);
-        }));
+    chapters.push(story.getChapter(n));
 }
 
-Promise.all(chapters).finally(() => {
-    story.displayFinished();
+Promise.all(chapters).then((response) =>
+    story.spawn(response)
+).finally(() => {
     story.spinnerElement.style.display = 'none';
+    story.displayFinished();
 });
 \end{lstlisting}
-\caption{Promise.all() bekommt ein Promise-Array als Parameter übergeben}
+\caption{Promise.all(iterable) bekommt ein iterierbares Objekt als Parameter übergeben}
 \end{figure}
 
 \noindent
-Promise.all() gibt ein einzelnes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays einschlagen sind oder das übergebene Argument keine Promises enthält. Die Promises werden nach der Reihenfolge ihres Einschlagens aufgerufen.
+Ein Promise.all(iterable) kann dabei abhängig vom Übergabeparameter verschiedene Rückgabewerte haben. Sollte das eingegebene iterable Argument leer sein, wird Promise.all() synchron erfüllt. Wenn das eingegebene iterable Argument keine Promises enthält, kommt ein asynchron eingelöstes Promise heraus. In allen anderen Fällen gibt ein Promise.all() ein einzelnes ausstehendes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays eingetroffen sind. Die Rückgabewerte entsprechen dann der Reihenfolge der Promises, unabhängig von der Reihenfolge der Erfüllung.\cite{promise-all}
+
+\noindent
+Sollte ein Promise fehlschlagen, wird dieser ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=12cm]{promise-zeitstrahl}
+\includegraphics[width=7cm]{promise-all}
 \caption{Die Nachrichten werden in der Reihenfolge: 1, 3 und 2 abgebildet.}
 \end{figure}
 
 \noindent
-Sollte ein Promise fehlschlagen, wird dieser ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor} Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race() gibt ein Promise zurück, dass eintrifft oder fehlschlägt, sobald das erste Promise des übergebenen Promise-Arrays eingetroffen oder fehlgeschlagen ist.\cite{versprechen}
+Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race() gibt ein Promise zurück, dass eintrifft oder fehlschlägt, sobald das erste Promise des übergebenen Promise-Arrays eingetroffen oder fehlgeschlagen ist.\cite{versprechen}
 
 \begin{figure}[H]
 \begin{lstlisting}
-Promise.race(chapters).finally(() => {
-    story.displayFinished();
+Promise.race(chapters).then((response) =>
+    story.spawn(response)
+).finally(() => {
     story.spinnerElement.style.display = 'none';
+    story.displayFinished();
 });
 \end{lstlisting}
 \caption{Es wird nur ein Kapitel mit der Nachricht \glqq Done!\grqq{} angezeigt.}
@@ -399,12 +435,12 @@ Ob bei der Erstellung oder bei der Verarbeitung von Promises - Es gibt gewisse A
 \begin{figure}[H]
 \begin{lstlisting}
 story.getChapter(1)
-    .then((response1: XMLHttpRequestResponseType) => {
+    .then((response1) => {
         story.spawn(response1);
         story.getChapter(2)
-            .then((response2: XMLHttpRequestResponseType) => {
+            .then((response2) => {
                 story.spawn(response2);
-                story.getChapter(3).then((response3: XMLHttpRequestResponseType) => {
+                story.getChapter(3).then((response3) => {
                     story.spawn(response3);
                 }).finally(() => {
                     story.spinnerElement.style.display = 'none';
@@ -422,12 +458,12 @@ Mit dem ursprünglichen Beispiel (Abb.17) ist es jedoch Möglich Fehler zwischen
 \begin{figure}[H]
 \begin{lstlisting}
 story.getChapter(1)
-    .then((response1: XMLHttpRequestResponseType) => {
+    .then((response1) => {
         story.spawn(response1);
     })
     .catch((err) => ('Catched: ' + err))
     .then(() => story.getChapter(2)
-        .then((response2: XMLHttpRequestResponseType) => {
+        .then((response2) => {
             story.spawn(response2);
         }))
     ...
@@ -522,7 +558,7 @@ async function getFirstSections() {
     try {
         for (const n of [1, 2, 3]) {
             const chapter = await story.getChapter(n);
-            story.spawn(chapter as XMLHttpRequestResponseType);
+            story.spawn(chapter);
         }
     } finally {
         story.spinnerElement.style.display = 'none';
@@ -546,7 +582,7 @@ Beim Einsetzen von async await muss sich vor Augen geführt werden, wann ein Ein
 \begin{lstlisting}
 async function getStoryAndPrint(chapter: number) {
     const res = await story.getChapter(chapter);
-    story.spawn(res as XMLHttpRequestResponseType);
+    story.spawn(res);
 }
 
 async function getFirstSectionsInParallel() {
