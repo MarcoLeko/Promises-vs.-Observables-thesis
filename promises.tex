@@ -27,7 +27,7 @@ Dabei gibt es zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: 
 \subsubsection{Erstellen eines Promises}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 new Promise( /* executor */ (resolve, reject) => { ... } );
 \end{lstlisting}
 \caption{Erzeugung einer neuen Promise-Instanz}
@@ -43,7 +43,7 @@ Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
  \end{center}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 module.exports = {
     mode: 'development',
     entry: './src/modules/promises/introduction.ts',
@@ -53,7 +53,7 @@ module.exports = {
 \end{figure}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 const keepsHisWord = true;
 const resolveRightAway = new Promise((resolve, reject) => {
     if (keepsHisWord) {
@@ -80,7 +80,7 @@ Dieser Promise springt auf Anhieb vom pending in den resolved Zustand, da die ab
 Der Initialstatus eines Promise wird im nächsten Beispiel verdeutlicht:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 export interface FakeHttpResponse {
     code: string;
     message: string;
@@ -129,19 +129,19 @@ Eine oder mehrere der drei Prototyp-Methoden werden aufgerufen wenn ein Promise 
 \begin{description}
 
 \begin{figure}[H]
-\item \begin{lstlisting}
+\item \begin{lstlisting}[basicstyle=\small]
 Promise.prototype.catch(onRejected)
 \end{lstlisting}
 \end{figure}
 
 \begin{figure}[H]
-\item \begin{lstlisting}
+\item \begin{lstlisting}[basicstyle=\small]
 Promise.prototype.then(onFulfilled, onRejected)
 \end{lstlisting}
 \end{figure}
  
 \begin{figure}[H]
-\item \begin{lstlisting} 
+\item \begin{lstlisting}[basicstyle=\small]
 Promise.prototype.finally(onFinally)
 \end{lstlisting}
 \end{figure}
@@ -161,7 +161,7 @@ Die untenstehende Grafik zeigt den Ablauf für das Eintreten der Events und wie 
 Promise-Fehlschläge können dabei auf zwei verschiedene Wege gefangen werden. Innerhalb der then() Methode kann eine zweite Funktion für das \textbf{Nicht-Eintreffen} der erfolgreichen Operation festgelegt werden. Ein Beispiel dafür wäre:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 get('story.json').then((response) => {
   console.log('Success!', response);
 }, (error) => {
@@ -172,7 +172,7 @@ get('story.json').then((response) => {
 \end{figure}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 get('story.json').then((response) => {
   console.log('Success!', response);
 }).catch((error) => {
@@ -186,7 +186,7 @@ get('story.json').then((response) => {
 Im Gegensatz zur oberen Variante führt die catch() Methode keine zusätzlichen Operationen aus. Sie macht den Code lediglich semantisch lesbarer. Wichtig zu beachten ist, dass innerhalb einer Executor-Funktion \textbf{niemals} beide Argumente gemeinsam eintreffen können. Sie verhalten sich exklusiv. Deshalb ist das letztere Beispiel im Verhalten vergleichbar mit diesem Beispiel:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 get('story.json').then((response) => {
   console.log('Success!', response);
 }).then(undefined, (error) => {
@@ -209,8 +209,8 @@ Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelange
 Die ersten beiden Methoden werden genutzt um einen eingetroffenen oder fehlgeschlagenen Promises zu simulieren:
 
 \begin{figure}[H]
-\begin{lstlisting}
-const rejectedPromise = Promise.reject('I reject on purpose!');
+\begin{lstlisting}[basicstyle=\small]
+const rejectedPromise = Promise.reject('I reject on purpose');
 
 rejectedPromise.catch((err: string) => {
     console.log('Reason of failure: ' + err);
@@ -227,7 +227,7 @@ Die anderen beiden Methoden helfen Promises leichter zu verarbeiten. Beispielswe
  \end{center}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 module.exports = {
     mode: 'development',
     entry: './src/modules/promises/stories.ts',
@@ -238,7 +238,7 @@ module.exports = {
 
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 export class HTTP {
 
     public makeRequest(url: string): Promise<string> {
@@ -272,7 +272,7 @@ export class HTTP {
 \end{figure}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 class Story extends HTTP {
 
     public static BASE_URL = 'https://jsonplaceholder.typicode.com/';
@@ -321,7 +321,7 @@ const story = new Story();
 Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  \textbf{makeRequest()} eine Methode zur Verfügung, die eine Http-Anfrage gegen einen übergebenen Endpunkt macht. Die Methode \textbf{fakeLatency()} simuliert eine Verzögerung der Datenübertragung. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Darüberhinaus werden mit \textbf{getAllStories()} und \textbf{getChapter()} zwei Methoden definiert, die eine Anfrage gegen verschiedene Endpunkte ausführen. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code hierfür wie folgt aussehen:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 story.getAllStories()
     .then((response) => story.spawn(response))
     .finally(() => {
@@ -335,7 +335,7 @@ story.getAllStories()
 Hier werden zunächst alle Kapitel mit einem einzigen Aufruf am Endpunkt angefragt und daraufhin im Browser abgebildet. Ist der Promise in den settled Zustand angelangt, wird mit finally der Lade-Icon ausgeblendet und eine Nachricht angezeigt, dass alle Stories abgebildet wurden. Sollte jedoch ein Anwendungsfall sein, dass nur drei Stories im Browser angezeigt werden sollen, könnte der Code hierfür so aussehen: 
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 story.getChapter(1).then((response1) => // (*)
     story.spawn(response1)
 ).then(() => // (**)
@@ -370,7 +370,7 @@ Das bedeutet .then() wartet auf die Aktionen innerhalb der Methode.
 Selbst bei einer weiteren Verzögerung der Kapitel innerhalb der Kette, wäre immer noch gewährleistet, dass die Kapitel sequentiell ausgeführt werden:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 story.getChapter(1).then((response1) => // (*)
     story.spawn(response1)
 ).then(() => // (**)
@@ -384,7 +384,7 @@ story.getChapter(1).then((response1) => // (*)
 Obwohl die voneinander abhängigen Aufrufe in der Darstellung deutlich lesbarer als geschachtelte Callbacks sind, wird mit diesem Beispiel ebenfalls deutlich, dass Promise-Verkettungen den Code in die Länge ziehen können. Da die Kapitel unabhängig voneinander sind (es wird kein Wert innerhalb der Kette weitergereicht), gibt es eine zweite Variante: 
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 const chapters: Array<Promise<void>> = [];
 
 for (const n of [1, 2, 3]) {
@@ -410,16 +410,16 @@ Sollte ein Promise fehlschlagen, wird dieser ebenfalls fehlschlagen mit der Fehl
 \begin{figure}[H]
 \centering
 \includegraphics[width=7cm]{promise-all}
-\caption{Die Nachrichten werden in der Reihenfolge: 1, 3 und 2 abgebildet.}
+\caption{Die Nachrichten werden in der Reihenfolge ausgegeben, in der sie ins Array übergeben worden sind.}
 \end{figure}
 
 \noindent
 Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. 
 Promise.race(iterable) gibt ein erfolgreiches oder fehlgeschlagenes Promise zurück, sobald eines der Promises in dem iterable erfolgreich war oder fehlgeschlagen ist, entsprechend mit dem Wert dieses Promises.
-Wenn das übergebene iterable leer ist, wird die Promise für immer im Status pending verharren.\cite{promise-race}
+Wenn das übergebene iterable leer ist, wird der Promise für immer im Status pending verharren.\cite{promise-race}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 Promise.race(chapters).then((response) =>
     story.spawn(response)
 ).finally(() => {
@@ -432,10 +432,10 @@ Promise.race(chapters).then((response) =>
 
 \subsection{Anti-Patterns und Best Practices}
 
-Ob bei der Erstellung oder bei der Verarbeitung von Promises - Es gibt gewisse Ansätze nach denen man sich bei der Nutzung von Promises richten sollte. Ein negativ Beispiel für die Verarbeitung von Promises, wäre folgendes Beispiel:
+Ob bei der Erstellung oder bei der Verarbeitung von Promises - Es gibt gewisse Ansätze nach denen man sich bei der Nutzung richten sollte. Ein negativ Beispiel für die Verarbeitung von Promises, wäre folgendes:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 story.getChapter(1)
     .then((response1) => {
         story.spawn(response1);
@@ -458,16 +458,16 @@ Diese Methoden rufen ähnlich wie in Abbildung 17 drei Kapitel nacheinander auf.
 Mit dem ursprünglichen Beispiel (Abb.17) ist es jedoch Möglich Fehler zwischen der Kette zu fangen:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 story.getChapter(1)
-    .then((response1) => {
+    .then((response1) =>
         story.spawn(response1);
-    })
+    )
     .catch((err) => ('Catched: ' + err))
     .then(() => story.getChapter(2)
-        .then((response2) => {
+        .then((response2) => 
             story.spawn(response2);
-        }))
+        ))
     ...
     \end{lstlisting}
 \end{figure}
@@ -479,7 +479,7 @@ Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig 
 Bei einer \textbf{async} Funktion handelt es sich um eine Funktion, die dank einer Eventschleife asynchron operiert. In einer Eventschleife werden auf Events gewartet bis diese auftreten. Innerhalb dieser Funktion wird implizit ein Promise genutzt. Die Stärke von async ist die Syntax und der strukturelle Aufbau einer solchen asynchronen Operation. Diese lässt den Code synchron aussehen.\cite{async-await} Ein einfaches Beispiel:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 function hello() {
     return 'world';
 }
@@ -488,7 +488,7 @@ function hello() {
 \end{figure}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 async function hello() {
     return 'world';
 }
@@ -505,7 +505,7 @@ Der async Ausdruck an einer Funktion wandelt den Rückgabetyp T in ein Promise\t
 Vor dem Ausführen des Beispiels sollte wieder die introduction.ts als Eingangsdatei in der webpack.config.js definiert werden.
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 const keepsHisWord = true;
 const resolveRightAway = new Promise((resolve, reject) => {
     if (keepsHisWord) {
@@ -531,8 +531,8 @@ In diesem Code-Block wird das erste Promise Beispiel genutzt. Wie man nun sehen 
 Ähnlich wie bei Java oder Swift gibt es auch in Javascript ein \textbf{try-catch}-Block. Wenn ein Promise fehlschlägt, wird eine Exception geworfen.\cite{async-await-heise} Diese kann daraufhin mit dem catch-Block gefangen werden. Code-technisch würde dies so aussehen:
 
 \begin{figure}[H]
-\begin{lstlisting}
-const rejectedPromise = Promise.reject('I reject on purpose!');
+\begin{lstlisting}[basicstyle=\small]
+const rejectedPromise = Promise.reject('I reject on purpose');
 
 async function getNotHisWord() {
     try {
@@ -549,13 +549,13 @@ getNotHisWord();
 \end{figure}
 
 \noindent
-Dabei wird der Code syntaktisch so geschrieben, als würde dieser synchron ausgeführt werden. Dies führt zu einer erheblichen Steigerung der Lesbarkeit und verhindert Verschachtelungen wie man sie oben gesehen hat (siehe Abb. 17). Solche langen Promise-Verschachtelungen ziehen den code unnötig in die Länge. Um auf das ursprüngliche Beispiel mit der Promise-Verkettung zurückzukommen, würde der Code mit async-await so aussehen:\\
+Dabei wird der Code syntaktisch so geschrieben, als würde dieser synchron ausgeführt werden. Dies führt zu einer erheblichen Steigerung der Lesbarkeit und verhindert Verschachtelungen wie man sie oben gesehen hat (siehe Abb. 17). Um auf das ursprüngliche Beispiel mit der Promise-Verkettung zurückzukommen, würde der Code mit async-await so aussehen:\\
 
 \noindent
 Vor dem Ausführen des Beispiels sollte wieder die stories.ts als Eingangsdatei in der webpack.config.js definiert werden.
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 async function getFirstSections() {
     try {
         for (const n of [1, 2, 3]) {
@@ -573,14 +573,14 @@ getFirstSections();
 \end{figure}
 
 \noindent
-Die Promise-Verkettung wurde mithilfe von async await aufgelöst und es es wird mit dem await Konstrukt auf die Promise Auflösung gewartet. Daraufhin wird weiter in der Schleife iteriert. Zudem bietet der try-catch-Block auch finally an. Ähnlich wie bei der Promise-Prototyp Methode wird unabhängig vom Ausgang des try-catch-Blocks in dem finally-Block vorrangeschreitet.
+Ohne jeglicher Verkettung wird mit dem await Konstrukt auf die Promise Auflösung gewartet und der entstandene Wert als Parameter in der Methode spawn() übergeben. Daraufhin wird weiter in der Schleife iteriert. Zudem bietet der try-catch-Block auch finally an. Ähnlich wie bei der Promise-Prototyp Methode wird unabhängig vom Ausgang des try-catch-Blocks in dem finally-Block vorrangeschreitet.
 
 \subsubsection{Einsetzen wenn sinnvoll}
 
-Beim Einsetzen von async await muss sich vor Augen geführt werden, wann ein Einsatz als solches Sinn ergibt. Kommt man wieder zum Anwendungsfall, man möchte die ersten fünf Kapitel völlig unabhängig voneinander in die DOM laden, würde der Code hierfür so aussehen:
+Beim Einsetzen von async await muss sich vor Augen geführt werden, wann ein Einsatz als solches Sinn ergibt. Kommt man wieder zum Anwendungsfall, man möchte die ersten fünf Kapitel parallel in die DOM laden, würde der Code hierfür so aussehen:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 async function getFirstSectionsInParallel() {
     try {
         const promises = [];
@@ -600,6 +600,6 @@ getFirstSectionsInParallel();
 \end{figure}
 
 \noindent
-Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zu Abbildung 18. Die einzigen Abhängigkeiten bestehen zwischen story.getChapter() und story.spawn(). Es kann erst dann Kapitel in die DOM geladen werden, sobald die Daten von der API ankommen. Die Stärke von async await kommt erst dann zur Geltung, wenn asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass Funktionen mit dem Präfix \textbf{async} ein Promise-Objekt zurückgeben. Selbst wenn explizit ein primitiver Typ zurückgegeben wird, stellt async sicher, dass dieser Typ in ein Promise umgewandelt wird. \textbf{Await} pausiert die Ausführung einer asynchronen Funktion, bis die blockierende Aktion eingetroffen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts \textbf{try-catch}-Block angewendet werden. Es sollte unterschieden werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Deshalb sollte man Acht geben bei der Nutzung von async await innerhalb Schleifen oder Iteratoren. Sollten mehrere await-Promises parallel ausgeführt werden, können diese als Array in einem Promise.all() übergeben werden.
+Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zur Abbildung 18. Die einzigen Abhängigkeiten bestehen zwischen story.getChapter() und story.spawn(). Es können erst dann Kapitel in die DOM geladen werden, sobald die Daten von der API ankommen. Beim übergeben der Promises in einem Array sind alle im pending Zustand. Erst mit await Promise.all(iterable) wird parallel auf die Auflösung gewartet. Die Stärke von async await kommt erst dann zur Geltung, wenn asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass Funktionen mit dem Präfix \textbf{async} ein Promise-Objekt zurückgeben. Selbst wenn explizit ein primitiver Typ zurückgegeben wird, stellt async sicher, dass dieser Typ in ein Promise umgewandelt wird. \textbf{Await} pausiert die Ausführung einer asynchronen Funktion, bis die blockierende Aktion eingetroffen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts \textbf{try-catch}-Block angewendet werden. Es sollte sich vor Augen geführt werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Möchte man mehrere Promises parallel ausführen, können diese als Array in einem Promise.all() übergeben werden.
 
 

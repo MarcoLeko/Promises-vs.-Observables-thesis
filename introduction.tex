@@ -10,22 +10,21 @@ Doch mit der Vielfalt steigt auch die Komplexität der Sprache. Besonders da Jav
 
 \subsection{Zielsetzung}
 
-Ziel der Arbeit ist die Betrachtung und Aufbereitung des Einsatzes von Sprachmitteln zur asynchronen Verarbeitung in Typescript in einer Form, die Einsteigern in die Thematik hilft, die unterschiedlichen Konzepte voneinander abzugrenzen und richtig einzusetzen. Dazu soll asynchrone Verarbeitung insgesamt anhand brauchbarer und für den Einsatz von Typescript typischer Szenarien motiviert werden. Es werden die zur Verfügung stehenden Sprachmittel Callbacks (im Kurzen), Promises und Observables mit ihren jeweiligen Features vorgestellt. Dabei soll nach dem Vorstellen der Kernkonzepte im zweiten Teil der Arbeit eine Single-Page Applikation mit \glqq Best Practice\grqq{}-Beispiele vorgeführt werden. Nach dem Lesen dieser Arbeit soll der Leser ein gewisses Verständnis dafür gewonnen haben, welche der vorgestellten Sprachmitteln für welchen Anwendungsfall sinnvoller erscheint.\\\\
+Ziel der Arbeit ist die Betrachtung und Aufbereitung des Einsatzes von Sprachmitteln zur asynchronen Verarbeitung in Typescript in einer Form, die Einsteigern in die Thematik hilft, die unterschiedlichen Konzepte voneinander abzugrenzen und richtig einzusetzen. Dazu soll asynchrone Verarbeitung insgesamt anhand brauchbarer und für den Einsatz von Typescript typischer Szenarien motiviert werden. Es werden die zur Verfügung stehenden Sprachmittel Callbacks (im Kurzen), Promises und Observables mit ihren jeweiligen Features vorgestellt. Nach dem Lesen dieser Arbeit soll der Leser ein gewisses Verständnis dafür gewonnen haben, welche der vorgestellten Sprachmitteln für welchen Anwendungsfall sinnvoller erscheint.\\\\
 
 \noindent
 Zielgruppe dieser Arbeit sind Personen, die Grundkenntnisse in der Sprache Javascript/Typescript vorweisen können. Des Weiteren sollte man von dem Modell der asynchronen Datenverarbeitung wie Callbacks, Promises und Oberservables schon mal gehört haben, da diese in der Arbeit gegenübergestellt werden.
 
 \subsection{Aufbau}
 
-Diese Bachelorarbeit wird aus zwei Code-Projekten bestehen. Während das erste Projekt nur im Kern die Ausführung von asynchronen Verarbeitungsprozessen präsentiert (mit der Hilfe von simulierten Anwendungsbeispielen), wird das zweite Projekt eine Single-Page Applikation darstellen und praxisnahe Beispiele anwenden. Dies soll mit dem Framework Angular und Google Firebase als DaaS bewerkstelligt werden. Das zweite Projekt wird im zweiten Teil der Arbeit näher vorgestellt. Die Repositories für beide Projekte sind zu finden unter: 
+Diese Bachelorarbeit präsentiert Code aus einem Beispiel-Projekt. Dieser wird neben simulierten Anwendungsbeispielen, auch praxisnahe Beispiele wie z.B. einen Endpunkt-Aufruf an einer API enthalten. Das Repository ist zu finden unter: 
 
 \begin{center}
-\url{https://github.com/MarcoLeko/async-patterns.git} \\
-\url{https://github.com/MarcoLeko/Angular-Firebase-App.git}
+\url{https://github.com/MarcoLeko/async-patterns.git}
 \end{center}
 
 \noindent
-Zu beachten ist, dass vor dem Ausführen beider Projekte \textbf{Node.js} auf dem Rechner installiert sein muss, um den integrierten Paket-Manager \textbf{npm} nutzen zu können. Da \textbf{RxJS} nicht von vornherein von Javascript mitgeliefert wird, wird eine sog. \glqq Third-Party Library\grqq{} dafür benötigt. Daraufhin muss in dem Root-Verzeichnis beider Projekte \textbf{npm install} ausgeführt werden, um die jeweiligen Abhängigkeiten dieser Libraries herunterzuladen. Node.js kann man unter folgendem Link herunterladen:
+Zu beachten ist, dass vor dem Ausführen des Projektes \textbf{Node.js} auf dem Rechner installiert sein muss, um den integrierten Paket-Manager \textbf{npm} nutzen zu können. Da \textbf{RxJS} nicht von vornherein von Javascript mitgeliefert wird, wird eine sog. \glqq Third-Party Library\grqq{} dafür benötigt. Daraufhin muss in dem Root-Verzeichnis beider Projekte \textbf{npm install} ausgeführt werden, um die jeweiligen Abhängigkeiten dieser Libraries herunterzuladen. Node.js kann man unter folgendem Link herunterladen:
 
 \begin{center}
 \url{https://nodejs.org/en/}
@@ -38,7 +37,7 @@ Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie ist eine
 \subsection{Beispiel}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 class Greeter {
     greeting: string;
     constructor (message: string) {
@@ -53,7 +52,7 @@ class Greeter {
 \end{figure}
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 var Greeter = (function () {
     function Greeter(message) {
         this.greeting = message;
@@ -71,7 +70,7 @@ var Greeter = (function () {
 Typescript selbst kann nicht selbständig ausgeführt werden. Das heißt in einem Browser oder auf einem Server wird unter Umständen immer noch Javascript genutzt. Mit dem Typescript Compiler werden daher Dateien mit dem Suffix *.ts in *.js überführt. Im oberen Code-Schnipsel wurden die variablen und die Klassenmethoden nach Typescript-Standard deklariert. Diese Typen werden beim transpilieren in Javascript ignoriert. Der Kompiler prüft dann, ob beim übergeben eines Parameters in den Konstruktor ein string Wert eingesetzt wird. Wenn nicht, wird dies als ein Fehler erkannt. In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Methode greet() und des Konstruktors. Zudem werden auch nicht direkt deklarierte (implizite) Typen übersetzt. Wie in diesem Fall wird erkannt, dass die Methode greet() einen String-Wert zurückgibt. Ungleich wie mit Java oder C\# gewährleistet Typescript aus der streng typisierten Welt rauszufahren.
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 let count: any = 23;
 
 count = 'Oops transformed to string!'
@@ -85,7 +84,7 @@ Der Kompiler würde hierbei keinen Fehler anzeigen. Obwohl im Idealfall auf die 
 Ein großer Vorteil von Typescript ist die Möglichkeit die aktuelle Javascript/Ecmascript Version anzuwenden, da es mit Typescript möglich ist, auf verschiedene Javascript-Versionen zu übersetzen. Diese Konfiguration wird mit Hilfe einer \textbf{tsconfig.json} Datei bewältigt. Die Auflistung einer solchen Datei zeigt, dass es sich hierbei um das Root-Verzeichnis des Projekts handelt. Hier können die Kompiler-Optionen für Typescript gesetzt werden oder Dateien von der Übersetzung ein- oder ausgeschlossen werden. Ein Beispiel für die Konfiguration einer solchen Datei könnte wie folgt aussehen: 
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 {
   "compilerOptions": {
     "target": "esnext",
@@ -110,7 +109,7 @@ Ein großer Vorteil von Typescript ist die Möglichkeit die aktuelle Javascript/
 Hier kann z.B. mit der Regel \glqq noImplicitAny\grqq{} festgelegt werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any deklariert. Dies würde zu einem Kompilefehler führen.\cite{tsconfig} Mit dem Wert \glqq target\grqq{} ist die Einstellung der Javascript Version möglich. Dadurch wird bestimmt, nach welcher Version transpiliert werden muss. Wenn der Wert nicht bestimmt ist, wird standardmäßig nach es3 übersetzt. Zu erwähnen ist, dass nicht alle Browser kompatibel mit Javascripts neuesten Features sind. In diesem Fall wird \textbf{esnext} genutzt, um auf die neuste Version zuzugreifen. Die Konfiguration dieser Datei betrifft nur Fehler beim erstellen eines Kompilats. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen. Zudem wird in jedem Fall eine Javascript-Datei erstellt, auch wenn der Kompiler einen Fehler anzeigt. Diese Datei ist potenziell auch lauffähig. Um Typescript zu Kompilieren muss im Terminal unter dem Verzeichnis einer Typescript-Datei \textbf{tsc} eingegeben werden. In den für die Bachelorarbeit genutzten Code-Projekte werden die Skripte von npm ausgeführt um die Applikation zu starten. Die Konfiguration eines Start-Skript sieht wie folgt aus:
 
 \begin{figure}[H]
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
   ...
   "scripts": {
     "start": "webpack --watch",
