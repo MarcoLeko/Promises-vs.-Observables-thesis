@@ -318,7 +318,7 @@ const story = new Story();
 \end{figure}
 
 \noindent
-Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  \textbf{makeRequest()} eine Methode zur Verfügung, die eine Http-Anfrage gegen einen übergebenen Endpunkt macht. Die Methode \textbf{fakeLatency()} simuliert eine Verzögerung der Datenübertragung. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Darüberhinaus werden mit \textbf{getAllStories()} und \textbf{getChapter()} zwei Methoden definiert, die eine Anfrage gegen verschiedene Endpunkte ausführen. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code hierfür wie folgt aussehen:
+Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse \textbf{HTTP} stellt mit  makeRequest() eine Methode zur Verfügung, die eine Http-Anfrage gegen einen übergebenen Endpunkt macht. Die Methode fakeLatency() simuliert eine Verzögerung der Datenübertragung. Mit der \textbf{Story} Klasse wird zunächst ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um JSONPlaceholder, eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Darüberhinaus werden mit getAllStories() und getChapter() zwei Methoden definiert, die eine Anfrage gegen verschiedene Endpunkte ausführen. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code hierfür wie folgt aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]

@@ -49,7 +49,7 @@ module.exports = {
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-const root: Observable<number> = RxJS.Observable.create((observer) => {
+const alias: Observable<number> = RxJS.Observable.create((observer) => {
     observer.next(1);
     observer.next(2);
     observer.next(3);
@@ -60,14 +60,14 @@ const root: Observable<number> = RxJS.Observable.create((observer) => {
 });
 
 console.log('Before subscribe');
-root.subscribe({
+alias.subscribe({
     next: x => console.log('Value: ' + x),
     error: err => console.error('Error occurred: ' + err),
     complete: () => console.log('Done!'),
 });
 console.log('After subscribe');
 \end{lstlisting}
-\caption{Observable können sich sowohl synchron als auch asynchron verhalten.}
+\caption{Observable verhalten sich sowohl synchron als auch asynchron.}
 \end{figure}
 
 \noindent
@@ -141,13 +141,30 @@ Der Output bleibt immer derselbe:
 \end{figure}
 
 \noindent
-Das liegt daran, da sowohl Funktionen als auch Observables träge sind. Die Operationen innerhalb beider Typen findet erst beim Aufruf statt. Mit anderen Worten: Das starten einer Subscription ist analog zum Aufruf einer Funktion. Entgegen der Annahme, dass Observables ausschließlich asynchron operieren können diese ebenfalls synchron Werte ausgeben (siehe Abb. 25).
+Das liegt daran, da sowohl Funktionen als auch Observables träge sind. Die Operationen innerhalb beider Typen findet erst beim Aufruf statt. Mit anderen Worten: Das starten einer Subscription ist analog zum Aufruf einer Funktion. Entgegen der Annahme, dass Observables ausschließlich asynchron operieren, können diese ebenfalls synchron Werte ausgeben (siehe Abb. 25).
+Der Hauptpunkt in dem Observables sich von Funktionen unterscheiden ist, dass Observables mehrere Werte (mit der Zeit) emittieren können. Innerhalb einer Funktion ist es nicht Möglich zwei return Ausdrücke einzubauen, die zusammen ausgegeben werden.
 
-\subsubsection{Hot- vs. Cold-Observables}
+\subsubsection{Anatomie eines Observable}
+Observables werden entweder mit der create Methode, mit einer Observable-Instanz oder mit Hilfe einer der Operatoren für Observables \textbf{erstellt}. Der Datenfluss wird an den Observern mit der subscribe()-Methode \textbf{überreicht}. Als Letztes kann ein Observable und somit sein Datenfluss geschlossen werden.
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+const root = new Observable<string>(observer => {
+    setInterval(() => observer.next('hi'), 2000);
+});
+
+root.subscribe((val: string) => console.log(val));
+\end{lstlisting}
+\caption{Observables verhalten sich gleich.}
+\end{figure}
+
+\noindent
+Die statische Methode Observable.create() ist ein alias ist zum Konstruktor-Aufruf.
 
 \subsection{Operatoren}
 Wenn es um Operatoren geht, sind diese die wahre Stärke der Observables. Operatoren gibt es in verschiedenen Kategorien: Sie manipulieren das Stream-Verhalten oder bearbeiten die Werte innerhalb eines Streams. Eines haben Operatoren gemeinsam. Wenn ein Operator an einem Stream angewendet wird, wird ein neuer Stream erstellt. Das liegt daran, dass Streams an sich unveränderbar (engl. immutable) sind. ....
 
+\subsubsection{Hot- vs. Cold-Observables}
 \subsection{Subjects}
 \subsubsection{Unicast vs. Multicast}
 
