@@ -1,7 +1,8 @@
 \section{Callbacks}
-Javascript ist eine auf Events basierende Programmiersprache. Das bedeutet, anstatt auf blockierenden Code zu warten, führt Javascript Operationen weiter aus und reagiert wenn die Aktion fertig ist. Um sicherzustellen, dass Javascript auf die Fertigstellung von asynchronen Operationen wartet, wurden Callbacks eingeführt. Doch was genau sind Callbacks? \\
+Javascript ist eine auf Events basierende Programmiersprache. Das bedeutet, anstatt auf blockierenden Code zu warten, führt Javascript Operationen weiter aus und reagiert wenn die Aktion fertig ist. Um sicherzustellen, dass Javascript auf die Fertigstellung von asynchronen Operationen wartet, wurden Callbacks eingeführt. Doch was genau sind Callbacks?
 
-\noindent
+\subsection{Funktionalität}
+
 Sowohl in Javascript als auch in Typescript sind Funktionen als Erste-Klasse-Objekte zu sehen. Aus diesem Grund ist es Möglich sie als Argumente in anderen Funktionen oder als Rückgabewert einzusetzen. Diese übergebenen Funktionen heißen Callbacks und werden dann \glqq{}später\grqq{} innerhalb des Funktionsrumpfes aufgerufen. Callbacks, auch Rückruffunktionen genannt, ist die am meist verbreitetste Technik der funktionalen Programmierung in Javascript.\cite{callbacks-intro} Javascript bietet mit Arrays mitgelieferte Callbacks wie z.B:
 
 \begin{figure}[H]
@@ -20,12 +21,12 @@ console.log(evenNumbers) // 2 4 6
 \noindent
 Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion die, die Filterkonditionen bestimmt. Dabei wird zuerst, dass Element aus der Liste entnommen und dann die Kondition geprüft. Wenn also eine Funktion als Parameter übergeben wird, wird diese nicht sofort ausgeführt. Eine Funktion die ein Callback als Input-Parameter annimmt, wird auch High-Order-Funktion genannt.
 
-\subsubsection{Beispiel}
+\subsection{Beispiel}
 
 In dem nächsten Beispiel wird gezeigt, wie asynchrone Operationen sich verhalten, wenn nicht explizit auf die Fertigstellung gewartet wird. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
 
 \begin{center}
-    Promises-vs.-Observables$\,\to\,$ webpack.config.js
+    async-patterns$\,\to\,$ webpack.config.js
 \end{center}
 
 \begin{figure}[H]
@@ -97,7 +98,8 @@ Zusammenfassend kann man also sagen, dass in dem synchronen Modell implizit auf 
 \end{figure}
 \end{center}
 
-\noindent
+\subsection{Callback-Verschachtelung}
+
 Um zu gewährleisten, dass die Nachrichten trotz Verzögerung aufeinander warten und somit sequentiell ausgeführt werden, würde der Code so aussehen:
 
 \begin{figure}[H]

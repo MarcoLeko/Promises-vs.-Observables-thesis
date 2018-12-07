@@ -32,9 +32,10 @@ Zu beachten ist, dass vor dem Ausführen des Projektes \textbf{Node.js} auf dem 
 
 \section{Grundlagen}
 
+\subsection{Typescript}
 Typescript. Bereits der Name sagt schon was diese Sprache ausmacht. Sie ist eine typisierte Form der Skriptsprache Javascript. Besonders Javascript-Entwickler sträubten sich Anfangs mit der Sprache auseinanderzusetzen. Die Stärke von Javascript liegt in ihrer Flexibilität und der Tatsache nicht mehr code schreiben zu müssen als man braucht. Doch den Kompromiss den man mit Typescript eingeht, zahlt sich am Ende mit dem Zuwachs der Projektgröße aus. Da der Typescript Kompiler bereits Fehler beim Kompilieren erkennt, stellt sich die Frage, ob man lieber Fehler beim Entwickeln oder in der Produktion eines Projekts entdecken möchte. Dabei ist das \textbf{Tooling} der größte Vorteil von Typescript. Wenn man mit Typ-Annotationen oder mit Libraries, die streng typisiert sind, arbeitet, wird der Code von der Entwicklungsumgebung automatisch dokumentiert. Das heißt beim Entwickeln mit einem Code-Editor wird nicht zusätzlich verlangt, die Dokumentation der benötigten Library zu öffnen, um jede einzelne Methode zu sehen. Wenn man nun von einem reinen Javascript Hintergrund kommt, gibt es so gut wie keine Lernkurve die Sprache zu bewältigen. Das liegt daran, dass jeder valide Code von Javascript auch in Typescript ausführbar ist. Der Lernprozess steigt mit zunehmender Nutzung.
 
-\subsection{Beispiel}
+\subsubsection{Beispiel}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -80,7 +81,7 @@ count = 'Oops transformed to string!'
 \noindent
 Der Kompiler würde hierbei keinen Fehler anzeigen. Obwohl im Idealfall auf die \textbf{any}-Notation verzichtet werden sollte, bietet es trotzdem Javascripts Flexibilität. 
 
-\subsection{Kompiler}
+\subsubsection{Kompiler}
 Ein großer Vorteil von Typescript ist die Möglichkeit die aktuelle Javascript/Ecmascript Version anzuwenden, da es mit Typescript möglich ist, auf verschiedene Javascript-Versionen zu übersetzen. Diese Konfiguration wird mit Hilfe einer \textbf{tsconfig.json} Datei bewältigt. Die Auflistung einer solchen Datei zeigt, dass es sich hierbei um das Root-Verzeichnis des Projekts handelt. Hier können die Kompiler-Optionen für Typescript gesetzt werden oder Dateien von der Übersetzung ein- oder ausgeschlossen werden. Ein Beispiel für die Konfiguration einer solchen Datei könnte wie folgt aussehen: 
 
 \begin{figure}[H]
