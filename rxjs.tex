@@ -2,7 +2,7 @@
 Rx ist eine Library, die für zahlreiche Programmiersprachen zur Verfügung gestellt wird. Diese finden sowohl in der Frontend als auch in der Backend-Implementierung Anwendung. In dieser Arbeit wird der Fokus auf RxJS geworfen. Diese Library ist eine Erweiterung speziell für Javascript/Typescript. RxJS erlaubt es mit Hilfe von Observable-Sequenzen Event-basierte Programme zu erstellen. Dabei wird dieser Ansatz auch als reactive Programming definiert. Neben der Kernfunktionalität von Observables werden auch Subjects und Schedulers geboten. Sollte man von reactive Programming noch nichts gehört haben, dann wird die größte Herausforderung sein \glqq{}reactive\grqq{} zu denken.
 
 \subsection{Reactive Programming}
-Im Kern ist reactive Programming ein Programmierparadigma. Hierbei richtet sich das Entwickeln mit asynchronen Datenflüssen. Als Beispiel für eine reaktive Anwendung kann Excel genommen werden. Ändert man einen Wert in einer Zelle, ändert sich auch der Wert in der Summenzelle. Die Zelle, deren Wert geändert wurde, löst ein Event aus, den die Summen-Zelle empfängt. Daraufhin findet eine Neuberechnung statt.\cite{reactive-programming-beispiel} Laut der offiziellen Dokumentation richtet sich ReactiveX nach dem Beobachter-Muster (engl. Observer-Pattern). Das Observer-Pattern ist ein Entwurfsmuster, in der Änderungen eines Objektes (Subjects genannt) an einer Liste abhängiger Strukturen weitergereicht wird. Diese abhängige Strukturen (Observers) werden bei jeder Zustandsveränderung informiert. Eine Veränderung eines Objekts kann hierbei gleichgesetzt werden mit einem Datenfluss. Datenflüsse können aus verschiedensten Operationen entstehen wie z.B. Klick-Events, Variablen, Cache etc. Als Observer kann man sich in diesem Datenfluss einhängen und entsprechend reagieren.\cite{rx-intro} Rx bietet eine enorme Menge an Funktionen diese Datenflüsse zu bearbeiten/manipulieren (siehe Sektion Operatoren). Diese Operatoren komplett abzudecken wird in dieser Arbeit unmöglich sein, jedoch wird nach dem behandeln dieses Kapitels ein gewisses Grundverständnis für neue Operatoren entstehen und wie diese in Folge anzuwenden sind. Die grundlegenden Konzepte, um asynchrone Events in RxJS zu steuern, sind:
+Im Kern ist reactive Programming ein Programmierparadigma. Hierbei richtet sich das Entwickeln auf asynchrone Datenflüssen. Als Beispiel für eine reaktive Anwendung kann Excel genommen werden. Ändert man einen Wert in einer Zelle, ändert sich auch der Wert in der Summenzelle. Die Zelle, deren Wert geändert wurde, löst ein Event aus, den die Summen-Zelle empfängt. Daraufhin findet eine Neuberechnung statt.\cite{reactive-programming-beispiel} Laut der offiziellen Dokumentation richtet sich ReactiveX nach dem Beobachter-Muster (engl. Observer-Pattern). Das Observer-Pattern ist ein Entwurfsmuster, in der Änderungen eines Objektes (Subjects genannt) an einer Liste abhängiger Strukturen weitergereicht wird. Diese abhängige Strukturen (Observers) werden bei jeder Zustandsveränderung informiert. Eine Veränderung eines Objekts kann hierbei gleichgesetzt werden mit einem Datenfluss. Datenflüsse können aus verschiedensten Operationen entstehen wie z.B. Klick-Events, Variablen, Cache etc. Als Observer kann man sich in diesem Datenfluss einhängen und entsprechend reagieren.\cite{rx-intro} Rx bietet eine enorme Menge an Funktionen diese Datenflüsse zu bearbeiten/manipulieren (siehe Sektion Operatoren). Diese Operatoren komplett abzudecken wird in dieser Arbeit unmöglich sein, jedoch wird nach dem behandeln dieses Kapitels ein gewisses Grundverständnis für neue Operatoren entstehen und wie diese in Folge anzuwenden sind. Die grundlegenden Konzepte, um asynchrone Events in RxJS zu steuern, sind:
 
 \begin{itemize}
     \item Observable: Repräsentiert die Idee einer abrufbaren Sammlung, in der zukünftige Werte oder Events gelagert sind.
@@ -27,8 +27,7 @@ Observables sind eine träge Sammlung von multiplen Werten. Sie füllen den fehl
 \end{center}
 
 \noindent
-Das Push- und Pull-Prinzip beschreibt dabei wie ein Daten-Produzent mit dem Daten-Verarbeiter kommuniziert. In \textbf{Pull-Systemen} bestimmt der Verarbeiter, wann die Daten vom Ersteller angenommen werden. Der Ersteller selbst weiß nicht wann die Daten angefragt werden.
-Jede Javascript Funktion unterliegt einem Pull-System. Die Funktion ist ein Verarbeiter von Daten, und der Code der die Funktion aufruft, verarbeitet diese.\\
+Das Push- und Pull-Prinzip beschreibt dabei wie ein Daten-Produzent mit dem Daten-Verarbeiter kommuniziert. In \textbf{Pull-Systemen} bestimmt der Verarbeiter, wann die Daten vom Ersteller angenommen werden. Der Ersteller selbst weiß nicht wann die Daten angefragt werden. Jede Javascript Funktion unterliegt einem Pull-System. Die Funktion ist ein Verarbeiter von Daten und diese kann im Code jederzeit abgerufen werden.\\
 
 \noindent
 Das \textbf{Push-Prinzip} wird im nächsten Beispiel deutlich. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
@@ -71,7 +70,7 @@ console.log('After subscribe');
 \end{figure}
 
 \noindent
-Das Observable-Objekt repräsentiert eine Kollektion die Werte zu seinen Beobachtern offenbart. In diesem Beispiel wird ein Observable erstellt, dass sofort (synchron) die Werte 1, 2 und 3 produziert, sobald die Subscription gestartet wird. Der vierte Wert wird asynchron übermittelt und das Observable daraufhin geschlossen. Wichtig ist, dass man sich ein Observable-Stream nur mit der subscribe()-Methode anschließen kann. Die Konsole gibt die Werte in folgender Reihenfolge aus:
+Das Observable-Objekt repräsentiert eine Kollektion die Werte zu seinen Beobachtern liefert. In diesem Beispiel wird ein Observable erstellt, dass sofort (synchron) die Werte 1, 2 und 3 produziert, sobald die Subscription gestartet wird. Der vierte Wert wird asynchron übermittelt und das Observable daraufhin geschlossen. Wichtig ist, dass man sich ein Observable-Stream nur mit der subscribe()-Methode anschließen kann. Die Konsole gibt die Werte in folgender Reihenfolge aus:
 
 \begin{figure}[H]
 \begin{center}
@@ -80,7 +79,7 @@ Das Observable-Objekt repräsentiert eine Kollektion die Werte zu seinen Beobach
 \end{figure}
 
 \noindent
-Bei einer Subscription können drei verschiedene Events auftreten und somit drei verschiedene Funktionen aufrufen:
+Bei einer Subscription können drei verschiedene Events auftreten und somit drei verschiedene Funktionen aufgerufen werden:
 
 \begin{itemize}
 \item next: () =\textgreater Wenn ein Wert ausgegeben wird,
@@ -145,7 +144,7 @@ Das liegt daran, da sowohl Funktionen als auch Observables träge sind. Die Oper
 Der Hauptpunkt in dem Observables sich von Funktionen unterscheiden ist, dass Observables mehrere Werte (mit der Zeit) emittieren können. Innerhalb einer Funktion ist es nicht Möglich zwei return Ausdrücke einzubauen, die zusammen ausgegeben werden.
 
 \subsubsection{Anatomie eines Observable}
-Observables werden entweder mit der create Methode, mit einer Observable-Instanz oder mit Hilfe einer der Operatoren für Observables \textbf{erstellt}. Der Datenfluss wird an den Observern mit der subscribe()-Methode \textbf{überreicht}. Als Letztes kann ein Observable und somit sein Datenfluss geschlossen werden.
+Observables werden entweder mit der create Methode, mit einer Observable-Instanz oder mit der Hilfe eines Observable-Operators \textbf{erstellt}. Der Datenfluss wird an den Observern mit der subscribe()-Methode \textbf{überreicht}. Als Letztes kann ein Observable und somit sein Datenfluss \textbf{geschlossen} werden.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -159,7 +158,13 @@ root.subscribe((val: string) => console.log(val));
 \end{figure}
 
 \noindent
-Die statische Methode Observable.create() ist ein alias ist zum Konstruktor-Aufruf.
+Die statische Methode Observable.create() ist ein alias ist zum Konstruktor-Aufruf.\\
+
+\noindent
+\begin{center}
+***Hier fehlt noch ordentlich was.*** 
+\end{center}
+
 
 \subsection{Operatoren}
 Wenn es um Operatoren geht, sind diese die wahre Stärke der Observables. Operatoren gibt es in verschiedenen Kategorien: Sie manipulieren das Stream-Verhalten oder bearbeiten die Werte innerhalb eines Streams. Eines haben Operatoren gemeinsam. Wenn ein Operator an einem Stream angewendet wird, wird ein neuer Stream erstellt. Das liegt daran, dass Streams an sich unveränderbar (engl. immutable) sind. ....

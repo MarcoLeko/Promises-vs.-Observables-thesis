@@ -3,7 +3,7 @@ Javascript ist eine auf Events basierende Programmiersprache. Das bedeutet, anst
 
 \subsection{Funktionalität}
 
-Sowohl in Javascript als auch in Typescript sind Funktionen als Erste-Klasse-Objekte zu sehen. Aus diesem Grund ist es Möglich sie als Argumente in anderen Funktionen oder als Rückgabewert einzusetzen. Diese übergebenen Funktionen heißen Callbacks und werden dann \glqq{}später\grqq{} innerhalb des Funktionsrumpfes aufgerufen. Callbacks, auch Rückruffunktionen genannt, ist die am meist verbreitetste Technik der funktionalen Programmierung in Javascript.\cite{callbacks-intro} Javascript bietet mit Arrays mitgelieferte Callbacks wie z.B:
+Sowohl in Javascript als auch in Typescript sind Funktionen als Erste-Klasse-Objekte zu sehen. Aus diesem Grund ist es Möglich sie als Argumente in anderen Funktionen oder als Rückgabewert einzusetzen. Diese übergebenen Funktionen heißen Callbacks und werden dann \glqq{}später\grqq{} innerhalb des Funktionsrumpfes aufgerufen. Callbacks, auch Rückruffunktionen genannt, ist die am meist verbreitetste Technik der funktionalen Programmierung in Javascript.\cite{callbacks-intro} Javascript bietet mit Arrays die Möglichkeit Callbacks einzusetzen.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -15,15 +15,15 @@ function isEven(x): boolean {
 const evenNumbers = numbers.filter(isEven);
 console.log(evenNumbers) // 2 4 6
 \end{lstlisting}
-\caption{Die Funktion filter() gibt ein neues Array zurück.\cite{callbacks-example}}
+\caption{Die Funktion filter() gibt ein neues Array zurück.}
 \end{figure}
 
 \noindent
-Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion die, die Filterkonditionen bestimmt. Dabei wird zuerst, dass Element aus der Liste entnommen und dann die Kondition geprüft. Wenn also eine Funktion als Parameter übergeben wird, wird diese nicht sofort ausgeführt. Eine Funktion die ein Callback als Input-Parameter annimmt, wird auch High-Order-Funktion genannt.
+Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion die, die Filterkonditionen bestimmt. Dabei wird zuerst, dass Element aus der Liste entnommen und dann die Kondition geprüft. Wenn also eine Funktion als Parameter übergeben wird, wird diese nicht sofort ausgeführt. Eine Funktion die ein Callback als Input-Parameter annimmt, wird auch High-Order-Funktion genannt.\cite{callbacks-example}
 
 \subsection{Beispiel}
 
-In dem nächsten Beispiel wird gezeigt, wie asynchrone Operationen sich verhalten, wenn nicht explizit auf die Fertigstellung gewartet wird. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
+Im nächsten Beispiel wird gezeigt, wie asynchrone Operationen sich verhalten, wenn nicht explizit auf die Fertigstellung gewartet wird. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
 
 \begin{center}
     async-patterns$\,\to\,$ webpack.config.js
