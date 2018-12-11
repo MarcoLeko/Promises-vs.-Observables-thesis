@@ -144,7 +144,9 @@ Das liegt daran, da sowohl Funktionen als auch Observables träge sind. Die Oper
 Der Hauptpunkt in dem Observables sich von Funktionen unterscheiden ist, dass Observables mehrere Werte (mit der Zeit) emittieren können. Innerhalb einer Funktion ist es nicht Möglich zwei return Ausdrücke einzubauen, die zusammen ausgegeben werden.
 
 \subsubsection{Anatomie eines Observable}
-Observables werden entweder mit der create Methode, mit einer Observable-Instanz oder mit der Hilfe eines Observable-Operators \textbf{erstellt}. Der Datenfluss wird an den Observern mit der subscribe()-Methode \textbf{überreicht}. Als Letztes kann ein Observable und somit sein Datenfluss \textbf{geschlossen} werden.
+Observables werden entweder mit der create Methode, mit einer Observable-Instanz oder mit der Hilfe eines Observable Operators \textbf{erstellt}. Der Datenfluss wird an den Observern mit der subscribe()-Methode \textbf{überreicht}. Als Letztes kann ein Observable und somit sein Datenfluss \textbf{geschlossen} werden.
+
+\subsubsection{Observables erstellen}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -158,7 +160,65 @@ root.subscribe((val: string) => console.log(val));
 \end{figure}
 
 \noindent
-Die statische Methode Observable.create() ist ein alias ist zum Konstruktor-Aufruf.\\
+Die statische Methode Observable.create() ist ein alias ist zum Konstruktor-Aufruf. Für gewöhnlich werden jedoch Operatoren mit den sog. \textit{creation operators} wie \textbf{of}, \textbf{from}, \textbf{interval} etc. erstellt. In dem oben angeführten Beispiel wird zudem die subscribe()-Methode aufgerufen, um die Stream-Werte abzurufen. Im nächsten Abschnitt wird erklärt, wie genau eine Subscription abläuft.\\
+
+\subsubsection{Observables überreichen}
+
+Beim Aufruf der subscribe()-Methode wird ein eigenständiger Datenfluss an den Observer überreicht. Das hat zur Folge, dass Observer sich dem gleichen Observable-Stream anschließen und dennoch unterschiedliche Werte bekommen können.
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+const randomNumber = new Observable<number>(observer => {
+    observer.next(Math.random());
+});
+
+randomNumber.subscribe(value => console.log('First subscription emits: ' + value));
+randomNumber.subscribe(value => console.log('Second subscription emits: ' + value));
+\end{lstlisting}
+\end{figure}
+
+\noindent
+Diese Eigenschaft wird als \textbf{unicasting} bezeichnet. Das ist nur Möglich, da die Funktion random() erst dann aufgerufen wird, wenn ein Observable mit der subscribe()-Methode aufgerufen wird. Es gibt nun mehrere Möglichkeiten, dass sich Observers den gleichen Datenfluss teilen. Eine Möglichkeit wäre, den Datenproduzent außerhalb des Observables auszulagern. 
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+const dataProducer: number = Math.random();
+const randomNumber = new Observable<number>(observer => {
+    observer.next(dataProducer);
+});
+
+...
+\end{lstlisting}
+\end{figure}
+
+\noindent
+Eine elegantere Variante, wäre ein Operator anzuwenden, der den zuletzt eingetretenen Wert an die verschiedenen Observer teilt:
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+const randomNumber = new Observable<number>(observer => {
+    observer.next(Math.random());
+});
+
+const hot = randomNumber.pipe(shareReplay());
+
+...
+\end{lstlisting}
+\end{figure}
+
+\noindent
+Nun können multiple Subscriptions am gleichen Stream, die gleichen Werte empfangen. Diese Eigenschaft wird auch als \textbf{multicasting} bezeichnet. Das Ergebnis sieht wie folgt aus:
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{multicasting-observables}
+\end{center}
+\end{figure}
+
+\noindent
+Wenn Werte eines Streams erst beim Aufruf einer Subscription entstehen, handelt es sich hierbei um \textbf{cold Observables}.\cite{hot-vs-cold-observable} Dies ist in jedem der oben angeführten Beispiele der Fall. Um auf die oben angeführte These zurückzukommen, dass Observables träge sind, war dies zwar zum Einstieg in die Thematik zwar  hilfreich, aber nur die halbe Wahrheit. Observables können Werte emittieren auch ohne der subscribe()-Methode. Das bedeutet es werden Werte ausgestoßen, unabhängig davon ob eine Subscription stattfindet oder nicht. 
+
+
 
 \noindent
 \begin{center}
@@ -167,7 +227,8 @@ Die statische Methode Observable.create() ist ein alias ist zum Konstruktor-Aufr
 
 
 \subsection{Operatoren}
-Wenn es um Operatoren geht, sind diese die wahre Stärke der Observables. Operatoren gibt es in verschiedenen Kategorien: Sie manipulieren das Stream-Verhalten oder bearbeiten die Werte innerhalb eines Streams. Eines haben Operatoren gemeinsam. Wenn ein Operator an einem Stream angewendet wird, wird ein neuer Stream erstellt. Das liegt daran, dass Streams an sich unveränderbar (engl. immutable) sind. ....
+Wenn es um Operatoren geht, sind diese die wahre Stärke der Observables. Operatoren gibt es in verschiedenen Kategorien: Sie manipulieren das Stream-Verhalten oder bearbeiten die Werte innerhalb eines Streams. Eines haben Operatoren gemeinsam. Wenn ein Operator an einem Stream angewendet wird, wird ein neuer Stream erstellt. Das liegt daran, dass Streams an sich unveränderbar (engl. immutable) sind.
+Mit der aktuell neuesten Version von RxJS (6) ist nur noch Möglich Operatoren innerhalb der pipe() Methode anzuwenden.  ....
 
 \subsubsection{Hot- vs. Cold-Observables}
 \subsection{Subjects}
