@@ -22,7 +22,7 @@ async function hello() {
 \noindent
 Der async Ausdruck an einer Funktion wandelt den Rückgabetyp T in ein Promise\textless T\textgreater um. Um explizit und implizit ein Promise\textless string\textgreater zu verwenden, könnte man beispielsweise ein Promise.resolve('world') ausliefern. Eine asynchrone Funktion kann zudem einen \textbf{await} Ausdruck enthalten. Dies lässt die asynchrone Funktion pausieren bis der übergebene Promise eingetroffen ist. Daraufhin wird die Ausführung der Funktion mit dem zurückgegeben Wert des Promise fortgesetzt. Ein await ist nur innerhalb einer async Funktion valide einsetzbar. Ein einfaches Beispiel zum Verständnis:\\
 
-\subsubsection{Funktionsweise}
+\subsection{Funktionsweise}
 
 \noindent
 Vor dem Ausführen des Beispiels sollte wieder die introduction.ts als Eingangsdatei in der webpack.config.js definiert werden.
@@ -98,7 +98,7 @@ getFirstSections();
 \noindent
 Ohne jeglicher Verkettung wird mit dem await Konstrukt auf die Promise Auflösung gewartet und der entstandene Wert als Parameter in der Methode spawn() übergeben. Daraufhin wird weiter in der Schleife iteriert. Zudem bietet der try-catch-Block auch finally an. Ähnlich wie bei der Promise-Prototyp Methode wird unabhängig vom Ausgang des try-catch-Blocks in dem finally-Block vorrangeschreitet.
 
-\subsubsection{Einsetzen wenn sinnvoll}
+\subsection{Einsetzen wenn sinnvoll}
 
 Beim Einsetzen von async await muss sich vor Augen geführt werden, wann ein Einsatz als solches Sinn ergibt. Kommt man wieder zum Anwendungsfall, man möchte die ersten fünf Kapitel parallel in die DOM laden, würde der Code hierfür so aussehen:
 

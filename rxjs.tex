@@ -2,14 +2,21 @@
 Rx ist eine Library, die für zahlreiche Programmiersprachen zur Verfügung gestellt wird. Diese finden sowohl in der Frontend als auch in der Backend-Implementierung Anwendung. In dieser Arbeit wird der Fokus auf RxJS geworfen. Diese Library ist eine Erweiterung speziell für Javascript/Typescript. RxJS erlaubt es mit Hilfe von Observable-Sequenzen Event-basierte Programme zu erstellen. Dabei wird dieser Ansatz auch als reactive Programming definiert. Neben der Kernfunktionalität von Observables werden auch Subjects und Schedulers geboten. Sollte man von reactive Programming noch nichts gehört haben, dann wird die größte Herausforderung sein \glqq{}reactive\grqq{} zu denken.
 
 \subsection{Reactive Programming}
-Im Kern ist reactive Programming ein Programmierparadigma. Hierbei richtet sich das Entwickeln auf asynchrone Datenflüssen. Als Beispiel für eine reaktive Anwendung kann Excel genommen werden. Ändert man einen Wert in einer Zelle, ändert sich auch der Wert in der Summenzelle. Die Zelle, deren Wert geändert wurde, löst ein Event aus, den die Summen-Zelle empfängt. Daraufhin findet eine Neuberechnung statt.\cite{reactive-programming-beispiel} Laut der offiziellen Dokumentation richtet sich ReactiveX nach dem Beobachter-Muster (engl. Observer-Pattern). Das Observer-Pattern ist ein Entwurfsmuster, in der Änderungen eines Objektes (Subjects genannt) an einer Liste abhängiger Strukturen weitergereicht wird. Diese abhängige Strukturen (Observers) werden bei jeder Zustandsveränderung informiert. Eine Veränderung eines Objekts kann hierbei gleichgesetzt werden mit einem Datenfluss. Datenflüsse können aus verschiedensten Operationen entstehen wie z.B. Klick-Events, Variablen, Cache etc. Als Observer kann man sich in diesem Datenfluss einhängen und entsprechend reagieren.\cite{rx-intro} Rx bietet eine enorme Menge an Funktionen diese Datenflüsse zu bearbeiten/manipulieren (siehe Sektion Operatoren). Diese Operatoren komplett abzudecken wird in dieser Arbeit unmöglich sein, jedoch wird nach dem behandeln dieses Kapitels ein gewisses Grundverständnis für neue Operatoren entstehen und wie diese in Folge anzuwenden sind. Die grundlegenden Konzepte, um asynchrone Events in RxJS zu steuern, sind:
+Im Kern ist reactive Programming ein Programmierparadigma. Im \textbf{reaktiven Manifest}, zu finden unter
+
+\begin{center}
+\url{https://www.reactivemanifesto.org/de},
+\end{center}
+
+\noindent
+wird bereits beschrieben, dass Reactive Programming als Programmierung mit asynchronen, immutable Streams von Events bezeichnet wird. Laut der offiziellen Dokumentation richtet sich ReactiveX nach dem Beobachter-Muster (engl. Observer-Pattern). Das Observer-Pattern ist ein Entwurfsmuster, in der Änderungen eines Objektes (Subjects genannt) an einer Liste abhängiger Strukturen weitergereicht wird. Diese abhängige Strukturen (Observers) werden bei jeder Zustandsveränderung informiert. Eine Veränderung eines Objekts kann hierbei gleichgesetzt werden mit neuen Wert innerhalb eines Datenflusses. Als Beispiel für eine reaktive Anwendung kann Excel genommen werden. Ändert man einen Wert in einer Zelle, ändert sich auch der Wert in der Summenzelle. Die Zelle, deren Wert geändert wurde, löst ein Event aus, den die Summen-Zelle empfängt. Daraufhin findet eine Neuberechnung statt.\cite{reactive-programming-beispiel} Datenflüsse können aus verschiedensten Operationen entstehen wie z.B. Klick-Events, Variablen, Cache etc. Als Observer kann man sich in diesem Datenfluss einhängen und entsprechend reagieren.\cite{rx-intro} Rx bietet eine enorme Menge an Funktionen diese Datenflüsse zu bearbeiten/manipulieren (siehe Sektion Operatoren). Diese Operatoren komplett abzudecken wird in dieser Arbeit unmöglich sein, jedoch wird nach dem behandeln dieses Kapitels ein gewisses Grundverständnis für neue Operatoren entstehen und wie diese in Folge anzuwenden sind. Die grundlegenden Konzepte, um asynchrone Events in RxJS zu steuern, sind:
 
 \begin{itemize}
     \item Observable: Repräsentiert die Idee einer abrufbaren Sammlung, in der zukünftige Werte oder Events gelagert sind.
     \item Observer: Eine Sammlung von Callbacks die, die  aus dem Observable-Stream gelieferten Werte, abrufen.
     \item Subscription: Repräsentiert das Aufrufen eines Observable.
     \item Operators: Funktionen, die das Verhalten von Observable-Streams beeinflussen.
-    \item Subjects: Eventgeneratoren, die Events an zuhörende Observer zurückgibt. Im Gegensatz zu Observables, ist hier ein Multicasting der Werte an die Observer möglich.
+    \item Subjects: Eventgeneratoren, die Events an zuhörende Observer zurückgibt. Im Gegensatz zu Observables, sind Subjects standardmäßig multicasting fähig.
     \item Schedulers: Steuerungsmechanismen die bestimmen, wann eine Subscription startet und wann Werte aus dem Stream an die Observer übermittelt werden.
 \end{itemize}
 
@@ -27,7 +34,7 @@ Observables sind eine träge Sammlung von multiplen Werten. Sie füllen den fehl
 \end{center}
 
 \noindent
-Das Push- und Pull-Prinzip beschreibt dabei wie ein Daten-Produzent mit dem Daten-Verarbeiter kommuniziert. In \textbf{Pull-Systemen} bestimmt der Verarbeiter, wann die Daten vom Ersteller angenommen werden. Der Ersteller selbst weiß nicht wann die Daten angefragt werden. Jede Javascript Funktion unterliegt einem Pull-System. Die Funktion ist ein Verarbeiter von Daten und diese kann im Code jederzeit abgerufen werden.\\
+Das Push- und Pull-Prinzip beschreibt dabei wie ein Datenproduzent mit dem Datenverarbeiter kommuniziert. In \textbf{Pull-Systemen} bestimmt der Verarbeiter, wann die Daten vom Ersteller angenommen werden. Der Ersteller selbst weiß nicht wann die Daten angefragt werden. Jede Javascript Funktion unterliegt einem Pull-System. Die Funktion ist ein Verarbeiter von Daten und diese kann im Code jederzeit abgerufen werden.\\
 
 \noindent
 Das \textbf{Push-Prinzip} wird im nächsten Beispiel deutlich. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
@@ -88,7 +95,7 @@ Bei einer Subscription können drei verschiedene Events auftreten und somit drei
 \end{itemize}
 
 \noindent
-In Push-Systemen steuert der Daten-Produzent, wann die Daten an die Zuhörenden übermittelt werden. Der Daten-Verarbeiter weiß dabei nicht, wann die Daten ankommen. Promises sind ein typisches Beispiel für Push-Systeme. Ein Promise (Produzent) übermittelt einen eingetroffenen Wert an angeschlossene Callbacks( Verarbeiter). Ungleich wie mit Funktionen bestimmen Promises, wann die Werte an die Callbacks weitergereicht wird. Observables zählen zu einem neuen Push-System in Javascript. Im Gegensatz zu Promises emittieren Observables multiple Werte in Form von Streams. Zur Unterscheidung:
+In Push-Systemen steuert der Datenproduzent, wann die Daten an die Zu-hörenden übermittelt werden. Der Datenverarbeiter weiß dabei nicht, wann die Daten ankommen. Promises sind ein typisches Beispiel für Push-Systeme. Ein Promise (Produzent) übermittelt einen eingetroffenen Wert an angeschlossene Callbacks (Verarbeiter). Ungleich wie mit Funktionen bestimmen Promises, wann die Werte an die Callbacks weitergereicht wird. Observables zählen zu einem neuen Push-System in Javascript. Im Gegensatz zu Promises emittieren Observables multiple Werte in Form von Streams. Zur Unterscheidung:
 
 \begin{itemize}
 \item Eine Funktion ist eine träge ausführende Operation, die beim Abruf ein Wert synchron zurückgibt.
@@ -97,7 +104,7 @@ In Push-Systemen steuert der Daten-Produzent, wann die Daten an die Zuhörenden 
 \end{itemize}
 
 \noindent
-Hierbei stellt sich die Frage, was bedeutet träge? Träge Funktionen, im englischen auch als \textit{lazy Functions} bezeichnet, sind Funktionen die erst bei ihrem Aufruf Werte produzieren. Beispiel:
+Hierbei stellt sich die Frage, was bedeutet träge? Träge Funktionen, im englischen auch als \textit{lazy Functions} bezeichnet, sind Funktionen die erst bei ihrem Aufruf Werte produzieren.\cite{lazy-functions}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -111,7 +118,6 @@ console.log(x);
 const y = foo.call(this); // same as foo()
 console.log(y);
 \end{lstlisting}
-\caption{Funktionen sind träge. \cite{lazy-functions}}
 \end{figure}
 
 \begin{figure}[H]
@@ -128,11 +134,11 @@ foo.subscribe((y) => {
   console.log(y);
 });
 \end{lstlisting}
-\caption{Observables verhalten sich gleich.}
 \end{figure}
 
 \noindent
 Der Output bleibt immer derselbe:
+
 \begin{figure}[H]
 \begin{center}
 \includegraphics{observable-lazy-console}
@@ -144,27 +150,25 @@ Das liegt daran, da sowohl Funktionen als auch Observables träge sind. Die Oper
 Der Hauptpunkt in dem Observables sich von Funktionen unterscheiden ist, dass Observables mehrere Werte (mit der Zeit) emittieren können. Innerhalb einer Funktion ist es nicht Möglich zwei return Ausdrücke einzubauen, die zusammen ausgegeben werden.
 
 \subsubsection{Anatomie eines Observable}
-Observables werden entweder mit der create Methode, mit einer Observable-Instanz oder mit der Hilfe eines Observable Operators \textbf{erstellt}. Der Datenfluss wird an den Observern mit der subscribe()-Methode \textbf{überreicht}. Als Letztes kann ein Observable und somit sein Datenfluss \textbf{geschlossen} werden.
+Observables werden entweder mit der create Methode, mit einer Observable-Instanz oder mit der Hilfe eines Observable Operators \textbf{erstellt}. Die Sequenzkette wird an den Observern mit der subscribe()-Methode \textbf{überreicht}. Letzteres kann ein Observable \textbf{abgesetzt} werden.
 
 \subsubsection{Observables erstellen}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-const root = new Observable<string>(observer => {
-    setInterval(() => observer.next('hi'), 2000);
+const randomNumber = new Observable<number>(observer => {
+    observer.next(Math.random());
 });
-
-root.subscribe((val: string) => console.log(val));
 \end{lstlisting}
-\caption{Observables verhalten sich gleich.}
+\caption{Instantiierung eines Observables, als Parameter wird ein Callback angenommen.}
 \end{figure}
 
 \noindent
-Die statische Methode Observable.create() ist ein alias ist zum Konstruktor-Aufruf. Für gewöhnlich werden jedoch Operatoren mit den sog. \textit{creation operators} wie \textbf{of}, \textbf{from}, \textbf{interval} etc. erstellt. In dem oben angeführten Beispiel wird zudem die subscribe()-Methode aufgerufen, um die Stream-Werte abzurufen. Im nächsten Abschnitt wird erklärt, wie genau eine Subscription abläuft.\\
+Die statische Methode Observable.create() ist ein alias ist zum Konstruktor-Aufruf. Für gewöhnlich werden jedoch sog. \textit{creation operators} wie \textbf{of}, \textbf{from}, \textbf{interval} etc. angewendet, um Observables zu erstellen. Im nächsten Abschnitt werden die verschiedenen Observable-Typen gegenübergestellt.
 
-\subsubsection{Observables überreichen}
+\subsubsection{Sequenzkette überreichen}
 
-Beim Aufruf der subscribe()-Methode wird ein eigenständiger Datenfluss an den Observer überreicht. Das hat zur Folge, dass Observer sich dem gleichen Observable-Stream anschließen und dennoch unterschiedliche Werte bekommen können.
+Beim Aufruf der subscribe()-Methode überreicht der Datenproduzent ein eigenständigen Datenfluss an die Observer. Das hat zur Folge, dass mehrere Observer sich dem gleichen Observable anschließen und dennoch unterschiedliche Werte bekommen können.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -172,13 +176,20 @@ const randomNumber = new Observable<number>(observer => {
     observer.next(Math.random());
 });
 
-randomNumber.subscribe(value => console.log('First subscription emits: ' + value));
-randomNumber.subscribe(value => console.log('Second subscription emits: ' + value));
+randomNumber.subscribe(value =>
+    console.log('1st subscription emits: ', value));
+randomNumber.subscribe(value =>
+    console.log('2nd subscription emits: ', value));
 \end{lstlisting}
 \end{figure}
 
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=12cm]{unicasting-observables}
+\end{center}
+\end{figure}
 \noindent
-Diese Eigenschaft wird als \textbf{unicasting} bezeichnet. Das ist nur Möglich, da die Funktion random() erst dann aufgerufen wird, wenn ein Observable mit der subscribe()-Methode aufgerufen wird. Es gibt nun mehrere Möglichkeiten, dass sich Observers den gleichen Datenfluss teilen. Eine Möglichkeit wäre, den Datenproduzent außerhalb des Observables auszulagern. 
+Das Ergebnis sind zwei verschiedene Werte, bei zwei Subscriptions an einem Observable. Diese Eigenschaft wird als \textbf{unicasting} bezeichnet. Das ist nur Möglich, da die Funktion random() erst dann aufgerufen wird, wenn ein Observable mit der subscribe()-Methode aufgerufen wird. Somit hat jede Subscription einen eigenen Datenproduzent. Es gibt nun mehrere Möglichkeiten, dass sich Observers den gleichen Datenfluss teilen. Eine Möglichkeit wäre, den Datenproduzent außerhalb des Observable auszulagern. 
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -196,29 +207,52 @@ Eine elegantere Variante, wäre ein Operator anzuwenden, der den zuletzt eingetr
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-const randomNumber = new Observable<number>(observer => {
-    observer.next(Math.random());
-});
+const multicast = randomNumber.pipe(shareReplay());
 
-const hot = randomNumber.pipe(shareReplay());
-
-...
+multicast.subscribe(value =>
+    console.log('1st subscription emits: ', value));
+multicast.subscribe(value =>
+    console.log('2nd subscription emits: ', value));
 \end{lstlisting}
 \end{figure}
 
 \noindent
-Nun können multiple Subscriptions am gleichen Stream, die gleichen Werte empfangen. Diese Eigenschaft wird auch als \textbf{multicasting} bezeichnet. Das Ergebnis sieht wie folgt aus:
+Nun können multiple Subscriptions am Observable die gleiche Sequenzkette empfangen, da shareReplay() dafür sorgt, dass der Datenproduzent nur einmal aufgerufen wird. Diese Eigenschaft wird auch als \textbf{multicasting} bezeichnet. Das Ergebnis sieht wie folgt aus:
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics{multicasting-observables}
+\includegraphics[width=12cm]{multicasting-observables}
 \end{center}
 \end{figure}
 
 \noindent
-Wenn Werte eines Streams erst beim Aufruf einer Subscription entstehen, handelt es sich hierbei um \textbf{cold Observables}.\cite{hot-vs-cold-observable} Dies ist in jedem der oben angeführten Beispiele der Fall. Um auf die oben angeführte These zurückzukommen, dass Observables träge sind, war dies zwar zum Einstieg in die Thematik zwar  hilfreich, aber nur die halbe Wahrheit. Observables können Werte emittieren auch ohne der subscribe()-Methode. Das bedeutet es werden Werte ausgestoßen, unabhängig davon ob eine Subscription stattfindet oder nicht. 
+Wenn Werte eines Streams erst beim Aufruf einer Subscription entstehen, handelt es sich hierbei um \textbf{cold Observables}.\cite{hot-vs-cold} Dies ist in jedem der oben angeführten Beispielen der Fall. Um auf die oben angeführte These zurück-zukommen, dass Observables träge sind, war dies zwar zum Einstieg in die Thematik hilfreich, aber nur die halbe Wahrheit. Observables können Werte emittieren auch ohne der subscribe()-Methode. Das bedeutet es werden Werte ausgestoßen, unabhängig davon ob eine Subscription stattfindet oder nicht. Hierbei würde es sich um ein \textbf{hot Observable} handeln. Um einen besseren Einblick zu bekommen, wird ein Observable erstellt, dass unendlich viele Werte ausstößt.
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+const infinite = RxJS.interval(1000).pipe(publish()) as ConnectableObservable<number>;
+infinite.connect();
+
+setTimeout(() =>
+    infinite.subscribe(v => console.log('1st subscriber:', v)), 2000);
+setTimeout(() =>
+    infinite.subscribe(v => console.log('2nd subscriber: ', v)), 3000);
+\end{lstlisting}
+\end{figure}
+
+\noindent
+Die statische Methode interval() erstellt ein Observable, dass aufsteigend Nummern ausgibt innerhalb eines festgelegten Intervalls. Der Startindex ist 0. Die publish()-Funktion sorgt dafür, dass der Datenproduzent an die verschiedenen Subscriptions geteilt wird. In diesem Fall wird das Observable auch in einem \textbf{connectable Observable} umgewandelt. Das heißt es werden erst Werte innerhalb der Sequenzkette emittiert, sobald die entsprechende connect()-Methode am Observable aufgerufen wird.\\
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=12cm]{hot-observable}
+\end{center}
+\end{figure}
 
 
+
+\noindent
+Wie man nun gesehen hat hängt es vom Observable ab, wann die Sequenz von Werten emittiert werden. Ein hot Observable könnte Werte ausstoßen, sobald es erstellt wird. Und deshalb könnten Observers, die sich später am Observable-Stream einhängen, Werte zwischenzeitlich verpassen. Wenn der gleiche Datenproduzent über verschiedene Subscriptions genutzt wird, ist dies ebenfalls ein Indikator dafür, dass es sich um ein hot Observable handeln könnte. Ein cold Observable dagegen wartet mit dem emittieren der Werte, bis eine Subscription eines Observers stattgefunden hat. Dieser Observer empfängt dementsprechend die gesamten Werte der Sequenzkette. In manchen Versionen von Rx gibt es auch die Bezeichnung connectable Observable. In solchen Fällen werden erst dann Werte emittiert, wenn die abhängige connect()-Methode aufgerufen wurde, unabhängig davon ob eine Subscription an dem Observable stattfindet oder nicht.\cite{hot-vs-cold-part-2}
 
 \noindent
 \begin{center}
