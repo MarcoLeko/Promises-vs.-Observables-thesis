@@ -1,6 +1,6 @@
 \section{Promises}
 
-Ein Promise repräsentiert ein Objekt das noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, da die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen Prozess asynchron aus. Das Prinzip der asynchronen Verarbeitung, bringt dabei Komplexität nach sich. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Dank der Rückruffunktionen ist die Ausführung dieser Sprache in asynchron möglich. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. 9). Mit Promises können voneinander abhängige Events übersichtlich dargestellt werden. Dank der Promise-Verkettung ist es auch möglich Fehlerbehandlungen übersichtlich abzudecken. Während bei Callbacks der Fokus darin liegt, in welcher Reihenfolge die Funktionen aufgerufen werden, sind Promises (mit ECMAScript 2015 eingeführt) danach gerichtet wie man mit dem Ergebnis der Interaktion umgeht.
+Ein Promise repräsentiert ein Objekt das noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, da die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen Prozess asynchron aus. Wenn die Daten angekommen sind, führt das Promise-Objekt die Aktionen mit den erstellten Verarbeitungsmethoden fort. Das Prinzip der asynchronen Verarbeitung, bringt dabei Komplexität nach sich. Um dem entgegenzuwirken hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Dank der Rückruffunktionen ist es Möglich auf blockierende Aktionen zu warten bis diese eingetroffen sind. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. 6). Mit Promises können voneinander abhängige Events übersichtlich dargestellt werden. Dank der Promise-Verkettung ist es auch möglich Fehlerbehandlungen übersichtlich abzudecken. Während bei Callbacks der Fokus darin liegt, in welcher Reihenfolge die Funktionen aufgerufen werden, sind Promises danach gerichtet wie man mit dem Ergebnis der Interaktion umgeht.
 
 \subsection{Funktionsweise}
 
@@ -68,12 +68,12 @@ console.log(resolveRightAway);
 \end{figure}
 
 \noindent
-Dieser Promise springt auf Anhieb vom pending in den resolved Zustand, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status rejected entsprechen.
+Promises haben einen Status und einen Wert. Bei der Initialisierung einer Promise-Instanz ist der Status erstmals immer ausstehend (pending). In diesem Beispiel löst sich der Promise auf Anhieb vom ausstehenden in den eingetroffenen (resolved) Zustand auf, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status abgelehnt (rejected) entsprechen.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=12cm]{promise-beispiel-1}
-\caption{Promises haben einen Status und einen Wert}
+\caption{}
 \end{figure}
 
 \noindent
@@ -110,11 +110,11 @@ Im oberen Beispiel wird der Promise vorbehaltlos nach zehn Sekunden aufgelöst, 
 \end{figure}
 
 \noindent
-Wie man nun gesehen hat kann ein Promise Objekt den Status  \textbf{pending}, \textbf{resolved} oder \textbf{rejected} haben. Im Status pending ist der Ausgang der Aktion noch ungewiss und deshalb der Promise-Wert undefined. Ändert sich der Status bzw. ist die Aktion zum Promise eingetroffen oder fehlgeschlagen, ist der Status \textbf{settled}. Grundsätzlich läuft ein Promise also vom pending in den settled Status. In der nächsten Sektion wird auf das Verarbeiten von Promises näher eingegangen.
+Wie man nun gesehen hat kann ein Promise Objekt den Status \textbf{pending}, \textbf{resolved} oder \textbf{rejected} haben. Im Status pending ist der Ausgang der Aktion noch ungewiss und deshalb der Promise-Wert undefined. Ändert sich der Status bzw. ist die Aktion zum Promise eingetroffen oder fehlgeschlagen, ist der Status \textbf{settled}. Grundsätzlich läuft ein Promise also vom pending in den settled Status. In der nächsten Sektion wird auf das Verarbeiten von Promises näher eingegangen.
 
 \subsubsection{Verarbeiten von Promises}
 
-Zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Eintreffen oder Fehlschlagen einer asynchronen Operation, einschließlich des entstandenen Wertes. Ein solches Objekt bietet \textbf{statische} Methoden und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Instanz eines Promise-Objekts aufgerufen werden können. Es gibt drei Prototyp-Methoden. Alle der folgenden Methoden lassen sich unter einem Promise-Event einordnen:
+Zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Eintreffen oder Fehlschlagen einer asynchronen Operation, einschließlich des entstandenen Wertes. Ein solches Objekt bietet \textbf{statische} Methoden und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Instanz eines Promise-Objekts aufgerufen werden können. Unter folgenden Promise-Events lassen sich diese Methoden einordnen:
 
 \begin{itemize} 
 \item Pending: Der Ausgang des Promises ist noch(!) ungewiss.
@@ -124,19 +124,19 @@ Zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Eintreffen od
 \end{itemize}
 
 \noindent
-Eine oder mehrere der drei Prototyp-Methoden werden aufgerufen wenn ein Promise in den settled Zustand übergelaufen ist:
+Eine oder mehrere der drei Prototyp-Methoden werden aufgerufen, wenn ein Promise in den settled Zustand übergelaufen ist:
 
 \begin{description}
 
 \begin{figure}[H]
 \item \begin{lstlisting}[basicstyle=\small]
-Promise.prototype.catch(onRejected)
+Promise.prototype.then(onFulfilled, onRejected)
 \end{lstlisting}
 \end{figure}
 
 \begin{figure}[H]
 \item \begin{lstlisting}[basicstyle=\small]
-Promise.prototype.then(onFulfilled, onRejected)
+Promise.prototype.catch(onRejected)
 \end{lstlisting}
 \end{figure}
  
@@ -149,16 +149,16 @@ Promise.prototype.finally(onFinally)
 \end{description}
 
 \noindent
-Die untenstehende Grafik zeigt den Ablauf für das Eintreten der Events und wie man diese dann verarbeitet. Mit den Methoden \textbf{then()} und \textbf{catch()} werden auf eintretenden Aktionen reagiert. Da beide Methoden ein neues Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally} an ein Promise Objekt angebunden wird, wird diese Callback-Funktion in jedem Fall aufgerufen, unabhängig davon ob der Promise \textbf{eingetroffen} oder \textbf{fehlgeschlagen} ist.
+Die untenstehende Grafik zeigt den Ablauf für das Eintreten der Events und wie man diese verarbeitet. Mit den Methoden \textbf{then()} und \textbf{catch()} werden auf eintretenden Aktionen reagiert. Diese Verarbeitungsmethoden werden aufgerufen wenn ein Promise in den settled Zustand angekommen ist. Im Erfolgsfall wird der Promise mit dem then()-Methode weiterverarbeitet. Im Fehlerfall hingegen wird die catch()-Methode aufgerufen. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally} an ein Promise Objekt angebunden wird, wird diese Methode in jedem Fall aufgerufen, unabhängig davon ob der Promise eingetroffen oder fehlgeschlagen ist.
 
 
 \begin{figure}[H]
-\includegraphics[width=12cm, height=6cm]{Promises-workflow}
+\includegraphics[width=13cm]{Promises-workflow}
 \caption{Weiterreichung eines Promise-Objekts \cite{promise-executor}}
 \end{figure}
 
 \noindent
-Promise-Fehlschläge können dabei auf zwei verschiedene Wege gefangen werden. Innerhalb der then() Methode kann eine zweite Funktion für das \textbf{Nicht-Eintreffen} der Operation festgelegt werden. Ein Beispiel dafür wäre:
+Promise-Fehlschläge können dabei auf zwei verschiedene Wege gefangen werden. Innerhalb der then()-Methode kann eine zweite, optionale Funktion für das \textbf{Nicht-Eintreffen} der Operation festgelegt werden. Ein Beispiel dafür wäre:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -168,7 +168,7 @@ get('story.json').then((response) => {
   console.log('Failed!', error);
 })
 \end{lstlisting}
-\caption{Error-Handling ohne catch. \cite{callback-vs-promises}}
+\caption{Error-Handling innerhalb der then()-Methode. \cite{callback-vs-promises}}
 \end{figure}
 
 \begin{figure}[H]
@@ -179,11 +179,11 @@ get('story.json').then((response) => {
   console.log('Failed!', error);
 })
 \end{lstlisting}
-\caption{Error-Handling mit catch. \cite{callback-vs-promises}}
+\caption{Error-Handling mit der catch()-Methode. \cite{callback-vs-promises}}
 \end{figure}
 
 \noindent
-Im Gegensatz zur oberen Variante führt die catch() Methode keine zusätzlichen Operationen aus. Sie macht den Code lediglich semantisch lesbarer. Wichtig zu beachten ist, dass innerhalb einer Executor-Funktion \textbf{niemals} beide Argumente gemeinsam eintreffen können. Sie verhalten sich exklusiv. Deshalb ist das letztere Beispiel im Verhalten vergleichbar mit diesem Beispiel:
+Im Gegensatz zur oberen Variante führt die catch()-Methode keine zusätzlichen Operationen aus. Sie macht den Code lediglich semantisch lesbarer. Wichtig zu beachten ist, dass innerhalb einer Executor-Funktion \textbf{niemals} beide Argumente gemeinsam eintreffen können. Sie verhalten sich exklusiv. Deshalb ist das letztere Beispiel im Verhalten vergleichbar mit diesem Beispiel:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -196,7 +196,7 @@ get('story.json').then((response) => {
 \end{figure}
 
 \noindent
-Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Diese bestehen aus vier Methoden:
+Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then()-Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Diese bestehen aus vier Methoden:
 
 \begin{itemize}
 \item Promise.resolve()
@@ -216,7 +216,6 @@ rejectedPromise.catch((err: string) => {
     console.log('Reason of failure: ' + err);
 });
 \end{lstlisting}
-\caption{introduction.ts}
 \end{figure}
 
 \noindent
