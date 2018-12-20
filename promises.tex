@@ -240,7 +240,7 @@ module.exports = {
 \begin{lstlisting}[basicstyle=\small]
 export class HTTP {
 
-    public makeRequest(url: string): Promise<string> {
+    public makeRequest(url: string): Promise<any> {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest();
             req.open('GET', url);
@@ -248,7 +248,7 @@ export class HTTP {
             req.onload = () => {
                 if (req.status === 200) {
                     this.fakeLatency()
-                        .then(() => resolve(req.response));
+                        .then(() => resolve(JSON.parse(req.response)));
                 } else {
                     reject(Error(req.statusText));
                 }
@@ -272,45 +272,59 @@ export class HTTP {
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-class Story extends HTTP {
+export class Story {
 
-    public static BASE_URL = 'https://jsonplaceholder.typicode.com/';
+    public static BASE_URL = 'https://jsonplaceholder.typicode.com/posts/';
+    public spinnerElement: HTMLElement;
+
+    public http: HTTP = new HTTP();
 
     constructor() {
-        super();
+       this.spinnerElement = Story.createElm('<svg>..</svg>');
     }
 
+    public static createElm(innerHTML: string): HTMLElement {
+        const div = document.createElement('div');
+        div.innerHTML = innerHTML;
+        document.body.appendChild(div);
+        return div;
+    }
+    
     public getAllStories(): Promise<string> {
-        const relativeUrl: string = 'posts';
-        return this.makeRequest(Story.BASE_URL + relativeUrl);
+        return this.http.makeRequest(Story.BASE_URL);
     }
 
     public getChapter(chapter: number): Promise<string> {
-        return this.makeRequest(`${Story.BASE_URL}posts/${chapter.toString()}`);
+        return this.http.makeRequest(Story.BASE_URL + chapter.toString());
     }
+\end{lstlisting}
+\end{figure}
 
-    public spawn(result: string | string[]): void {
-        const chapter = [];
-
-        if (result instanceof Array === false) {
-            chapter.push(JSON.parse(result as string));
-        } else {
-            for (const post of result) {
-                chapter.push(JSON.parse(post));
-            }
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+    public spawn(content): void {
+        if (content instanceof Array === false) {
+            content = [content];
         }
 
-        chapter.forEach(elm =>
-            this.storyElement.innerHTML +=
-                `<h1>${elm.title}</h1>
-                     <div class="story-info"><i>ID: Post-${elm.id}</i></div>
-                 <div><p>${elm.body}.</p></div>`
-        );
+        content.forEach(elm => {
+            const snippet = document.createElement('div');
+            snippet.innerHTML = '<h1>${elm.title}</h1>
+                                 <div>
+                                     <i>${elm.id}</i>
+                                 </div>
+                                 <p>${elm.body}.</p>';
+
+            document.body.insertBefore(snippet, this.spinnerElement);
+        });
+
     }
 
     public displayFinished(): void {
-        document.body.innerHTML += '<div>Done!</div>';
+        this.spinnerElement.style.display = 'none';
+        Story.createElement('All done!');
     }
+}
 
 const story = new Story();
 \end{lstlisting}
@@ -322,11 +336,12 @@ Dieses Beispiel kommt einem praktischen Anwendungsfall relativ nahe. Die Klasse 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
 story.getAllStories()
-    .then((response) => story.spawn(response))
-    .finally(() => {
-        story.spinnerElement.style.display = 'none';
-        story.displayFinished();
-    });
+    .then((response: XMLHttpRequestResponseType) =>
+        story.spawn(response)
+    )
+    .finally(() =>
+        story.displayFinished()
+    );
 \end{lstlisting}
 \end{figure}
 
@@ -354,7 +369,7 @@ In diesem Fall werden drei Kapitel nacheinander angefragt und im Browser angezei
 
 \begin{enumerate}
     \item Das initiale Promise wird aufgerufen und das Kapitel angezeigt
-    \item .then() wird aufgerufen und die nächste Sequenz gestartet -         diese endet erst, wenn die Operation innerhalb dieser Methode          erfüllt ist
+    \item .then() wird aufgerufen und die nächste Sequenz gestartet - diese endet erst, wenn die Operation innerhalb dieser Methode erfüllt ist
     \item Das nächste .then() wird initiiert...
 \end{enumerate}
 

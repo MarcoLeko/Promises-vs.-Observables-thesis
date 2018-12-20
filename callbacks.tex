@@ -25,6 +25,7 @@ module.exports = {
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
 const numbers: number[] = [1, 2, 3, 4, 5, 6];
+
 function isEven(x): boolean { 
   return x % 2 === 0; 
 }
@@ -93,7 +94,7 @@ function makeRequest(url, onSuccess, onFailure?): void {
 
     req.onload = () => {
         if (req.status === 200) {
-            fakeLatency(() => onSuccess(req.response));
+            fakeLatency(() => onSuccess(JSON.parse(req.response));
         }
     };
 
@@ -129,35 +130,33 @@ function createElm(innerHTML): HTMLElement {
     return div;
 }
 
-function spawn(content): void {
-    content = JSON.parse(content);
-
+function spawn(content: any): void {
     if (content instanceof Array === false) {
         content = [content];
     }
 
     content.forEach(elm => {
         const snippet = document.createElement('div');
-        snippet.innerHTML = `<h1>${elm.title}</h1>
-                           <div class="story-info">
-                               <i>ID: Post-${elm.id}</i>
-                           </div>
-                           <p>${elm.body}.</p>`;
+        snippet.innerHTML = '<h1>${elm.title}</h1>
+                             <div>
+                                <i>${elm.id}</i>
+                             </div>
+                             <p>${elm.body}.</p>';
 
         document.body.insertBefore(snippet, loadingIcon);
     });
 }
 
 function catchError(err) {
-     createElm(`Ooops! Error Occurred! ${err}`);
+     createElm('Ooops! Error Occurred! ${err}');
 }
 
 function displayFinished(): void {
     loadingIcon.style.display = 'none';
-    createElm('<div>All done!</div>');
+    createElm('All done!');
 }
 
-const loadingIcon = createElm(`<svg>...</svg>`);
+const loadingIcon = createElm('<svg>..</svg>');
 \end{lstlisting}
 \end{figure}
 
