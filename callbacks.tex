@@ -1,7 +1,7 @@
 \section{Callbacks}
-Javascript ist eine auf Events basierende Programmiersprache. Das bedeutet, anstatt auf blockierenden Code zu warten, führt Javascript Operationen weiter aus und reagiert wenn die Aktion fertig ist. Um sicherzustellen, dass Javascript auf die Fertigstellung von asynchronen Operationen wartet, wurden \textbf{Callbacks} eingeführt. Doch was genau sind Callbacks?
+Javascript ist eine auf Events basierende Programmiersprache. Das bedeutet, anstatt auf blockierenden Code zu warten, führt Javascript Operationen weiter aus und reagiert wenn die Aktion fertig ist. Um sicherzustellen, dass Javascript auf die Fertigstellung von asynchronen Operationen wartet, wurden \textbf{Callbacks} eingeführt.
 
-\subsection{Funktionale Programmierung}
+\subsection{Funktionsweise}
 
 Sowohl in Javascript als auch in Typescript sind Funktionen als Erste-Klasse-Objekte zu sehen. Aus diesem Grund ist es Möglich sie an Variablen, als Argumente in anderen Funktionen oder als Rückgabewert zu übergeben. Diese übergebenen Funktionen heißen Callbacks.\\
 
@@ -36,7 +36,7 @@ console.log(evenNumbers) // 2 4 6
 \end{figure}
 
 \noindent
-Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion die, die Filterkonditionen bestimmt. Dabei wird zuerst, dass Element aus der Liste entnommen und dann die Kondition geprüft. Da Funktionen als Argument anderer Funktionen übergeben werden, ist es Möglich diese \glqq{}später\grqq{} innerhalb des Funktionsrumpfes aufzurufen \textit{(Call back)}. Wenn also eine Funktion als Parameter übergeben wird, wird diese nicht sofort ausgeführt. Eine Funktion die ein Callback als Input-Parameter annimmt, wird auch High-Order-Funktion genannt.\cite{callbacks-example} Möchte man das Filtern klassisch implementieren, dann würde der Code im Vergleich dazu so aussehen:
+Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion die, die Filterkonditionen bestimmt. Dabei wird zuerst, dass Element aus der Liste entnommen und dann die Kondition geprüft. Da Funktionen als Argument anderer Funktionen übergeben werden, ist es Möglich diese \glqq{}später\grqq{} innerhalb des Funktionsrumpfes aufzurufen \textit{(Call back)}. Wenn also eine Funktion als Parameter übergeben wird, wird diese nicht sofort ausgeführt. Eine Funktion die ein Callback als Argument annimmt, wird auch High-Order-Funktion genannt.\cite{callbacks-example} Möchte man das Filtern klassisch implementieren, dann würde der Code im Vergleich dazu so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -56,10 +56,20 @@ console.log(newArr);
 Wie man nun sehen kann, ist man mit dieser Umsetzung an externe Variablen gebunden. Diese könnte im Verlauf des Codes eventuell überschrieben werden. Das heißt der unten ausgeführte Code ist abhängig vom Status des Arrays. Dies führt zu einer erhöhten Fehleranfälligkeit. Wenn man nun alle ungeraden Zahlen herausfiltern möchte, müsste man ein neues Array mit einer neuen Schleife erstellen. In diesem Fall wird keine Möglichkeit der Wiederverwendbarkeit gewährleistet.
 
 \subsection{Asynchrone Verarbeitung}
-Ein Ansatz der asynchronen Verarbeitung ist die Nutzung von Funktionen die eine Funktion als Argument annehmen und erst dann diese Aufrufen, wenn eine blockierende Aktion fertig ausgeführt wurde. Dieses Verhalten ist nützlich wenn der Browser von bestimmten, zeitintensiven Aktionen abhängig ist. In den folgenden drei Kapitel (Callbacks, Promises und Async await) wird der gleiche Anwendungsfall, in drei verschiedenen Ansätzen angewendet und gegenübergestellt. Mit der REST-Api \textbf{JSONPlaceholder} wird ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Je nach Anwendungsfall werden verschiedene Ausführungen von Anfragen an diese Endstelle geführt, um die Code-Beispiele so praxisnah wie Möglich zu halten.
+
+Ein Ansatz der asynchronen Verarbeitung ist die Nutzung von Funktionen die eine Funktion als Argument annimmt und erst dann diese Aufrufen, wenn eine blockierende Aktion fertig ausgeführt wurde. Dieses Verhalten ist nützlich wenn der Browser von bestimmten, zeitintensiven Aktionen abhängig ist. Man kann ein synchrones und asynchrones Programmiermodel mit einem kleinem Beispiel vergleichen: Eine Anwendung die zwei Ressourcen aus einem Netzwerk anfragt und die Ergebnisse miteinander kombiniert. In einer synchronen Umgebung würde man dies mit einem Funktionsaufruf nach dem anderen bewältigen. Das hat den Nachteil, dass die zweite Funktion erst dann ausführt, wenn die erste fertig ist. Die Gesamtzeit der Ausführung ist die Summe der Antwortzeiten der beiden Anfragen. Die Lösung dafür ist ein synchrones Programmverhalten mit mehrere kontrollierten Threads. Ein Thread ist ein Ausführungsstrang, der seine eigene Zeitleiste besitzt und innerhalb dieser Operationen ausführt. Ein zweiter Thread könnte zum selben Zeitpunkt die Funktion aufrufen und wenn beide Threads das Ergebnis geliefert bekommen resynchronisieren sie sich und kombinieren ihre Ergebnisse. Im folgenden Diagramm repräsentieren die blauen Linien die Zeit, in der das Programm ausführt und die roten Linien repräsentieren die Zeit, in der auf die Antwort gewartet wird.\cite{asynchronitaet}
+
+\begin{center}
+\begin{figure}[H]
+\includegraphics[width=12cm]{synchron-vs-asynchron-diagram}
+\end{figure}
+\end{center}
+
+\noindent
+Im synchronen Modell ist die Zeit der Netzwerkanfrage ein Teil der Zeitleiste. Im asynchronen Modell hingegen führt das Starten einer asynchronen Operation zu einer neuen Zeitleiste. Zusammenfassend kann man also sagen, dass in dem synchronen Modell implizit auf die Aktionen gewartet wird, und in dem asynchronen Modell explizit.
 
 \subsection{Beispiel}
-Das folgende Code-Beispiel richtet sich nach dem funktionalen Programmierparadigma, da durch die Nutzungen von \textbf{puren Funktionen}, das Callback-Prinzip besser zur Geltung kommt. Eine pure Funktion, ist eine Funktion die beim selben Input jedes mal das gleiche Output wiedergibt. Für das Beispiel sollte folgend konfiguriert werden:
+In den Kapitel Callbacks, Promises und Async await wird das gleiche Beispiel, in drei verschiedenen Ausprägungen angewendet und gegenübergestellt. Mit der REST-Api \textbf{JSONPlaceholder} wird ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Je nach Anwendungsfall werden verschiedene Ausführungen von Anfragen an diese Endstelle geführt, um die Code-Beispiele so praxisnah wie Möglich zu halten. Das folgende Beispiel richtet sich nach dem funktionalen Programmierparadigma, da durch die Nutzungen von \textbf{puren Funktionen}, das Callback-Prinzip besser zur Geltung kommt. Eine pure Funktion, ist eine Funktion, die beim selben Input jedes mal das gleiche Output wiedergibt. Zu erwähnen ist jedoch, dass die Umsetzung von Callbacks auch in dem objektorientiertem Schema genutzt werden kann. Für das Beispiel sollte folgend konfiguriert werden:
 
 \begin{center}
     async-patterns$\,\to\,$ webpack.config.js
@@ -95,20 +105,9 @@ function makeRequest(url, onSuccess, onFailure?): void {
 function fakeLatency(callback): void {
     setTimeout(callback, 3000 * Math.random());
 }
-\end{lstlisting}
-\end{figure}
 
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
 function baseUrl(): string {
     return 'https://jsonplaceholder.typicode.com/posts/';
-}
-
-function createElm(innerHTML): HTMLElement {
-    const div = document.createElement('div');
-    div.innerHTML = innerHTML;
-    document.body.appendChild(div);
-    return div;
 }
 
 function getAllChapters(onSuccess, onFailure?): void {
@@ -117,6 +116,17 @@ function getAllChapters(onSuccess, onFailure?): void {
 
 function getChapter(chapter, onSuccess, onFailure?): void {
     makeRequest(baseUrl() + chapter.toString(), onSuccess, onFailure);
+}
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+function createElm(innerHTML): HTMLElement {
+    const div = document.createElement('div');
+    div.innerHTML = innerHTML;
+    document.body.appendChild(div);
+    return div;
 }
 
 function spawn(content): void {
@@ -137,11 +147,7 @@ function spawn(content): void {
         document.body.insertBefore(snippet, loadingIcon);
     });
 }
-\end{lstlisting}
-\end{figure}
 
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
 function catchError(err) {
      createElm(`Ooops! Error Occurred! ${err}`);
 }
@@ -156,7 +162,7 @@ const loadingIcon = createElm(`<svg>...</svg>`);
 \end{figure}
 
 \noindent
-Dabei sind die wichtigsten Funktionen makeRequest(), getAllChapters(), getChapter() und spawn(). MakeRequest() führt eine Http-Anfrage gegen einen definierten Endpunkt aus. Wenn der Status der Antwort 200 beträgt, wird im Success-Callback vorangeschreitet. Bei einem Fehler wird der Error-Callback aufgerufen. Sowohl getAllChapter() als auch getChapter() führen makeRequest() aus mit der Möglichkeit im Erfolgs- und im Fehlerfall der Anfrage eine Aktion auszuführen. Spawn() nimmt ein Argument entgegen und lädt diesen in die HTML-DOM. Sollte ein Anwendungsfall sein, alle Kapitel der API anzufragen und bei Ankunft der Daten in die DOM zu laden, würde dies wie folgt aussehen:
+Dabei sind die wichtigsten Funktionen makeRequest(), getAllChapters(), getChapter() und spawn(). MakeRequest() führt eine Http-Anfrage gegen einen definierten Endpunkt aus. Wenn der Status der Antwort 200 beträgt, wird im Success-Callback vorangeschreitet. Bei einem Fehler wird der Error-Callback aufgerufen. Sowohl getAllChapter() als auch getChapter() führen makeRequest() aus mit der Möglichkeit im Erfolgs- und im Fehlerfall der Anfrage eine Aktion auszuführen. Spawn() nimmt ein Argument entgegen und lädt diesen in die DOM. Sollte ein Anwendungsfall sein, alle Kapitel der API anzufragen und bei Ankunft der Daten anzuzeigen, würde dies wie folgt aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -186,7 +192,7 @@ getChapter(1, function(response1) { // (*)
 \end{figure}
 
 \noindent
-Auffallend in diesem Beispiel wird der Grad an Einrückung, der mit jeder weiteren asynchronen Operationen steigt. Ein neuer Thread entsteht schon beim Aufruf von getChapter(1). Alle weiteren asynchronen Operationen sind voneinander abhängig und bleiben innerhalb des selben Zeitfensters. Asynchronität ist ansteckend. Eine Funktion, die zur asynchronen Verarbeitung ein Callback nutzt, operiert selbst asynchron. Wenn nun ein Großteil eines Programms aus ineinandergeschachtelten Funktionen besteht, kann diese Struktur zur erhöhten Fehleranfälligkeit führen. Dank der der sechsten Ecmascript-Version ist es auch Möglich Pfeil-Funktionen in Javascript zu nutzen. Diese sind syntaktisch kürzer als anonyme Funktionen. Bei der Verarbeitung des Fehlgeschlagenen Callbacks, würde der Code so aussehen:
+Auffallend in diesem Beispiel ist der Grad der Einrückung, der mit jeder weiteren asynchronen Operationen steigt. Ein neuer Thread entsteht schon beim Aufruf von getChapter(1). Alle weiteren asynchronen Operationen sind voneinander abhängig und bleiben innerhalb der selben Zeitleiste. Asynchronität ist ansteckend. Eine Funktion, die zur asynchronen Verarbeitung ein Callback nutzt, operiert selbst asynchron. Wenn nun ein Großteil eines Programms aus ineinandergeschachtelten Funktionen besteht, kann diese Struktur zur erhöhten Fehleranfälligkeit führen. Dank der der sechsten Ecmascript-Version ist es auch Möglich Pfeil-Funktionen in Javascript zu nutzen. Diese sind syntaktisch kürzer als anonyme Funktionen. Wenn nun die fehlgeschlagenen Callbacks zusätzlich verarbeitet werden sollen, dann sieht der Code so aus:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -201,22 +207,14 @@ getChapter(1, response1 => { // (*)
     }, err2 => catchError(err2)); // (**)
 }, err1 => catchError(err1)); // (*)
 \end{lstlisting}
-\caption{Es bildet sich ein sog. Baum, der sich immer weiter nach rechts ausbreitet.}
+\caption{In der Praxis sollte für eine asynchrone Operation wie z.B. ein Http-Aufruf der Fehlerfall immer abgedeckt sein.}
 \end{figure}
 
 \noindent
-Zusammenfassend kann man also sagen, dass in dem synchronen Modell implizit auf die Aktionen gewartet wird, und in dem asynchronen Modell explizit. Als Diagramm abgebildet führt der Browser die Methoden wie folgt aus:
-
-\begin{center}
-\begin{figure}[H]
-\includegraphics[width=12cm]{synchron-vs-asynchron-diagram}
-\caption{Ablauf der ausgeführten Operationen im Browser}
-\end{figure}
-\end{center}
+Es bildet sich eine Verzweigung, die sich immer weiter nach rechts ausbreitet. Zudem ist es auf dem ersten Blick schwer zu erkennen welcher Error-Callback zu welchem Kapitelaufruf gehört. \\
 
 \noindent
-Hier werden mehrere Level von Callback-Funktionen ineinander geschachtelt, um die Abhängigkeiten der Aufrufe zu wahren. Sollte jetzt bei einer selbsterstellten Callback-Funktion ein zusätzliches Error-Handling berücksichtigt werden, wird die Nachvollziehbarkeit einer höherrangigen Funktion kaum noch gewährleistet. Der Code oben wird deshalb auch als Callback-Hell bezeichnet.
-
+Wie man nun sehen kann, ist es möglich mit Callbacks asynchron Daten zu verarbeiten. Bei mehreren abhängigen asynchronen Prozessen müssen Callbacks ineinandergeschachtelt werden, um die Abhängigkeit zu wahren. Mehrere Level von geschachtelten Callbacks führen zu einer schwer nachvollziehbaren Code-Struktur. Deshalb wird der Code in Abbildung 6 auch als Callback-Hell bezeichnet. Um aus der Callback-Hell zu entkommen, ebnete Ecmascript 6 den Weg der rein nativen Nutzung von \textbf{Promises}.
 
 
 
