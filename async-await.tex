@@ -16,7 +16,6 @@ hello
 \noindent
 Da Promises selbst Rückruffunktionen nutzen, wird einem schnell klar, dass hier eine asynchrone Aktion stattfindet. Mit der Erscheinung von Ecmascript 2017 gibt es nun die Möglichkeit asynchron operierenden Code lesbarer darzustellen. Dies wird mit dem \textbf{async await} Konstrukt bewerkstelligt. 
 
-
 \subsection{Funktionsweise}
 
 Bei einer \textbf{async} Funktion handelt es sich um eine Funktion, die dank einer Eventschleife asynchron operiert. In einer Eventschleife werden auf Aktionen gewartet bis diese auftreten. Wenn also vor einer Funktion das Schlüsselwort async steht bedeutet dies nur eins: Die Funktion gibt immer ein Promise zurück.
@@ -147,12 +146,12 @@ Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exe
 
 Mit dem Ansatz der Callbacks war es in Javascript erstmals Möglich asynchrone Operationen sequentiell zu verarbeiten. Callbacks sind leicht zu verstehen, jedoch werden sie ineinandergeschachtelt schnell chaotisch und schwer nachzuvollziehen. Entwickler neigten dazu Libraries für asynchrone Verarbeitung zu nutzen wie:
 
-\begin{itemize}
+\begin{description}
 \item Q
 \item when
 \item WinJS
 \item RSVP.js
-\end{itemize}
+\end{description}
 
 \noindent
 Durch diese externe Libraries war es Möglich Promises in Javascript zu nutzen. All diese Libraries teilen die gleiche Anatomie eines Promises und verhalten sich nach dem Standard \textbf{Promises/A+}.\cite{promises-a+} Promises wurden mit der Zeit immer beliebter. Sogar so beliebt, dass sie seid der Ecmascript-2015 Version rein nativ nutzbar sind. Mit der Einführung von async await war es sogar erstmals Möglich asynchron operierenden Code übersichtlich abzubilden. Ganz ohne Verschachtelung wurde blockierender Code aufgelöst und in der nächsten Anweisung vorrangeschreitet. All diese Ansätze haben eines gemeinsam: Beim Aufruf werden sie nur einmal verarbeitet. Wenn man mithilfe eines Promise ein Endpunkt-Aufruf macht und dieser eintrifft, ist es irrelevant, ob die API nach zehn Sekunden nicht mehr erreichbar ist. Der Aufruf wurde bereits erfolgreich durchgeführt. Diese Ansätze werden beim Aufruf einmalig für asynchrone Events verarbeitet und liefern nur ein Ergebnis. Mit Observables wird in der nächsten Sektion ein komplett neuer Ansatz gegenübergestellt. Sie haben ein Strom-basiertes Verhalten, dass kein, ein oder multiple Werte mit der Zeit ausgeben. Dieser Ansatz unterscheidet sich grundlegend von den Bisherigen.

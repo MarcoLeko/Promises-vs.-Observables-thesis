@@ -13,7 +13,7 @@ Promises \textit{(zu deutsch: Versprechen)} verhalten sich in Javascript ähnlic
 \noindent
 Das heißt:
 
-\begin{enumerate}
+\begin{description}
     \item Ein Versprechen ist eine Absicherung, dass etwas gemacht wird. Unabhängig davon, ob das Versprechen sich selbst oder von einer anderen Partei gegeben wird.
     
     \item Ein Versprechen kann eingehalten oder gebrochen werden.
@@ -22,7 +22,7 @@ Das heißt:
     
     \item Beim Zeitpunkt eines Versprechens hat man nur die Absicherung. Man kann damit erstmal noch nichts anfangen. Es kann nur geplant werden was nach dem Einhalten des Versprechens gemacht wird. Dementsprechend kann man auch Maßnahmen setzen beim Nichteinhalten dieser Absicherung.
     
-\end{enumerate}
+\end{description}
 
 \noindent
 Dabei gibt es zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
@@ -62,7 +62,6 @@ Promises haben einen Status und einen Wert. Bei der Initialisierung einer Promis
 \begin{figure}[H]
 \centering
 \includegraphics[width=12cm]{promise-beispiel-1}
-\caption{}
 \end{figure}
 
 \noindent
@@ -127,10 +126,8 @@ Promise.prototype.finally(onFinally)
  
 \end{description}
 
-
 \noindent
 Die untenstehende Grafik zeigt den Ablauf für das Eintreten der Events (onFulfilled, onRejected und onFinally) und wie man diese verarbeitet. Mit den Methoden \textbf{then()} und \textbf{catch()} werden auf eintretenden Aktionen reagiert. Diese Verarbeitungsmethoden werden aufgerufen wenn ein Promise in den settled Zustand angekommen ist. Im Erfolgsfall wird das Promise mit der then() Methode weiterverarbeitet. Im Fehlerfall hingegen wird die catch() Methode aufgerufen. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally()} an ein Promise Objekt angebunden wird, wird diese Methode in jedem Fall aufgerufen, unabhängig davon ob das Promise eingetroffen oder fehlgeschlagen ist.
-
 
 \begin{figure}[H]
 \includegraphics[width=13cm]{Promises-workflow}
@@ -178,12 +175,12 @@ get('story.json').then((response) => {
 \noindent
 Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then()-Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Diese bestehen aus vier Methoden:
 
-\begin{itemize}
+\begin{description}
 \item Promise.resolve()
 \item Promise.reject()
 \item Promise.race()
 \item Promise.all()
-\end{itemize}
+\end{description}
 
 \noindent
 Die ersten beiden Methoden werden genutzt um einen eingetroffenen oder fehlgeschlagenen Promises zu simulieren:
@@ -448,12 +445,12 @@ story.getChapter(1)
 \noindent
 Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig auftretende asynchrone Events genutzt werden sollten. Der Verarbeitungsstatus eines Promise kann folgend sein:
 
-\begin{itemize} 
+\begin{description} 
 \item Pending: Der Ausgang des Promises ist noch ungewiss.
 \item Resolved: Die Aktion, die zum Promise verlief, ist eingetroffen.
 \item Rejected: Die Aktion, die zum Promise verlief, schlug fehl.
 \item Settled: Die Aktion ist entweder fehlgeschlagen oder eingetroffen - jedoch abgeschlossen.
-\end{itemize}
+\end{description}
 
 \noindent
 Beim erstellen einer Promise Instanz werden zwei Callback Funktionen als Argument angenommen. Resolve() wird mit der then() Methode verarbeitet und reject() mit der catch() Methode gefangen. Finally() kann unabhängig vom Eintreffen oder Fehlschlagen einer Operation genutzt werden. Der zurückgegebene Typ einer Promise Methode ist immer ein Promise-Objekt. Aufgrund dessen lassen sich Promises leicht verketten. Promises bieten mit Promise.all() und Promise.race() Hilfemethoden an, um mehrere Promises leichter zu verarbeiten.
