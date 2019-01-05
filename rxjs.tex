@@ -309,7 +309,7 @@ Operatoren sind Methoden eines Observable Objekts. Wenn ein Operator an einem Ob
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-function multiplyByTen(input: Observable<number>): Observable<number> {
+function multiplyByTen(input): Observable<number> {
    return RxJS.Observable.create(function subscribe(obs) {
         input.subscribe(val => obs.next(val * 10),
             err => obs.error(err),
@@ -379,12 +379,79 @@ Das Ergebnis ist ein Kanal aus Streams, in dem beide Quellen in unterschiedliche
 
 \subsubsection{Kategorien von Operatoren}
 
-Es gibt Operatoren für verschiedene Anwendungsfälle und können kategorisiert werden in: Kreation, Transformierung, Kombination, Multicasting und Fehlerbehandlung. Wie ursprünglich bereits erwähnt werden Operatoren mit der pipe() Methode an einem Observable angeschlossen. Da ein Teil der Kreationsoperatoren bereits abgehandelt wurden, wird mit den Transformationsoperatoren fortgefahren.
+Es gibt Operatoren für verschiedene Anwendungsfälle und können kategorisiert werden in: Kreation, Transformierung, Kombination, Multicasting und Fehlerbehandlung. Wie ursprünglich bereits erwähnt werden Operatoren mit der pipe() Methode an einem Observable angeschlossen. Da ein Teil der Kreations- und Transformationsoperatoren bereits abgehandelt wurden, wird mit den Kombinationsoperatoren fortgefahren.\\
+
+\noindent
+Um komplexe for Schleifen zu umgehen, bietet Javascript nativ die Möglichkeit mit Callback Funktionen Arrays weiterzuverarbeiten.
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+const source = ['1', '2', '5', 'foo', '13', '17', 'bar'];
+
+console.log(source);
+
+const result = source
+    .map(val => parseInt(val, 10))
+    .filter(num => !isNaN(num))
+    .reduce((previous: number, current: number) => previous + current);
+\end{lstlisting}
+\end{figure}
+
+\noindent
+In diesem Fall werden alle Werte in Zahlen umgewandelt und herausgefiltert. Letzteres wird die Summe gebildet. Observables bieten mit Operatoren die gleiche Funktionalität:
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+const result$ = from(source).pipe(
+    map(val => parseInt(val, 10)),
+    filter(num => !isNaN(num)),
+    reduce((previous: number, current: number) => previous + current));
+
+result$.subscribe(res => console.log(res));
+\end{lstlisting}
+\caption{Mit dem Kreationsoperator from wird jedes Iterable oder \textit{Promiselike} Okjekt in einem Observable umgewandelt.}
+\end{figure}
+
+\noindent
+In der asynchronen Prozessverarbeitung ist ein häufiger Anwendungsfall asynchrone Operationen voneinander abhängig auszuführen. Wie im Kapitel Callbacks, Promises und Async await bereits gegenübergestellt, kann dieser Anwendungsfall auch mit Observables durchgeführt werden. Im folgenden werden Operatoren vorgestellt die multiple Datenströme in verschiedensten Ausführungen verarbeiten.
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+const observable1 = new Observable(obs => {
+    setTimeout(() => {
+        obs.next({id: '1', name: 'Marco'});
+        obs.complete();
+    }, 2000);
+});
+
+const observable2 = new Observable(obs => {
+    setTimeout(() => {
+        obs.next({age: 25, gender: 'male'});
+        obs.complete();
+    }, 1000);
+});
+\end{lstlisting}
+\end{figure}
+
+\noindent
+\textbf{Concat} ist ein statischer Operator der als Argument mehrere Observables annimmt. Dabei werden die übergeben Argumente in einem Output Observable zusammengefasst und sequentiell ausgeführt. Mit anderen Worten: Concat führt eine Subscription des ersten Observable aus und die Werte entstehend aus der Exekution werden emittiert. Nach der Fertigstellung des Observable findet die nächste Subscription des zweiten übergegebenen Arguments statt. Dieser Vorgang wiederholt sich bis die Argumente ausgelaufen sind. Wenn ein Observable nicht fertiggestellt wird, wird concat niemals zur nächsten Subscription voranschreiten.\\
+
+\noindent
+Ein üblicher Anwendungsfall ist auch das Zusammenführen Ergebnissen aus  zwei verschiedenen Datenströmen.
+
+
+
+
+
+
+
+
+
 
 
 \subsection{Subjects}
 
-Ein RxJS Subject ist eine spezialisierte Form von Observables. Hierbei sind die Datenströme von vornherein multicastingfähig. Dabei kennzeichnet ein Subject 2 Merkmale:
+Ein RxJS Subject ist eine spezialisierte Form von Observables. Hierbei sind die Datenströme von vornherein multicastingfähig. Dabei kennzeichnet ein Subject zwei Merkmale:
 
 \begin{description}
 \item Jedes Subject ist auch ein Observable.
