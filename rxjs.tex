@@ -17,7 +17,7 @@ wird bereits beschrieben, dass Reactive Programming als Programmierung mit async
     \item Subscription: Repräsentiert das Aufrufen eines Observable.
     \item Observer: Ein Objekt, dass eine Sammlung von Callbacks enthält, um die aus dem Observable gelieferten Werte, abzurufen.
     \item Operators: Funktionen, die das Verhalten von Observable-Streams beeinflussen.
-    \item Subjects: Eventgeneratoren, die Events an zuhörende Observer zurückgibt. Im Gegensatz zu Observables, sind Subjects standardmäßig multicasting fähig.
+    \item Subjects: Eine spezielle Form von Observable, die sowohl als Observer als auch als Observable fungiert. Im Gegensatz zu Observables, sind Subjects standardmäßig multicasting fähig.
     \item Schedulers: Steuerungsmechanismen die bestimmen, wann eine Subscription startet und wann Werte aus dem Stream an die Observer übermittelt werden.
 \end{description}
 
@@ -239,7 +239,7 @@ Die statische Methode interval() erstellt ein Observable, dass aufsteigend Numme
 \end{figure}
 
 \noindent
-Es vom Observable ab, wann die Sequenz von Werten emittiert werden. Ein hot Observable könnte Werte ausstoßen, sobald es erstellt wird. Und deshalb könnten Observer, die sich später am Observable-Stream einhängen, Werte zwischenzeitlich verpassen. Wenn der gleiche Datenproduzent über verschiedene Subscriptions genutzt wird, ist dies ebenfalls ein Indikator dafür, dass es sich um ein hot Observable handelt. Ein cold Observable dagegen wartet mit dem emittieren der Werte, bis eine Subscription eines Observers stattgefunden hat. Dieser Observer empfängt dementsprechend die gesamten Werte der Sequenz. In manchen Versionen von Rx gibt es auch die Bezeichnung connectable Observable. In solchen Fällen werden erst dann Werte emittiert, wenn die dazugehörige connect() Methode aufgerufen wurde, unabhängig davon ob eine Subscription an dem Observable stattfindet oder nicht.\cite{hot-vs-cold-part-2}
+Es hängt vom Observable ab, wann die Sequenz von Werten emittiert werden. Ein hot Observable könnte Werte ausstoßen, sobald es erstellt wird. Und deshalb könnten Observer, die sich später am Observable-Stream einhängen, Werte zwischenzeitlich verpassen. Wenn der gleiche Datenproduzent über verschiedene Subscriptions genutzt wird, ist dies ebenfalls ein Indikator dafür, dass es sich um ein hot Observable handelt. Ein cold Observable dagegen wartet mit dem emittieren der Werte, bis eine Subscription eines Observers stattgefunden hat. Dieser Observer empfängt dementsprechend die gesamten Werte der Sequenz. In manchen Versionen von Rx gibt es auch die Bezeichnung connectable Observable. In solchen Fällen werden erst dann Werte emittiert, wenn die dazugehörige connect() Methode aufgerufen wurde, unabhängig davon ob eine Subscription an dem Observable stattfindet oder nicht.\cite{hot-vs-cold-part-2}
 
 \subsection{Subscription}
 
@@ -249,7 +249,7 @@ Da Observables potenziell unendlich viele Werte an dessen Observer ausgeben kön
 \begin{lstlisting}[basicstyle=\small]
 const subscriber: Subscription = multicast.subscribe(value => console.log(value));
 
-firstSubscriber.unsubscribe();
+subscriber.unsubscribe();
 \end{lstlisting}
 \end{figure}
 
@@ -305,17 +305,17 @@ observable.subscribe(
 Wenn es um Operatoren geht, sind diese die wahre Stärke der Observables. Operatoren manipulieren das Stream-Verhalten oder beeinflussen die Werte innerhalb eines Streams. Deshalb ist es mit ihnen möglich komplexen asynchronen Code, leicht und deklarativ zusammenzustellen.\\
 
 \noindent
-Operatoren sind Methoden eines Observable Objekts. Wenn ein Operator an einem Observable angewendet wird, wird eine neue Observable Instanz mit einem neuen Datenfluss erstellt. Der ursprüngliche Datenfluss wird nicht verändert. Das liegt daran, dass Observables an sich unveränderlich sind. Bei Anwendung wird somit das aktuelle Observable als Input genommen und ein neues Observable als Output generiert. Deshalb wird bei einer Subscription des Output Observable auch eine des Input Observables stattfinden. Im folgenden Beispiel wird ein selbstkreiertes Observable erstellt, dass alle numerischen Werte mit 10 multipliziert:
+Operatoren sind Methoden eines Observable Objekts. Wenn ein Operator an einem Observable angewendet wird, wird eine neue Observable Instanz mit einem neuen Datenfluss erstellt. Der ursprüngliche Datenfluss wird nicht verändert. Das liegt daran, dass Observables an sich unveränderlich sind. Bei Anwendung wird somit das aktuelle Observable als Input genommen und ein neues Observable als Output generiert. Deshalb wird bei einer Subscription des Output Observables auch eine des Input Observables stattfinden. Im folgenden Beispiel wird ein selbstkreiertes Observable erstellt, dass alle numerischen Werte mit 10 multipliziert:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
 function multiplyByTen(input): Observable<number> {
-   return RxJS.Observable.create(function subscribe(obs) {
+   return RxJS.Observable.create((obs) =>
         input.subscribe(val => obs.next(val * 10),
             err => obs.error(err),
             () => obs.complete()
         );
-    });
+    );
 }
 
 const observable = from([1, 2, 3, 4]);
@@ -349,7 +349,7 @@ RxJS.Observable.prototype.multiplyByTen = function() {
 \end{figure}
 
 \noindent
-Instanz Operatoren sind Funktionen die den this Ausdruck als Referenz der Input Observable nutzen. Das Input Observable wird nicht mehr als Callback genutzt, sondern als Funktionsaufruf eines Observable Objekts.
+Instanz Operatoren sind Funktionen die den \textbf{this} Ausdruck als Referenz des Input Observables nutzen. Das Input Observable wird nicht mehr als Callback genutzt, sondern als Funktionsaufruf eines Observable Objekts.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -359,27 +359,11 @@ observable.subscribe(result => console.log(result));
 \end{figure}
 
 \noindent
-Ein statischer Operator hingegen ist eine Funktion, die direkt an die Observable-Klasse angehängt wird. Für gewöhnlich werden dabei Observable auf Anhieb erstellt. Die typischsten statischen Operatoren sind die creation Operatoren. Anstatt ein Input-Observable als Argument anzunehmen, wird ein nicht-Observable Objekt als Argument übergeben und somit ein neues Observable erstellt. Als Beispiel kann dabei die Funktion interval genommen werden, die in Abbildung. 23 genutzt wurde. Sie nimmt einen numerischen Wert an und generiert ein neues Observable als Output.\\
-
-\noindent
-Im Ausnahmefall gibt es auch Kombinationsoperatoren, die als statische Methoden fungieren, wie z.B: merge(), combineLatest(), concat(), etc. Da hierbei multiple Observables als Input übergeben werden.
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-const observable1 = RxJS.interval(1000);
-const observable2 = RxJS.interval(400);
-
-const merged = merge(observable1, observable2);
-merged.subscribe(res => console.log(res));
-\end{lstlisting}
-\end{figure}
-
-\noindent
-Das Ergebnis ist ein Kanal aus Streams, in dem beide Quellen in unterschiedlichen Intervallen ihre Werte ausschütten.
+Ein statischer Operator hingegen ist eine Funktion, die direkt an die Observable-Klasse angehängt wird. Für gewöhnlich werden dabei Observable auf Anhieb erstellt. Die typischsten statischen Operatoren sind die \textit{creation} Operatoren. Anstatt ein Input-Observable als Argument anzunehmen, wird ein nicht-Observable Objekt als Argument übergeben und somit ein neues Observable erstellt. Als Beispiel kann die Funktion interval genommen werden, die in Abbildung. 26 genutzt wurde. Sie nimmt einen numerischen Wert an und generiert ein neues Observable als Output. Weitere statische Kreationsoperatoren sind: \textbf{from()}, \textbf{range()}, \textbf{of()}, etc.
 
 \subsubsection{Kategorien von Operatoren}
 
-Es gibt Operatoren für verschiedene Anwendungsfälle und können kategorisiert werden in: Kreation, Transformierung, Kombination, Multicasting und Fehlerbehandlung. Wie ursprünglich bereits erwähnt werden Operatoren mit der pipe() Methode an einem Observable angeschlossen. Da ein Teil der Kreations- und Transformationsoperatoren bereits abgehandelt wurden, wird mit den Kombinationsoperatoren fortgefahren.\\
+Es gibt Operatoren für verschiedene Anwendungsfälle und können kategorisiert werden in: Kreation, Transformierung, Multicasting, Kombination und Fehlerbehandlung. Wie ursprünglich bereits erwähnt werden Operatoren mit der pipe() Methode an einem Observable angeschlossen. Da die Kreations- und Multicasting-Operatoren bereits vorgestellt wurden, wird mit den Transformationsoperatoren fortgefahren.\\
 
 \noindent
 Um komplexe for Schleifen zu umgehen, bietet Javascript nativ die Möglichkeit mit Callback Funktionen Arrays weiterzuverarbeiten.
@@ -409,37 +393,99 @@ const result$ = from(source).pipe(
 
 result$.subscribe(res => console.log(res));
 \end{lstlisting}
-\caption{Mit dem Kreationsoperator from wird jedes Iterable oder \textit{Promiselike} Okjekt in einem Observable umgewandelt.}
 \end{figure}
 
 \noindent
-In der asynchronen Prozessverarbeitung ist ein häufiger Anwendungsfall asynchrone Operationen voneinander abhängig auszuführen. Wie im Kapitel Callbacks, Promises und Async await bereits gegenübergestellt, kann dieser Anwendungsfall auch mit Observables durchgeführt werden. Im folgenden werden Operatoren vorgestellt die multiple Datenströme in verschiedensten Ausführungen verarbeiten.
+Mit dem Kreationsoperator from() wird jedes Iterable oder \textit{Promiselike} Okjekt in einem Observable umgewandelt. Das Filtern der Zahlen und die anschließende Addition wurde unabhängig von externen Variablen und ganz mit Hilfe von puren Funktionen implementiert. Weitere Transformationsoperatoren sind unter Anderem \textbf{scan()}, \textbf{pluck()}, \textbf{switchMap()} etc.\\
+
+\noindent
+Ein häufiger Anwendungsfall ist asynchrone Operationen voneinander abhängig auszuführen. Wie in der Sektion Callbacks, Promises und Async await bereits gegenübergestellt, kann dieser Anwendungsfall auch mit Observables durchgeführt werden. Im folgenden werden die Kombinationsoperatoren vorgestellt die multiple Datenströme in verschiedensten Ausführungen verarbeiten oder kombinieren. Es werden die bisherigen Kapitelaufrufe als Beispiel genutzt. Vor dem Ausführen des Beispiels muss ../rxjs/stories.ts als Eingangsdatei definiert werden.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-const observable1 = new Observable(obs => {
-    setTimeout(() => {
-        obs.next({id: '1', name: 'Marco'});
-        obs.complete();
-    }, 2000);
-});
+export class HTTP {
+    public makeRequest(url): Observable<any> {
+        return from(new Promise((resolve, reject) => {
+                const req = new XMLHttpRequest();
+                req.open('GET', url);
 
-const observable2 = new Observable(obs => {
-    setTimeout(() => {
-        obs.next({age: 25, gender: 'male'});
-        obs.complete();
-    }, 1000);
+                req.onload = () => {
+                    if (req.status === 200) {
+                        this.fakeLatency().then(() => resolve(JSON.parse(req.response)));
+                    } else {
+                        reject(Error(req.statusText));
+                    }
+                };
+
+                req.onerror = () => {
+                    reject(Error('Network Error'));
+                };
+
+                req.send();
+            })
+        );
+    }
+
+export class Story {
+    ...
+}
+
+const story = new Story();
+\end{lstlisting}
+\end{figure}
+
+\noindent
+Als einzige Änderung im Vergleich zum Beispiel in der Sektion Promises, gibt in diesem Fall die makeRequest()-Methode kein Promise, sondern ein Observable zurück. Um die Kapitelaufrufe eins bis 3 innerhalb eines Observable Sequenz auszugeben, würde der Code hierfür so aussehen:
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+from([1, 2, 3]).pipe(
+    concatMap(chapter => story.getChapter(chapter)),
+        tap(result => story.spawn(result)),
+        finalize(() => story.displayFinished())
+).subscribe();
+\end{lstlisting}
+\end{figure}
+
+\noindent
+Für jeden Wert der from() ausgibt wird mit dem concatMap() Operator ein weiteres Observable angeschlossen. Das jeweils angeschlossene Observable ist story.getChapter(). Am Ende werden alle entstandenen getChapter()-Aufrufe innerhalb einer Observable Sequenz ausgeführt. Wenn die Observable Sequenz erfolgreich ausgeführt wurde kann vor der Fertigstellung des Observables finalize() aufgerufen werden. Mit dem tap() Operator wird für jede Emission der Sequenz eine Operation ausgeführt. Die Aktionen, die in tap() und finalize() durchgeführt werden, können auch durch den next() und dem complete() Callback des Observer Objekts ersetzt werden.\\
+
+\noindent
+Es ist ebenfalls möglich Werte aus verschiedenen Observable Sequenzen gleichzeitig auszugeben. Mit dem statischen Operator \textbf{forkJoin()} kann ein Observable Array oder mehrere Observables als Argument übergeben werden. Sobald alle Observables erfolgreich ihre Werte emittiert haben und die Sequenzen abgeschlossen sind, werden die gesamte Anzahl an Werten an die Observer verteilt. Forkjoin() führt die Observables in der Reihenfolge aus, in der sie als Argument übergeben worden sind. Dementsprechend wird auf jede Sequenz gewartet bis die Werte ausgegeben und das Observable fertiggestellt wird. Somit addiert sich die Zeit bis alle Sequenzen abgeschlossen sind. Observables forkJoin() ist das Gegenstück zum \textbf{Promise.all()}. Es gibt noch zahlreiche weitere Operatoren die mehrere Observables kombinieren können. Dazu gehören unter anderem \textbf{MergeMap()}, \textbf{concat()}, \textbf{merge()}, \textbf{combineLatest()} etc.\\
+
+
+\noindent
+Als letzte aber nicht unwesentlich wichtige Kategorie wird die Fehlerbehandlung mit Observables abgedeckt. Bei selbsterstellten Observables werden Fehler mit der error() Funktion an die Observer übergeben (Abb. 25). Observer verarbeiten daraufhin innerhalb der subscribe() Methode mit dem error() Callback jeden ankommenden Fehler. Mit Operatoren ist es möglich zwischendurch Fehler zu werfen oder zu fangen:
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+from([1, 2, 3]).pipe(
+    concatMap(chapter => {
+        if (chapter === 3) {
+            return throwError(new Error('Forced error!'));
+        } else {
+            return story.getChapter(chapter);
+        }
+    }),
+    catchError((err) => {
+        console.error(err);
+        return of([{title: 'Fallback title', id: 101, body: 'Fallback body'}]);
+    })
+).subscribe({
+    next: val => story.spawn(val),
+    complete: () => story.displayFinished()
 });
 \end{lstlisting}
 \end{figure}
 
 \noindent
-\textbf{Concat} ist ein statischer Operator der als Argument mehrere Observables annimmt. Dabei werden die übergeben Argumente in einem Output Observable zusammengefasst und sequentiell ausgeführt. Mit anderen Worten: Concat führt eine Subscription des ersten Observable aus und die Werte entstehend aus der Exekution werden emittiert. Nach der Fertigstellung des Observable findet die nächste Subscription des zweiten übergegebenen Arguments statt. Dieser Vorgang wiederholt sich bis die Argumente ausgelaufen sind. Wenn ein Observable nicht fertiggestellt wird, wird concat niemals zur nächsten Subscription voranschreiten.\\
+In diesem Beispiel wird der Auftritt eines Fehlers mit throwError() simuliert und mit dem catchError() Operator gefangen. Ein in der Praxis öfters verwendeter Operator ist \textbf{retry()}. Da nach einer Emission eines Fehler eine Subscription abläuft, wird mit retry(count) die Subscription wieder neu initiiert. Die Anzahl an Neuversuche einer Subscription wird vom übergebenen Parameter bestimmt.\\
 
 \noindent
-Ein üblicher Anwendungsfall ist auch das Zusammenführen Ergebnissen aus  zwei verschiedenen Datenströmen.
+Wie man nun gesehen hat bilden Operatoren etliche Möglichkeiten das Verhalten von Observables zu beeinflussen. Die angeführten Beispiele waren nur die Spitze des Eisbergs. Alle Operatoren abzudecken würde jedoch den Rahmen sprengen. Um mehr von Operatoren zu erfahren, kann in der Dokumentation von RxJS nachgeschaut werden:
 
-
+\begin{center}
+\url{http://reactivex.io/rxjs/manual/overview.html#operators} 
+\end{center}
 
 
 
@@ -477,7 +523,7 @@ subject.next(2);
 \end{figure}
 
 \noindent
-In diesem Beispiel wurde ein Subject mit jeweils zwei angeschlossenen Subscriptions erstellt. Dabei wird das Subject mit Werten\glqq gefüttert\grqq. Da ein Subject auch ein Observer sein kann, ist es auch Möglich diesen als Argument einer subscribe() Methode einzusetzen:
+In diesem Beispiel wurde ein Subject mit jeweils zwei angeschlossenen Subscriptions erstellt. Dabei wird das Subject mit Werten \glqq gefüttert\grqq. Da ein Subject auch ein Observer sein kann, ist es auch Möglich diesen als Argument einer subscribe() Methode einzusetzen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
