@@ -412,12 +412,11 @@ story.getChapter(1)
         story.getChapter(2)
             .then((response2) => {
                 story.spawn(response2);
-                story.getChapter(3).then((response3) => {
-                    story.spawn(response3);
-                }).finally(() => {
-                    story.spinnerElement.style.display = 'none';
-                    story.displayFinished();
-                });
+                story.getChapter(3).then((response3) =>
+                    story.spawn(response3)
+                ).finally(() => 
+                    story.displayFinished()
+                    );
             });
     });
 \end{lstlisting}

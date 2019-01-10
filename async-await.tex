@@ -53,7 +53,7 @@ hello2();
 \end{figure}
 
 \noindent
-Wie man sehen kann wird an dem await Ausdruck eine Konstante gebildet um das Ergebnis weiterzunutzen. Für den Promise Wert werden keinerlei Verarbeitungsmethode mehr benötigt. Der await Ausdruck greift direkt auf den Wert zu. Obwohl es für gewöhnlich so beschrieben wird, dass await die Exekution der Funktion pausiert, sollte man daraus nicht schlussfolgern, dass die Funktion synchron operiert. In Wahrheit, await bricht den synchronen Fluss und jede nachfolgende Anweisung innerhalb der Funktion operiert asynchron. Das heißt ein await Ausdruck blockiert nicht den synchronen Fluss von Javascripts Ausführung. Sie lässt das Ausführungsmodell asynchron agieren.
+Wie man sehen kann wird an dem await Ausdruck eine Konstante gebildet um das Ergebnis weiterzunutzen. Für den Promise Wert werden keinerlei Verarbeitungsmethoden mehr benötigt. Der await Ausdruck greift direkt auf den Wert zu. Obwohl es für gewöhnlich so beschrieben wird, dass await die Exekution der Funktion pausiert, sollte man daraus nicht schlussfolgern, dass die Funktion synchron operiert. In Wahrheit, await bricht den synchronen Fluss und jede nachfolgende Anweisung innerhalb der Funktion operiert asynchron. Das heißt ein await Ausdruck blockiert nicht den synchronen Fluss von Javascripts Ausführung. Sie lässt das Ausführungsmodell asynchron agieren.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
