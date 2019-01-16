@@ -1,12 +1,97 @@
 \section{Callbacks}
-Javascript ist eine ereignisgesteuerte Programmiersprache. Das bedeutet, anstatt auf blockierenden Code zu warten, führt Javascript Operationen weiter aus und reagiert wenn die Aktion fertig ist. Um sicherzustellen, dass Javascript abhängige Funktionen erst nach der Fertigstellung von asynchronen Operationen ausführt, wurde das Prinzip der \textbf{Callbacks} eingeführt.
+Javascript ist eine ereignisgesteuerte Programmiersprache. Das bedeutet, anstatt auf blockierenden Code zu warten, führt Javascript Operationen weiter aus und reagiert wenn die Aktion fertig ist. Um sicherzustellen, dass Javascript abhängige Funktionen erst nach der Fertigstellung von asynchronen Operationen ausführt, wurde das Prinzip der \textbf{Callbacks} eingeführt. Doch wie regelt der Browser in welcher Reihenfolge der Code ausgeführt wird?
+
+\subsection{Javascripts Laufzeitkonzept}
+Dazu muss im groben das Verhalten des Javascript-Interpreters erklärt werden. Wenn ein Skript eine Funktion \textit{f} aufruft, fügt der Interpreter die Funktion zum Aufrufstapel \textit{(Call stack)} hinzu. Wird nun eine Funktion \textit{g} innerhalb von \textit{f} aufgerufen, wird die innere Funktion weiter oben in den Callstack hinzugefügt. Wenn die Ausführung der aktuellen Funktion fertig ist, wird die Funktion aus dem Aufrufstapel entfernt und die Exekution an der Stelle fortgeführt, wo sie als letztes fertiggestellt wurde.
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+function h(z) {
+    console.log(new Error().stack); // (A)
+}
+function g(y) {
+    h(y + 1); // (B)
+}
+function f(x) {
+    g(x + 1); // (C)
+}
+f(3); // (D)
+\end{lstlisting}
+\caption{Fiktives Beispiel}
+\end{figure}
+
+\noindent
+Anfänglich ist der Call stack leer. Erst ab Zeile D mit dem Funktionsaufruf f(3) hat der Aufrufstapel einen Eingangspunkt. Der Einstiegspunkt befindet sich im globalen Geltungsbereich (\textit{global scope}):
+
+\begin{description}
+\item Globaler Geltungsbereich
+\end{description}
+
+\noindent
+Nachdem die Funktion g(x +1) in Zeile C aufgerufen wurde, hat der stack zwei Eingangspunkte:
+
+\begin{description}
+\item Geltungsbereich innerhalb von Funktion \textit{f}
+\item Globaler Geltungsbereich
+\end{description}
+
+\noindent
+Nachdem Funktion h(y + 1) aufgerufen wurden in Zeile B, hat der stack drei Eingangspunkte:
+
+\begin{description}
+\item Geltungsbereich innerhalb von Funktion \textit{g}
+\item Geltungsbereich innerhalb von Funktion \textit{f}
+\item Globaler Geltungsbereich
+\end{description}
+
+\noindent
+Beim Ausführen des Codes zeigt die Konsole wie der Callstack vorgegangen ist:
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+Error
+    at h (stack_trace.js:2:17)
+    at g (stack_trace.js:6:5)
+    at f (stack_trace.js:9:5)
+    at <global> (stack_trace.js:11:1)
+\end{lstlisting}
+\caption{Fiktives Beispiel}
+\end{figure}
+
+\noindent
+Javascripts Laufzeitkonzept lässt sich mit einem Warteschlangen-System vergleichen. Unabhängig davon wie zeitnah asynchrone Ereignisse wie timeouts oder Antworten aus einem Netzwerk ankommen, diese Prozesse werden sofort in die Schlange gesetzt, jedoch erst Verarbeitet, wenn der aktuelle stack fertig ist.
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+setTimeout(function() {
+    console.log('second');
+}, 0);
+
+let num: number = 0;
+
+while (num < 100000000) {
+    num = num + 1;
+}
+
+console.log('first');
+// first
+// second
+\end{lstlisting}
+\caption{Mit der setTimeout()-Funktion können Funktionsaufrufe verzögert werden.}
+\end{figure}
+
+\noindent
+Eine Javascript Umgebung wird nur eine Opearation nacheinander ausführen. Diesen Prozess kann man sich als eine riesige Schleife, die durch den Programm läuft, vorstellen. Diese Schleife wird auch als \textbf{Event Loop} bezeichnet. Ist keine Operation mehr ausführbar, stoppt die Event-Schleife. Sollten Ereignisse in der Zwischenzeit entstehen, werden diese in die Warteschlange hintenan gesetzt. Deshalb kann in einem synchronen Programmiermodell stark blockierender Code andere Operationen verzögern, da zwei Operationen nicht zum selben Zeitpunkt ausgeführt werden können.\\
+
+\noindent
+Ein Ansatz der asynchronen Verarbeitung ist die Nutzung von Funktionen die eine Funktion als Argument annimmt und erst dann diese Aufrufen, wenn eine blockierende Aktion fertig ausgeführt wurde. Dieses Verhalten ist nützlich wenn der Browser von bestimmten, zeitintensiven Aktionen abhängig ist. Doch wie genau funktioniert diese Schachtelung von Funktionen?
 
 \subsection{Funktionsweise}
 
 Sowohl in Javascript als auch in Typescript sind Funktionen als Erste-Klasse-Objekte zu sehen. Aus diesem Grund ist es Möglich sie an Variablen zu binden oder als Argumente in anderen Funktionen oder als Rückgabewert zu übergeben. Diese übergebenen Funktionen heißen Callbacks.\\
 
 \noindent
-Callbacks, auch Rückruffunktionen genannt, bildet das Kernkonzept der funktionalen Programmierung in Javascript.\cite{callbacks-intro} In der funktionalen Programmierung sind Funktionen als Werte zu betrachten. Der Code besteht aus kleineren Funktionen, die in höher geordneten Funktionen eingesetzt oder miteinander kombiniert werden können (Komposition). Dadurch ist der Code wiederverwendbar und weniger fehleranfällig. Javascript bietet mit Arrays die Möglichkeit Callbacks sinnvoll einzusetzen. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
+Callbacks, auch Rückruffunktionen genannt, bildet das Kernkonzept der \textbf{funktionalen Programmierung} in Javascript.\cite{callbacks-intro} In der funktionalen Programmierung sind Funktionen als Werte zu betrachten. Der Code besteht aus kleineren Funktionen, die in höher geordneten Funktionen eingesetzt oder miteinander kombiniert werden können (Komposition). Dadurch ist der Code wiederverwendbar und weniger fehleranfällig. Javascript bietet mit Arrays die Möglichkeit Callbacks sinnvoll einzusetzen. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
 
 \begin{center}
     async-patterns$\,\to\,$ webpack.config.js
@@ -37,40 +122,10 @@ console.log(evenNumbers) // 2 4 6
 \end{figure}
 
 \noindent
-Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion die, die Filterkonditionen bestimmt. Dabei wird zuerst, dass Element aus der Liste entnommen und dann die Kondition geprüft. Da Funktionen als Argument anderer Funktionen übergeben werden, ist es Möglich diese \glqq{}später\grqq{} innerhalb des Funktionsrumpfes aufzurufen \textit{(\glqq{}Call back\grqq{})}. Wenn also eine Funktion als Parameter übergeben wird, wird diese nicht sofort ausgeführt. Eine Funktion die ein Callback als Argument annimmt, wird auch höherrangige Funktion \textit{(Higher order function)} genannt.\cite{callbacks-example} Möchte man das Filtern klassisch implementieren, dann würde der Code im Vergleich dazu so aussehen:
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-const newArr = [];
-
-for (let i = 0; i < numbers.length; i++) {
-    if (numbers[i] % 2 === 0) {
-        newArr.push(numbers[i]);
-    }
-}
-
-console.log(newArr);
-\end{lstlisting}
-\end{figure}
-
-\noindent
-Wie man nun sehen kann, ist man mit dieser Umsetzung an externe Variablen gebunden. Diese könnte im Verlauf des Codes eventuell überschrieben werden. Das heißt der unten ausgeführte Code ist abhängig vom Status des Arrays. Dies führt zu einer erhöhten Fehleranfälligkeit. Wenn man nun alle ungeraden Zahlen herausfiltern möchte, müsste man ein neues Array mit einer neuen Schleife erstellen. In diesem Fall wird keine Möglichkeit der Wiederverwendbarkeit gewährleistet.
-
-\subsection{Asynchrone Verarbeitung}
-
-Ein Ansatz der asynchronen Verarbeitung ist die Nutzung von Funktionen die eine Funktion als Argument annimmt und erst dann diese Aufrufen, wenn eine blockierende Aktion fertig ausgeführt wurde. Dieses Verhalten ist nützlich wenn der Browser von bestimmten, zeitintensiven Aktionen abhängig ist. Man kann ein synchrones und asynchrones Programmiermodel mit einem kleinem Beispiel vergleichen: Eine Anwendung die zwei Ressourcen aus einem Netzwerk anfragt und die Ergebnisse miteinander kombiniert. In einer synchronen Umgebung würde man dies mit einem Funktionsaufruf nach dem anderen bewältigen. Das hat den Nachteil, dass die zweite Funktion erst dann ausführt, wenn die erste fertig ist. Die Gesamtzeit der Ausführung ist die Summe der Antwortzeiten der beiden Anfragen. Die Lösung dafür ist ein synchrones Programmverhalten mit mehreren kontrollierten Threads. Ein Thread ist ein Ausführungsstrang, der seine eigene Zeitleiste besitzt und innerhalb dieser Operationen ausführt. Ein zweiter Thread könnte zum selben Zeitpunkt die Funktion aufrufen und wenn beide Threads das Ergebnis geliefert bekommen resynchronisieren sie sich und kombinieren ihre Ergebnisse. Im folgenden Diagramm repräsentieren die blauen Linien die Zeit, in der das Programm ausführt und die roten Linien repräsentieren die Zeit, in der auf die Antwort gewartet wird.\cite{asynchronitaet}
-
-\begin{center}
-\begin{figure}[H]
-\includegraphics[width=12cm]{synchron-vs-asynchron-diagram}
-\end{figure}
-\end{center}
-
-\noindent
-Im synchronen Modell ist die Zeit der Netzwerkanfrage ein Teil der Zeitleiste. Im asynchronen Modell hingegen führt das Starten einer asynchronen Operation zu einer neuen Zeitleiste. Zusammenfassend kann man also sagen, dass in dem synchronen Modell implizit auf die Aktionen gewartet wird, und in dem asynchronen Modell explizit.
+Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion die, die Filterkonditionen bestimmt. Dabei wird zuerst, dass Element aus der Liste entnommen und dann die Kondition geprüft. Da Funktionen als Argument anderer Funktionen übergeben werden, ist es Möglich diese \glqq{}später\grqq{} innerhalb des Funktionsrumpfes aufzurufen \textit{(\glqq{}Call back\grqq{})}. Wenn also eine Funktion als Parameter übergeben wird, wird diese nicht sofort ausgeführt. Eine Funktion die ein Callback als Argument annimmt, wird auch höherrangige Funktion \textit{(Higher order function)} genannt.\cite{callbacks-example}
 
 \subsection{Beispiel}
-In den Sektionen Callbacks, Promises und Async await wird das gleiche Beispiel, in drei verschiedenen Ausprägungen angewendet und gegenübergestellt. Mit der REST-Api \textbf{JSONPlaceholder} wird ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um eine Open Source Endstelle die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Je nach Anwendungsfall werden verschiedene Ausführungen von Anfragen an diese Endstelle gemacht, um die Code-Beispiele so praxisnah wie Möglich zu halten.\\
+In den jeweiligen Sektionen wird das gleiche Beispiel, in verschiedenen Ausprägungen angewendet und gegenübergestellt. Mit der REST-Api \textbf{JSONPlaceholder} wird ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um eine Open Source Endstelle, die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Je nach Anwendungsfall werden verschiedene Ausführungen von Anfragen an diese Endstelle gemacht, um die Code-Beispiele so praxisnah wie Möglich zu halten.\\
 
 \noindent
 Das folgende Beispiel richtet sich nach dem funktionalen Programmierparadigma, da durch die Nutzungen von \textbf{puren Funktionen}, das Callback-Prinzip besser zur Geltung kommt. Eine pure Funktion, ist eine Funktion, die beim selben Input jedes mal das gleiche Output wiedergibt. Zu erwähnen ist jedoch, dass das Prinzip der Callbacks auch im objektorientiertem Schema umgesetzt werden kann. Für das Beispiel sollte ../callbacks/stories-usage.ts als Eingangsdatei in die webpack.config.js definiert werden.
@@ -180,7 +235,7 @@ getChapter(1, function(response1) { // (*)
 \end{figure}
 
 \noindent
-Auffallend in diesem Beispiel ist der Grad der Einrückung, der mit jeder weiteren asynchronen Operationen steigt. Ein neuer Thread entsteht schon beim Aufruf von getChapter(1). Alle weiteren asynchronen Operationen sind voneinander abhängig und bleiben innerhalb der selben Zeitleiste. Asynchronität ist ansteckend. Eine Funktion, die zur asynchronen Verarbeitung ein Callback nutzt, operiert selbst asynchron. Wenn nun ein Großteil eines Programms aus ineinandergeschachtelten Funktionen besteht, kann diese Struktur zur erhöhten Fehleranfälligkeit führen. Dank der der sechsten Ecmascript Version ist es auch Möglich Pfeil-Funktionen in Javascript zu nutzen. Diese sind syntaktisch kürzer als anonyme Funktionen. Wenn nun die fehlgeschlagenen Callbacks zusätzlich verarbeitet werden sollen, dann sieht der Code so aus:
+Auffallend in diesem Beispiel ist der Grad der Einrückung, der mit jeder weiteren asynchronen Operationen steigt. Ein neuer Thread entsteht schon beim Aufruf von getChapter(1). Alle weiteren asynchronen Operationen sind voneinander abhängig und bleiben innerhalb der selben Zeitleiste. Asynchronität ist ansteckend. Eine Funktion, die zur asynchronen Verarbeitung ein Callback nutzt, operiert selbst asynchron. Wenn nun ein Großteil eines Programms aus ineinandergeschachtelten Funktionen besteht, kann diese Struktur zur erhöhten Fehleranfälligkeit führen. Dank der der sechsten Ecmascript Version ist es auch Möglich Pfeil-Funktionen in Javascript zu nutzen. Diese sind syntaktisch kürzer als anonyme Funktionen. Wenn nun die fehlgeschlagenen Callbacks zusätzlich verarbeitet werden sollen, dann würde dies so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -199,7 +254,10 @@ getChapter(1, response1 => { // (*)
 \end{figure}
 
 \noindent
-Es bildet sich eine Verzweigung, die sich immer weiter nach rechts ausbreitet. Zudem ist es auf dem ersten Blick schwer zu erkennen welcher Error-Callback zu welchem Kapitelaufruf gehört. Wie man nun sehen kann, ist es möglich mit Callbacks asynchron Daten zu verarbeiten. Bei mehreren abhängigen asynchronen Prozessen müssen Callbacks ineinandergeschachtelt werden. Mehrere Level von geschachtelten Callbacks führen zu einer schwer nachvollziehbaren Code-Struktur. Deshalb wird der Code in Abbildung 6 auch als \glqq{}Callback-Hell\grqq{} bezeichnet. Um aus der Callback-Hell zu entkommen, ebnete Ecmascript 6 den Weg der nativen Nutzung von \textbf{Promises}.
+Es bildet sich eine Verzweigung, die sich immer weiter nach rechts ausbreitet. Zudem ist es auf dem ersten Blick schwer zu erkennen welcher Error-Callback zu welchem Kapitelaufruf gehört.\\
+
+\noindent
+Wie man nun sehen kann, ist es möglich mit Callbacks asynchron Daten zu verarbeiten. Bei mehreren abhängigen asynchronen Prozessen müssen Callbacks ineinandergeschachtelt werden. Mehrere Level von geschachtelten Callbacks führen zu einer schwer nachvollziehbaren Code-Struktur. Deshalb wird der Code in Abbildung 6 auch als \glqq{}Callback-Hell\grqq{} bezeichnet. Um aus der Callback-Hell zu entkommen, ebnete Ecmascript 6 den Weg der nativen Nutzung von \textbf{Promises}.
 
 
 

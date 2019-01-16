@@ -18,9 +18,6 @@ try {
 \end{figure}
 
 \noindent
-Unabhängig davon wie zeitnah Ereignisse wie timeouts oder ankommende Antworten aus einem Netzwerk entstehen. Eine Javascript Umgebung wird nur eine Opearation nacheinander ausführen. Diesen Prozess kann man sich als eine riesige Schleife, die durch den Programm läuft, vorstellen. Diese Schleife wird auch als \textbf{Event Loop} bezeichnet. Ist keine Operation mehr ausführbar, stoppt die Event-Schleife. Sollten Ereignisse in der Zwischenzeit entstehen, werden diese in eine Warteschlange gesetzt. Dieser Code wird dann nacheinander ausgeführt. Da zwei Operationen nicht zum selben Zeitpunkt ausgeführt werden können, kann stark blockierender Code andere Operationen verzögern.\\
-
-\noindent
 Promises lösen sich immer auf als entweder eingetroffenes oder fehlgeschlagenes Ereignis. Selbst wenn ein Promise auf Anhieb eintrifft, wartet der Callstack bis der aktuelle Skript fertiggestellt wurde.
 
 \begin{figure}[H]

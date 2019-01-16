@@ -1,5 +1,5 @@
 \section{Async await}
-Wenn es um das Verarbeiten von asynchronen Operationen geht, sind Promises ein erheblicher Fortschritt im Vergleich zum Callback Prinzip. Jedoch wurde ein grundlegendes Problem noch nicht gelöst: Mit der Nutzung von Promises ist der Code immer noch geschachtelt. Ziel ist es asynchron blockierenden Code so abzubilden, als ob dieser synchron ausgeführt wird. Die webpack.config.js sollte als Eingangspunkt die ../async-await/introduction.ts Datei annehmen.
+Wenn es um das Verarbeiten von asynchronen Operationen geht, sind Promises ein erheblicher Fortschritt im Vergleich zum Callback Prinzip. Jedoch wurde ein grundlegendes Problem noch nicht gelöst: Mit der Nutzung von Promises ist der Code immer noch geschachtelt. Ziel ist es, asynchrone Aktionen so abzubilden, als ob diese synchron ausgeführt werden. Die webpack.config.js sollte als Eingangspunkt die ../async-await/introduction.ts Datei annehmen.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -18,7 +18,7 @@ Da Promises selbst Rückruffunktionen nutzen, wird einem schnell klar, dass hier
 
 \subsection{Funktionsweise}
 
-Bei einer \textbf{async} Funktion handelt es sich um eine Funktion, die dank einer Eventschleife asynchron operiert. In einer Eventschleife werden auf Aktionen gewartet bis diese auftreten. Wenn also vor einer Funktion das Schlüsselwort async steht bedeutet dies nur eins: Die Funktion gibt immer ein Promise zurück.
+Async/Await sind Schlüsselwörter in Javascript, welche die asynchrone Programmierung wesentlich vereinfachen. Wenn vor einer Funktion das Schlüsselwort \textbf{async} steht bedeutet dies nur eins: Die Funktion gibt immer ein Promise zurück.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -53,7 +53,7 @@ hello2();
 \end{figure}
 
 \noindent
-Wie man sehen kann wird an dem await Ausdruck eine Konstante gebildet um das Ergebnis weiterzunutzen. Für den Promise Wert werden keinerlei Verarbeitungsmethoden mehr benötigt. Der await Ausdruck greift direkt auf den Wert zu. Obwohl es für gewöhnlich so beschrieben wird, dass await die Exekution der Funktion pausiert, sollte man daraus nicht schlussfolgern, dass die Funktion synchron operiert. In Wahrheit, await bricht den synchronen Fluss und jede nachfolgende Anweisung innerhalb der Funktion operiert asynchron. Das heißt ein await Ausdruck blockiert nicht den synchronen Fluss von Javascripts Ausführung. Sie lässt das Ausführungsmodell asynchron agieren.
+Wie man sehen kann wird an dem await Ausdruck eine Konstante gebildet um das Ergebnis weiterzunutzen. Für den Promise Wert werden keinerlei Verarbeitungsmethoden mehr benötigt. Der await Ausdruck greift direkt auf den Wert zu. Obwohl es für gewöhnlich so beschrieben wird, dass await die Exekution der Funktion pausiert, sollte man daraus nicht schlussfolgern, dass die Funktion synchron operiert. In Wahrheit, await bricht den synchronen Fluss und jede nachfolgende Anweisung innerhalb der Funktion operiert asynchron. Das heißt ein await Ausdruck blockiert nicht den synchronen Fluss von Javascripts Interpreter. Sie lässt das Ausführungsmodell asynchron agieren.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -64,6 +64,8 @@ async function fn() {
 
 fn();
 console.log('bar');
+// bar
+// foo
 \end{lstlisting}
 \caption{In diesem Fall wird bar vor foo angezeigt.}
 \end{figure}
