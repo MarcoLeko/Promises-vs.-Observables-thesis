@@ -60,7 +60,7 @@ console.log(resolveRightAway);
 Promises haben einen Status und einen Wert. Bei der Initialisierung einer Promise-Instanz ist der Status erstmals immer ausstehend. In diesem Beispiel löst sich das Promise auf Anhieb vom ausstehenden in den eingetroffenen (resolved) Zustand auf, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status abgelehnt (rejected) entsprechen.
 
 \begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
+\begin{lstlisting}
 Promise {<resolved>: "Promises kept!"}
     [[PromiseStatus]]: "resolved"
     [[PromiseValue]]: "Promises kept!"
@@ -96,7 +96,7 @@ setTimeout(() => console.log(pendingPromise), 10 * 1000);
 Im oberen Beispiel wird das Promise vorbehaltlos nach zehn Sekunden aufgelöst, solange ist der Status ausstehend (pending). Nachdem das Promise aufgelöst wurde, werden Status und Wert aktualisiert. Dabei können nicht nur primitive Typen wie number, boolean oder strings zurückgegeben werden, sondern auch Objekt-Typen und komplexe Typen. Mit anderen Worten: Promises sind generisch.
 
 \begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
+\begin{lstlisting}
 Promise {<pending>}
     [[PromiseStatus]]: "pending"
     [[PromiseValue]]: undefined
