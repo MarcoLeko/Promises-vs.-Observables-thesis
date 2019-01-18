@@ -31,9 +31,11 @@ function h(z: string): void {
 function g(y: string): void {
     h(y + 'c'); // (B)
 }
+
 function f(x: string): void {
     g(x + 'b'); // (C)
 }
+
 f('a'); // (D)
 \end{lstlisting}
 \caption{Fiktives Beispiel}
@@ -137,7 +139,7 @@ Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion
 In den jeweiligen Sektionen wird das gleiche Beispiel, in verschiedenen Ausprägungen angewendet und gegenübergestellt. Mit der REST-Api \textbf{JSONPlaceholder} wird ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um eine Open Source Endstelle, die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Je nach Anwendungsfall werden verschiedene Ausführungen von Anfragen an diese Endstelle gemacht, um die Code-Beispiele so praxisnah wie Möglich zu halten.\\
 
 \noindent
-Das folgende Beispiel richtet sich nach dem funktionalen Programmierparadigma, da durch die Nutzungen von \textbf{puren Funktionen}, das Callback-Prinzip besser zur Geltung kommt. Eine pure Funktion, ist eine Funktion, die beim selben Input jedes mal das gleiche Output wiedergibt. Zu erwähnen ist jedoch, dass das Prinzip der Callbacks auch im objektorientiertem Schema umgesetzt werden kann. Für das Beispiel sollte ../callbacks/stories-usage.ts als Eingangsdatei in die webpack.config.js definiert werden.
+Das folgende Beispiel richtet sich nach dem funktionalen Programmierparadigma, da durch die Nutzungen von \textbf{puren Funktionen}, das Callback Prinzip besser zur Geltung kommt. Eine pure Funktion, ist eine Funktion, die beim selben Input jedes mal das gleiche Output wiedergibt. Zu erwähnen ist jedoch, dass das Prinzip der Callbacks auch im objektorientiertem Schema umgesetzt werden kann. Für das Beispiel sollte ../callbacks/stories-usage.ts als Eingangsdatei in die webpack.config.js definiert werden.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -267,7 +269,7 @@ getChapter(1, response1 => { // (*)
 Es bildet sich eine Verzweigung, die sich immer weiter nach rechts ausbreitet. Zudem ist es auf dem ersten Blick schwer zu erkennen welcher Error-Callback zu welchem Kapitelaufruf gehört.\\
 
 \noindent
-Callbacks ist nur eine konventionelle Bezeichnung, für die Nutzung von Javascripts Funktionen. Es gibt kein bestimmtes Schlüsselwort oder Objekt in Javascripts Sprache, dass Callback heißt. Anstatt sofort ein Wert zurückzugeben, bietet das Callback-Prinzip die Möglichkeit Daten zu verarbeiten, die das Programm nicht sofort zur Verfügung hat. Es sollte jedoch nicht davon ausgegangen werden, dass alle höherrangigen Funktionen asynchron operieren (siehe Abb. \ref{callbacks-with-arrays}). Sie bilden lediglich Javascripts ersten Ansatz Daten asynchron zu verarbeiten. Bei mehreren abhängigen asynchronen Prozessen müssen Callbacks ineinandergeschachtelt werden. Mehrere Level von geschachtelten Callbacks führen zu einer schwer nachvollziehbaren Code-Struktur. Deshalb wird der Code in Abbildung \ref{Nested-Callback-with-catch-error} auch als \glqq{}Callback-Hell\grqq{} bezeichnet. Um aus der Callback-Hell zu entkommen, ebnete Ecmascript 6 den Weg der nativen Nutzung von \textbf{Promises}.
+Callbacks ist nur eine konventionelle Bezeichnung, für die Nutzung von Javascripts Funktionen. Es gibt kein bestimmtes Schlüsselwort oder Objekt in Javascripts Sprache, dass Callback heißt. Anstatt sofort ein Wert zurückzugeben, bietet das Callback Prinzip die Möglichkeit Daten zu verarbeiten, die das Programm nicht sofort zur Verfügung hat. Es sollte jedoch nicht davon ausgegangen werden, dass alle höherrangigen Funktionen asynchron operieren (siehe Abb. \ref{callbacks-with-arrays}). Sie bilden lediglich Javascripts ersten Ansatz Daten asynchron zu verarbeiten. Bei mehreren abhängigen asynchronen Prozessen müssen Callbacks ineinandergeschachtelt werden. Mehrere Level von geschachtelten Callbacks führen zu einer schwer nachvollziehbaren Code-Struktur. Deshalb wird der Code in Abbildung \ref{Nested-Callback-with-catch-error} auch als \glqq{}Callback-Hell\grqq{} bezeichnet. Um aus der Callback-Hell zu entkommen, ebnete Ecmascript 6 den Weg der nativen Nutzung von \textbf{Promises}.
 
 
 
