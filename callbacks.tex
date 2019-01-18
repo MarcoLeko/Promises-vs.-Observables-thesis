@@ -2,26 +2,45 @@
 Javascript ist eine ereignisgesteuerte Programmiersprache. Das bedeutet, anstatt auf blockierenden Code zu warten, führt Javascript Operationen weiter aus und reagiert wenn die Aktion fertig ist. Um sicherzustellen, dass Javascript abhängige Funktionen erst nach der Fertigstellung von asynchronen Operationen ausführt, wurde das Prinzip der \textbf{Callbacks} eingeführt. Doch wie regelt der Browser in welcher Reihenfolge der Code ausgeführt wird?
 
 \subsection{Javascripts Laufzeitkonzept}
-Dazu muss im groben das Verhalten des Javascript-Interpreters erklärt werden. Wenn ein Skript eine Funktion \textit{f} aufruft, fügt der Interpreter die Funktion zum Aufrufstapel \textit{(Call stack)} hinzu. Wird nun eine Funktion \textit{g} innerhalb von \textit{f} aufgerufen, wird die innere Funktion weiter oben in den Callstack hinzugefügt. Wenn die Ausführung der aktuellen Funktion fertig ist, wird die Funktion aus dem Aufrufstapel entfernt und die Exekution an der Stelle fortgeführt, wo sie als letztes fertiggestellt wurde.
+Dazu muss im groben das Verhalten des Javascript-Interpreters erklärt werden. Die wichtigsten Komponenten eines Javascript-Interpreters ist der Call stack und die Event Loop.\\
+
+\noindent
+Wenn ein Skript eine Funktion \textit{f} aufruft, fügt der Interpreter die Funktion zum Aufrufsstapel \textit{(Call stack)} hinzu. Wird nun eine Funktion \textit{g} innerhalb von \textit{f} aufgerufen, wird die innere Funktion weiter oben in den Call stack hinzugefügt. Wenn die Ausführung von \textit{f} fertig ist, wird diese Funktion aus dem Stapel entfernt und die Funktion, die sich weiter oben befindet, aufgerufen. Der Call stack verfolgt das Lifo-Prinzip (Last in - first out).\cite{javascript-interpreter} Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
+
+\begin{center}
+    async-patterns$\,\to\,$ webpack.config.js
+\end{center}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-function h(z) {
-    console.log(new Error().stack); // (A)
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/callbacks/introduction.ts',
+    ...
 }
-function g(y) {
-    h(y + 1); // (B)
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+function h(z: string): void {
+    console.log(z);
+    console.log(new Error().stack);
 }
-function f(x) {
-    g(x + 1); // (C)
+
+function g(y: string): void {
+    h(y + 'c'); // (B)
 }
-f(3); // (D)
+function f(x: string): void {
+    g(x + 'b'); // (C)
+}
+f('a'); // (D)
 \end{lstlisting}
 \caption{Fiktives Beispiel}
 \end{figure}
 
 \noindent
-Anfänglich ist der Call stack leer. Erst ab Zeile D mit dem Funktionsaufruf f(3) hat der Aufrufstapel einen Eingangspunkt. Der Einstiegspunkt befindet sich im globalen Geltungsbereich (\textit{global scope}):
+Anfänglich, wenn das Programm startet, ist der Call stack leer. Erst ab Zeile D mit dem Funktionsaufruf f(3) hat der Aufrufstapel einen Eingangspunkt. Der Einstiegspunkt befindet sich im globalen Geltungsbereich (\textit{global scope}):
 
 \begin{description}
 \item Globaler Geltungsbereich
@@ -49,27 +68,29 @@ Beim Ausführen des Codes zeigt die Konsole wie der Callstack vorgegangen ist:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
+abc
 Error
     at h (stack_trace.js:2:17)
     at g (stack_trace.js:6:5)
     at f (stack_trace.js:9:5)
     at <global> (stack_trace.js:11:1)
 \end{lstlisting}
-\caption{Fiktives Beispiel}
+\caption{Stellt die Anordnung der Aufrufe von unten nach oben dar.}
+\label{stack-trace-error}
 \end{figure}
 
 \noindent
-Javascripts Laufzeitkonzept lässt sich mit einem Warteschlangen-System vergleichen. Unabhängig davon wie zeitnah asynchrone Ereignisse wie timeouts oder Antworten aus einem Netzwerk ankommen, diese Prozesse werden sofort in die Schlange gesetzt, jedoch erst Verarbeitet, wenn der aktuelle stack fertig ist.
+Javascripts Laufzeitkonzept lässt sich mit einem Warteschlangen-System vergleichen. Unabhängig davon wie zeitnah asynchrone Ereignisse wie timeouts oder Antworten aus einem Netzwerk ankommen, diese Prozesse werden erst in die Schlange gesetzt wenn der Stapel leer ist.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
 setTimeout(function() {
     console.log('second');
-}, 0);
+}, 10);
 
 let num: number = 0;
 
-while (num < 100000000) {
+while (num < 100000000) { // 100 Millionen Iterationen
     num = num + 1;
 }
 
@@ -78,34 +99,21 @@ console.log('first');
 // second
 \end{lstlisting}
 \caption{Mit der setTimeout()-Funktion können Funktionsaufrufe verzögert werden.}
+\label{First-timeout-example}
 \end{figure}
 
 \noindent
-Eine Javascript Umgebung wird nur eine Opearation nacheinander ausführen. Diesen Prozess kann man sich als eine riesige Schleife, die durch den Programm läuft, vorstellen. Diese Schleife wird auch als \textbf{Event Loop} bezeichnet. Ist keine Operation mehr ausführbar, stoppt die Event-Schleife. Sollten Ereignisse in der Zwischenzeit entstehen, werden diese in die Warteschlange hintenan gesetzt. Deshalb kann in einem synchronen Programmiermodell stark blockierender Code andere Operationen verzögern, da zwei Operationen nicht zum selben Zeitpunkt ausgeführt werden können.\\
+Eine Javascript Umgebung führt nur eine Aufgabe nacheinander aus. Während das Programm ausgeführt wird, läuft im Hintergrund eine Eventschleife die eventuell eintreffende Ereignisse registriert. Diese Schleife wird auch als \textbf{Event Loop} bezeichnet. Im Beispiel von Abbildung \ref{First-timeout-example} wird die setTimout() Funktion genutzt. SetTimeout() ist eine WEB API Methode, die der Browser zur Verfügung stellt. Hierbei wird bestimmt mit welcher Verzögerung in Millisekunden die innere Funktion in den Callstack hinzugefügt wird. Um genau zu sein, wird die innere Funktion nicht direkt in den Call stack hinzugefügt. Die Eventschleife registriert, dass ein Ereignis nach einer Zeitverzögerung ausgelöst wurde, und sorgt dafür dass diese Funktion in den Callstack hinzugefügt wird, sobald dieser Leer ist. Wann auch immer ein Javascript Programm läuft, prüft die Event Loop ob ein neues Ereignis ausgelöst wurde.\cite{regular-event-loop}\\
 
 \noindent
-Ein Ansatz der asynchronen Verarbeitung ist die Nutzung von Funktionen die eine Funktion als Argument annimmt und erst dann diese Aufrufen, wenn eine blockierende Aktion fertig ausgeführt wurde. Dieses Verhalten ist nützlich wenn der Browser von bestimmten, zeitintensiven Aktionen abhängig ist. Doch wie genau funktioniert diese Schachtelung von Funktionen?
+Um eine Funktion nach einer asynchronen Operation auszuführen, ist es Möglich Funktionen zu schachteln. Dabei wird eine Funktionen als Argument angenommen und erst dann aufgerufen, wenn eine blockierende Aktion fertig ist. Doch wie genau funktioniert diese Schachtelung von Funktionen?
 
 \subsection{Funktionsweise}
 
 Sowohl in Javascript als auch in Typescript sind Funktionen als Erste-Klasse-Objekte zu sehen. Aus diesem Grund ist es Möglich sie an Variablen zu binden oder als Argumente in anderen Funktionen oder als Rückgabewert zu übergeben. Diese übergebenen Funktionen heißen Callbacks.\\
 
 \noindent
-Callbacks, auch Rückruffunktionen genannt, bildet das Kernkonzept der \textbf{funktionalen Programmierung} in Javascript.\cite{callbacks-intro} In der funktionalen Programmierung sind Funktionen als Werte zu betrachten. Der Code besteht aus kleineren Funktionen, die in höher geordneten Funktionen eingesetzt oder miteinander kombiniert werden können (Komposition). Dadurch ist der Code wiederverwendbar und weniger fehleranfällig. Javascript bietet mit Arrays die Möglichkeit Callbacks sinnvoll einzusetzen. Vor dem Ausführen des Beispiels muss folgend konfiguriert werden:
-
-\begin{center}
-    async-patterns$\,\to\,$ webpack.config.js
-\end{center}
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-module.exports = {
-    mode: 'development',
-    entry: './src/modules/callbacks/introduction.ts',
-    ...
-}
-\end{lstlisting}
-\end{figure}
+Callbacks, auch Rückruffunktionen genannt, bildet das Kernkonzept der \textbf{funktionalen Programmierung} in Javascript.\cite{callbacks-intro} In der funktionalen Programmierung sind Funktionen als Werte zu betrachten. Der Code besteht aus kleineren Funktionen, die in höher geordneten Funktionen eingesetzt oder miteinander kombiniert werden können (Komposition). Dadurch ist der Code wiederverwendbar und weniger fehleranfällig. Javascript bietet mit Arrays die Möglichkeit Callbacks sinnvoll einzusetzen.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -119,6 +127,7 @@ const evenNumbers = numbers.filter(isEven);
 console.log(evenNumbers) // 2 4 6
 \end{lstlisting}
 \caption{Die Funktion filter() gibt ein neues Array zurück.}
+\label{callbacks-with-arrays}
 \end{figure}
 
 \noindent
@@ -162,18 +171,18 @@ function getAllChapters(onSuccess, onFailure?): void {
 function getChapter(chapter, onSuccess, onFailure?): void {
     makeRequest(baseUrl() + chapter.toString(), onSuccess, onFailure);
 }
-\end{lstlisting}
-\end{figure}
 
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
 function createElm(innerHTML): HTMLElement {
     const div = document.createElement('div');
     div.innerHTML = innerHTML;
     document.body.appendChild(div);
     return div;
 }
+\end{lstlisting}
+\end{figure}
 
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
 function spawn(content: any): void {
     if (content instanceof Array === false) {
         content = [content];
@@ -205,7 +214,7 @@ const loadingIcon = createElm('<svg>..</svg>');
 \end{figure}
 
 \noindent
-Dabei sind die wichtigsten Funktionen makeRequest(), getAllChapters(), getChapter() und spawn(). MakeRequest() führt eine Http-Anfrage gegen einen definierten Endpunkt aus. Wenn der Status der Antwort 200 beträgt, wird im Success-Callback vorangeschreitet. Bei einem Fehler wird der Error-Callback aufgerufen. Sowohl getAllChapter() als auch getChapter() führen makeRequest() aus, mit der Möglichkeit im Erfolgs- und im Fehlerfall der Anfrage eine Aktion auszuführen. Spawn() nimmt ein Argument entgegen und lädt diesen in die DOM. Sollte ein Anwendungsfall sein, alle Kapitel der API anzufragen und bei Ankunft der Daten anzuzeigen, würde dies wie folgt aussehen:
+Dabei sind die wichtigsten Funktionen makeRequest(), getAllChapters(), getChapter() und spawn(). MakeRequest() führt eine Http-Anfrage gegen einen definierten Endpunkt aus. Wenn der Status der Antwort 200 beträgt, wird im Success-Callback vorangeschreitet. Bei einem Fehler wird der Error-Callback aufgerufen. Sowohl getAllChapter() als auch getChapter() führen makeRequest() aus, mit der Möglichkeit im Erfolgs- und im Fehlerfall der Anfrage eine Aktion auszuführen. Spawn() nimmt ein Kapitel entgegen und lädt diesen in die DOM. Sollte ein Anwendungsfall sein, alle Kapitel der API anzufragen und bei Ankunft der Daten anzuzeigen, würde dies wie folgt aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -250,14 +259,15 @@ getChapter(1, response1 => { // (*)
     }, err2 => catchError(err2)); // (**)
 }, err1 => catchError(err1)); // (*)
 \end{lstlisting}
-\caption{In der Praxis sollte für eine asynchrone Operation wie z.B. ein Http-Aufruf der Fehlerfall immer abgedeckt sein.}
+\caption{In der Praxis sollte bei einem Http-Aufruf der Fehlerfall immer abgedeckt sein.}
+\label{Nested-Callback-with-catch-error}
 \end{figure}
 
 \noindent
 Es bildet sich eine Verzweigung, die sich immer weiter nach rechts ausbreitet. Zudem ist es auf dem ersten Blick schwer zu erkennen welcher Error-Callback zu welchem Kapitelaufruf gehört.\\
 
 \noindent
-Wie man nun sehen kann, ist es möglich mit Callbacks asynchron Daten zu verarbeiten. Bei mehreren abhängigen asynchronen Prozessen müssen Callbacks ineinandergeschachtelt werden. Mehrere Level von geschachtelten Callbacks führen zu einer schwer nachvollziehbaren Code-Struktur. Deshalb wird der Code in Abbildung 6 auch als \glqq{}Callback-Hell\grqq{} bezeichnet. Um aus der Callback-Hell zu entkommen, ebnete Ecmascript 6 den Weg der nativen Nutzung von \textbf{Promises}.
+Callbacks ist nur eine konventionelle Bezeichnung, für die Nutzung von Javascripts Funktionen. Es gibt kein bestimmtes Schlüsselwort oder Objekt in Javascripts Sprache, dass Callback heißt. Anstatt sofort ein Wert zurückzugeben, bietet das Callback-Prinzip die Möglichkeit Daten zu verarbeiten, die das Programm nicht sofort zur Verfügung hat. Es sollte jedoch nicht davon ausgegangen werden, dass alle höherrangigen Funktionen asynchron operieren (siehe Abb. \ref{callbacks-with-arrays}). Sie bilden lediglich Javascripts ersten Ansatz Daten asynchron zu verarbeiten. Bei mehreren abhängigen asynchronen Prozessen müssen Callbacks ineinandergeschachtelt werden. Mehrere Level von geschachtelten Callbacks führen zu einer schwer nachvollziehbaren Code-Struktur. Deshalb wird der Code in Abbildung \ref{Nested-Callback-with-catch-error} auch als \glqq{}Callback-Hell\grqq{} bezeichnet. Um aus der Callback-Hell zu entkommen, ebnete Ecmascript 6 den Weg der nativen Nutzung von \textbf{Promises}.
 
 
 
