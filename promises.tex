@@ -8,7 +8,7 @@ Ein Promise repräsentiert ein Objekt das noch nicht absehbar ist, aber in Zukun
 \subsection{Funktionsweise}
 
 \noindent
-Promises \textit{(Versprechen)} verhalten sich in Javascript ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis. \cite{versprechen} \\
+Promises \textit{(Versprechen)} verhalten sich in Javascript ähnlich wie im echten Leben. Die Definition aus dem Wörterbuch ist: Das Versprechen ist eine einseitige Zusage über eine zukünftige Handlung oder ein zukünftiges Ereignis\cite{versprechen}.\\
 
 \noindent
 Das heißt:
@@ -33,10 +33,10 @@ Dabei gibt es zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: 
 \begin{lstlisting}[basicstyle=\small]
 new Promise( /* executor */ (resolve, reject) => { ... } );
 \end{lstlisting}
-\caption{Erzeugung einer neuen Promise-Instanz}
+\caption{Erzeugung einer neuen Promise-Instanz.}
 \end{figure}
 
-Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt.\cite{promise-executor} Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders wird bei einem Fehler die reject Funktion mit der jeweiligen Fehlernachricht aufgerufen. Zur Einführung ein einfaches Beispiel:\\
+Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt\cite{promise-executor}. Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders wird bei einem Fehler die reject Funktion mit der jeweiligen Fehlernachricht aufgerufen. Zur Einführung ein einfaches Beispiel:\\
 
 \noindent
 Vor dem Ausführen des Beispiels sollte ../promises/introduction.ts als Eingangsdatei in der webpack.config.js definiert werden.
@@ -54,6 +54,7 @@ const resolveRightAway = new Promise((resolve, reject) => {
 
 console.log(resolveRightAway);
 \end{lstlisting}
+\caption{Eine Executer Funktion nimmt zwei Callbacks als Argument an.}
 \end{figure}
 
 \noindent
@@ -65,6 +66,7 @@ Promise {<resolved>: "Promises kept!"}
     [[PromiseStatus]]: "resolved"
     [[PromiseValue]]: "Promises kept!"
 \end{lstlisting}
+\caption{Ausgabe eines Promise Objekts in der Konsole.}
 \end{figure}
 
 
@@ -90,6 +92,7 @@ const pendingPromise = new Promise<FakeHttpResponse>((resolve, reject) => {
 console.log(pendingPromise);
 setTimeout(() => console.log(pendingPromise), 10 * 1000);
 \end{lstlisting}
+\caption{Beim Eintreffen einer Aktion werden Status und Wert aktualisiert.}
 \end{figure}
 
 \noindent
@@ -117,7 +120,7 @@ Wie man nun gesehen hat kann ein Promise Objekt den Status \textbf{pending}, \te
 
 \subsubsection{Verarbeiten von Promises}
 
-Zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Eintreffen oder Fehlschlagen einer asynchronen Operation, einschließlich des entstandenen Wertes. Ein solches Objekt bietet \textbf{statische}- und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Promise Instanz aufrufbar sind. Eine oder mehrere der drei Prototyp-Methoden werden aufgerufen, wenn ein Promise in den settled Zustand eingetroffen ist:
+Zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Eintreffen oder Fehlschlagen einer asynchronen Operation, einschließlich des entstandenen Wertes. Ein solches Objekt bietet \textbf{statische}- und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Promise Instanz aufrufbar sind.
 
 \begin{description}
 
@@ -125,20 +128,18 @@ Zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Eintreffen od
 \item \begin{lstlisting}[basicstyle=\small]
 Promise.prototype.then(onFulfilled, onRejected)
 \end{lstlisting}
-\end{figure}
 
-\begin{figure}[H]
 \item \begin{lstlisting}[basicstyle=\small]
 Promise.prototype.catch(onRejected)
 \end{lstlisting}
-\end{figure}
- 
-\begin{figure}[H]
+
+
 \item \begin{lstlisting}[basicstyle=\small]
 Promise.prototype.finally(onFinally)
 \end{lstlisting}
+\caption{Eine oder mehrere der drei Prototyp-Methoden werden aufgerufen, wenn ein Promise in den settled Zustand eingetroffen ist}
 \end{figure}
- 
+
 \end{description}
 
 \noindent
@@ -146,7 +147,7 @@ Die untenstehende Grafik zeigt den Ablauf für das Eintreten der Events (onFulfi
 
 \begin{figure}[H]
 \includegraphics[width=13cm]{Promises-workflow}
-\caption{Weiterreichung eines Promise-Objekts \cite{promise-executor}}
+\caption{Weiterreichung eines Promise-Objekts\cite{promise-executor}.}
 \end{figure}
 
 \noindent
@@ -160,7 +161,7 @@ get('story.json').then((response) => {
   console.log('Failed!', error);
 })
 \end{lstlisting}
-\caption{Error-Handling innerhalb der then()-Methode. \cite{callback-vs-promises}}
+\caption{Error-Handling innerhalb der then()-Methode\cite{callback-vs-promises}.}
 \end{figure}
 
 \begin{figure}[H]
@@ -171,11 +172,12 @@ get('story.json').then((response) => {
   console.log('Failed!', error);
 })
 \end{lstlisting}
-\caption{Error-Handling mit der catch()-Methode. \cite{callback-vs-promises}}
+\caption{Error-Handling mit der catch()-Methode\cite{callback-vs-promises}.}
+\label{error-with-catch}
 \end{figure}
 
 \noindent
-Im Gegensatz zur oberen Variante führt die catch()-Methode keine zusätzlichen Operationen aus. Sie macht den Code lediglich semantisch lesbarer. Wichtig zu beachten ist, dass innerhalb einer Executor-Funktion \textbf{niemals} beide Argumente gemeinsam eintreffen können. Sie verhalten sich exklusiv. Deshalb ist das letztere Beispiel im Verhalten vergleichbar mit diesem Beispiel:
+Im Gegensatz zur oberen Variante führt die catch()-Methode keine zusätzlichen Operationen aus. Sie macht den Code lediglich semantisch lesbarer. Wichtig zu beachten ist, dass innerhalb einer Executor-Funktion \textbf{niemals} beide Argumente gemeinsam eintreffen können. Sie verhalten sich exklusiv. Deshalb ist das letztere Beispiel im Verhalten vergleichbar mit diesem:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -185,33 +187,29 @@ get('story.json').then((response) => {
   console.log('Failed!', error);
 })
 \end{lstlisting}
+\caption{Verhält sich ähnlich wie in Abbildung\ref{error-with-catch}.}
 \end{figure}
 
 \noindent
-Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then()-Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Diese bestehen aus vier Methoden:
+Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then()-Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Die wichtigsten dabei sind:
+
 
 \begin{description}
-\item Promise.resolve()
-\item Promise.reject()
-\item Promise.race()
-\item Promise.all()
+
+\begin{figure}[H]
+\item \begin{lstlisting}[basicstyle=\small]
+Promise.race(iterable)
+\end{lstlisting}
+
+\item \begin{lstlisting}[basicstyle=\small]
+Promise.all(iterable)
+\end{lstlisting}
+\caption{Ein iterable ist alles was mit einer for-of Schleife (ab ES6 nutzbar) iterierbar ist. Beispielsweise: Arrays oder Strings.}
+\end{figure}
 \end{description}
 
 \noindent
-Die ersten beiden Methoden werden genutzt um einen eingetroffenen oder fehlgeschlagenen Promises zu simulieren:
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-const rejectedPromise = Promise.reject('I reject on purpose');
-
-rejectedPromise.catch((err: string) => {
-    console.log('Reason of failure: ' + err);
-});
-\end{lstlisting}
-\end{figure}
-
-\noindent
-Diese Methoden können sich bei der Fehlersuche oder beim Testing als nützlich erweisen. Die anderen beiden Methoden helfen Promises leichter zu verarbeiten. Beispielsweise, wenn es darum geht mehrere Promises auszuführen, hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array zu lagern und dann die nötigen Aktionen mit der Sammlung von Promises auszuführen. Im nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt. Zum Ausführen des Beispiels muss ../promises/stories-usage.ts als Eingangsdatei konfiguriert werden.
+Diese Methoden helfen Promises leichter zu verarbeiten. Beispielsweise, wenn es darum geht mehrere Promises voneinander abhängig auszuführen, hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array zu lagern und dann die nötigen Aktionen mit der Sammlung von Promises auszuführen. Im nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt. Zum Ausführen des Beispiels muss ../promises/stories-usage.ts als Eingangsdatei konfiguriert werden.
 
 
 \begin{figure}[H]
@@ -392,7 +390,7 @@ Promise.all(chapters).then((response) =>
 \end{figure}
 
 \noindent
-Ein Promise.all() kann dabei abhängig vom Übergabeparameter verschiedene Rückgabewerte haben. Sollte das eingegebene iterable Argument leer sein, wird Promise.all() synchron erfüllt. Wenn das eingegebene iterable Argument keine Promises enthält, kommt ein asynchron eingelöstes Promise heraus. In allen anderen Fällen gibt ein Promise.all() ein einzelnes ausstehendes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays eingetroffen sind. Die Rückgabewerte entsprechen dann der Reihenfolge der Promises, unabhängig von der Reihenfolge der Erfüllung.\cite{promise-all} Sollte ein Promise fehlschlagen, wird dieser ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise.\cite{promise-executor}\\
+Ein Promise.all() kann dabei abhängig vom Übergabeparameter verschiedene Rückgabewerte haben. Sollte das eingegebene iterable Argument leer sein, wird Promise.all() synchron erfüllt. Wenn das eingegebene iterable Argument keine Promises enthält, kommt ein asynchron eingelöstes Promise heraus. In allen anderen Fällen gibt ein Promise.all() ein einzelnes ausstehendes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays eingetroffen sind. Die Rückgabewerte entsprechen dann der Reihenfolge der Promises, unabhängig von der Reihenfolge der Erfüllung\cite{promise-all}. Sollte ein Promise fehlschlagen, wird dieser ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise\cite{promise-executor}.\\
 
 \noindent
 Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Der unterschied der verketteten Variante zu Promise.all() liegt in der Art und Weise der Ausführung. Ein Promise.all() führt die Promises parallel aus und es löst sich nur so schnell auf wie das langsamste eintreffende Promise im iterable. Solange passiert nichts. In diesem Fall wird solange wird kein Kapitel in die DOM geladen, bis das langsamste Kapitel eingetroffen ist. In der verketteten Variante hingegen werden die Kapitel nacheinander im Browser geladen. Der Nutzer bekommt den Ladevorgang und das sequentiell laden der Kapitel mit. In der Praxis machen solche Kleinigkeiten eine nutzerfreundliche Applikation aus. 
@@ -404,7 +402,7 @@ Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden
 \end{figure}
 
 \noindent
-Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race(iterable) gibt ein erfolgreiches oder fehlgeschlagenes Promise zurück, sobald eines der Promises in dem iterable erfolgreich war oder fehlgeschlagen ist, entsprechend mit dem Wert dieses Promises. Wenn das übergebene iterable leer ist, wird das Promise für immer im pending Status verharren.\cite{promise-race}
+Dagegen wird die nächste Methode verhältnismäßig seltener genutzt. Promise.race(iterable) gibt ein erfolgreiches oder fehlgeschlagenes Promise zurück, sobald eines der Promises in dem iterable erfolgreich war oder fehlgeschlagen ist, entsprechend mit dem Wert dieses Promises. Wenn das übergebene iterable leer ist, wird das Promise für immer im pending Status verharren\cite{promise-race}.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]

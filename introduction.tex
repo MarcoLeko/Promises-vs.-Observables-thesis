@@ -2,7 +2,7 @@
 
 \section{Einführung}
 
-Javascript ist im Aufwind mehr denn je. Sie ist die meist genutzte Programmiersprache unter Entwicklern. Laut der diesjährigen Umfrage von Stackoverflow belegte sie zum sechsten mal in Folge den ersten Platz.\cite{programming-language-survey} Doch woher kommt dieser Erfolg? \\
+Javascript ist im Aufwind mehr denn je. Sie ist die meist genutzte Programmiersprache unter Entwicklern. Laut der diesjährigen Umfrage von Stackoverflow belegte sie zum sechsten mal in Folge den ersten Platz\cite{programming-language-survey}. Doch woher kommt dieser Erfolg? \\
 Wenn es um das Web geht, war Javascript als Skriptsprache schon immer Vorreiter. Doch diese Sprache hat seine Stärken auch in der Vielfalt seiner Einsatzmöglichkeiten. Wie mit dem Framework Node.js, dass ab 2009 in Erscheinung getreten ist, war es Möglich Server-seitigen Javascript-Code zu implementieren. Dies hatte zur Folge, dass man sich nicht mit multiplen Programmiersprachen auseinandersetzen musste. Man hatte eine Vereinheitlichung in seiner Code-Basis gefunden. Zudem bietet Node.js mit npm als Paketmanager die größte Auswahl an Open-Source-Libraries. Ein weiterer Punkt ist die Multi-Plattform-Kompatibilität die Javascript z.B. mit dem Framework Angular offenbart. Mit diesen Framework ist es Möglich mit einer Code-Basis sowohl Web-Anwendungen als auch Apps für mobile Geräte zu entwickeln. Da Javascript's Kompilierung vom Betriebssystem unabhängig ist, ist der Übergang von der Webentwicklung zur mobilen Entwicklung reibungslos. Und genau das bietet auch Typescript. Da Typescript ein sog. \textbf{Superset} von Javascript ist, kann jeder Code von Javascript auch in Typescript interpretiert werden. Der Unterschied zu Typescript und Javascript liegt in ihrer statischen Typisierung. Das bedeutet, dass Variablen, Methoden und Funktionsparameter im Vorfeld mit einem Typ versehen werden. Aufgrund dessen können Bugs zur Laufzeit schneller erkannt werden. Zudem lässt sich diese Sprache leicht modular aufbauen. Dadurch können Entwicklerteams in Unternehmensprojekte die Code-Struktur besser organisieren und dokumentieren.\\\\
 
 \noindent
@@ -76,6 +76,7 @@ let count: any = 23;
 
 count = 'Oops transformed to string!'
 \end{lstlisting}
+\caption{Wenn unbekannte Objekte von einem API-Aufruf verarbeitet werden, können diese als any deklariert werden.}
 \end{figure}
 
 \noindent
@@ -107,7 +108,7 @@ Ein großer Vorteil von Typescript ist die Möglichkeit auf verschiedene Javascr
 \end{figure}
 
 \noindent
-Hier kann z.B. mit der Regel \glqq noImplicitAny\grqq{} festgelegt werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any deklariert. Dies würde zu einem Kompilefehler führen.\cite{tsconfig} Mit dem Wert \glqq target\grqq{} wird die zu nutzende Javascript Version eingestellt. Wenn der Wert nicht bestimmt ist, wird standardmäßig nach es3 übersetzt. Um stets die aktuellste Version zu nutzen, wird in diesem Fall wird \textbf{esnext} angegeben.\\
+Hier kann z.B. mit der Regel \glqq noImplicitAny\grqq{} festgelegt werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any deklariert. Dies würde zu einem Kompilefehler führen\cite{tsconfig}. Mit dem Wert \glqq target\grqq{} wird die zu nutzende Javascript Version eingestellt. Wenn der Wert nicht bestimmt ist, wird standardmäßig nach es3 übersetzt. Um stets die aktuellste Version zu nutzen, wird in diesem Fall wird \textbf{esnext} angegeben.\\
 
 \noindent
 Zu beachten ist, dass die Konfiguration dieser Datei nur Fehler beim erstellen eines Kompilats entdeckt. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen. Zudem wird in jedem Fall eine Javascript Datei erstellt, auch wenn der Kompiler einen Fehler anzeigt. Diese Datei ist potenziell auch lauffähig. Um Typescript zu Kompilieren muss im Terminal unter dem Verzeichnis einer Typescript-Datei \textbf{tsc} eingegeben werden. In den für diese Arbeit genutzten Code-Beispiele werden die Startskripte von npm ausgeführt. Ein Skriptbefehl kann wie folgt aussehen:
@@ -139,18 +140,19 @@ Der zentrale Teil eines Computers, welches Programme und einzelne Schritte zum A
 
 \subsubsection{Asynchronität}
 
-Ein \textbf{asynchrones} Programmiermodell erlaubt multiple Abläufe zum selben Zeitpunkt. Wenn eine Aktion ausgeführt wird, läuft das Programm in einem anderen \glqq Thread\grqq{} weiter. Sollte die Operation fertig gestellt sein, wird das Programm informiert und liefert das Ergebnis zurück. Ein Beispiel dafür wäre das Suchen von Dateien auf einer Festplatte.\cite{asynchronitaet}
+Ein \textbf{asynchrones} Programmiermodell erlaubt multiple Abläufe zum selben Zeitpunkt. Wenn eine Aktion ausgeführt wird, läuft das Programm in einem anderen \glqq Thread\grqq{} weiter. Sollte die Operation fertig gestellt sein, wird das Programm informiert und liefert das Ergebnis zurück. Ein Beispiel dafür wäre das Suchen von Dateien auf einer Festplatte\cite{asynchronitaet}.
 
 \subsubsection{Synchronität}
 
-In einem \textbf{synchronen} Programmiermodell entstehen Abläufe sequenziell. Wenn eine Funktion mit einer zeitintensiven Aktion abgerufen wird, wird das Ergebnis erst nach dem Beenden der Operation zurückgegeben. In diesem Zeitintervall werden keine Nebenoperationen ausgeführt.\cite{asynchronitaet}\\
+In einem \textbf{synchronen} Programmiermodell entstehen Abläufe sequenziell. Wenn eine Funktion mit einer zeitintensiven Aktion abgerufen wird, wird das Ergebnis erst nach dem Beenden der Operation zurückgegeben. In diesem Zeitintervall werden keine Nebenoperationen ausgeführt\cite{asynchronitaet}.\\
 
 \noindent
-Man kann ein synchrones und asynchrones Modell mit einem kleinem Beispiel vergleichen: Eine Anwendung die zwei Ressourcen aus einem Netzwerk anfragt und die Ergebnisse miteinander kombiniert. In einer synchronen Umgebung würde man dies mit einem Funktionsaufruf nach dem anderen bewältigen. Das hat den Nachteil, dass die zweite Funktion erst dann ausführt, wenn die erste fertig ist. Die Gesamtzeit der Ausführung ist die Summe der Antwortzeiten der beiden Anfragen. Die Lösung dafür ist ein synchrones Programmverhalten mit mehreren kontrollierten Threads. Ein Thread ist ein Ausführungsstrang, der seine eigene Zeitleiste besitzt und innerhalb dieser Operationen ausführt. Ein zweiter Thread könnte zum selben Zeitpunkt die Funktion aufrufen und wenn beide Threads das Ergebnis geliefert bekommen resynchronisieren sie sich und kombinieren ihre Ergebnisse. Im folgenden Diagramm repräsentieren die blauen Linien die Zeit, in der das Programm ausführt und die roten Linien repräsentieren die Zeit, in der auf die Antwort gewartet wird.\cite{asynchronitaet}
+Man kann ein synchrones und asynchrones Modell mit einem kleinem Beispiel vergleichen: Eine Anwendung die zwei Ressourcen aus einem Netzwerk anfragt und die Ergebnisse miteinander kombiniert. In einer synchronen Umgebung würde man dies mit einem Funktionsaufruf nach dem anderen bewältigen. Das hat den Nachteil, dass die zweite Funktion erst dann ausführt, wenn die erste fertig ist. Die Gesamtzeit der Ausführung ist die Summe der Antwortzeiten der beiden Anfragen. Die Lösung dafür ist ein synchrones Programmverhalten mit mehreren kontrollierten Threads. Ein Thread ist ein Ausführungsstrang, der seine eigene Zeitleiste besitzt und innerhalb dieser Operationen ausführt. Ein zweiter Thread könnte zum selben Zeitpunkt die Funktion aufrufen und wenn beide Threads das Ergebnis geliefert bekommen resynchronisieren sie sich und kombinieren ihre Ergebnisse\cite{asynchronitaet}. Im folgenden Diagramm wird ein synchrones Modell mit einem Thread, mit zwei Threads und ein asynchrones Modell gegenübergestellt.
 
 \begin{center}
 \begin{figure}[H]
 \includegraphics[width=12cm]{synchron-vs-asynchron-diagram}
+\caption{Die blauen Linien repräsentieren die Zeit, in der das Programm ausführt und die roten Linien repräsentieren die Zeit, in der auf die Antwort gewartet wird.}
 \end{figure}
 \end{center}
 
