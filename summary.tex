@@ -1,33 +1,11 @@
 \section{Zusammenfassung}
-Asynchrone Programme werden nacheinander und in ihrem eigenen Kontext ausgeführt. Sollte eine Aktion gestartet werden plant das Programm Code auszuführen beim eintreffen oder fehlschlagen der Aktion. Zwischen den Aktionen steckt ein Programm im Leerlauf und wartet auf kommende Operationen.\\
+Die meisten Entwickler sträuben sich davor im Detail mit asynchroner Verarbeitung zu befassen. Jedoch kommt man in Javascript nicht drumherum, sich damit auseinanderzusetzen. Entweder man liest sich kurz in das Grundkonzept eines asynchronen Verarbeitungskonzeptes ein, und hofft, dass der Code das \glqq richtige tut\grqq{}. Oder man lernt die Anatomie eines Ansatzes im Detail kennen und steigt mit dem entwickeln später ein. Am Ende muss abgewogen werden, ob man am Ende bei der Fehlersuche oder beim Erlernen des Ansatzes Zeit in Anspruch nehmen möchte. Sich mit dieser Arbeit im Vorfeld beschäftigt zu haben, erspart dem Entwickler beim Anwenden dieser Ansätze Zeit und Nerven. Insbesondere kann bei einem Fehlerauftritt entsprechende Vermutungen am Fehler des Codes gestellt werden. Asynchrone Programmierung ist nicht leicht zu verstehen. Javascript ist eine Single-Threaded Skriptsprache und sollte immer als solche gesehen werden. Wenn eine Aktion asynchron stattfindet wird kein zweiter Thread gestartet. Im Gegenteil, die Aktion wird erst verarbeitet wenn, 
+
+\begin{description}
+\item entweder erfolgreich oder fehlerhaft vollendet ist,
+\item die Event-Loop die Aktion registriert hat,
+\item und der aktuelle Call stack leer ist.
+\end{description}
 
 \noindent
-Callbacks werden nicht direkt vom Code nach seiner festgelegten Reihenfolge aufgerufen. Zum Beispiel wird setTimeout() innerhalb einer Funktion aufgerufen, wird bereits mit der nächsten Operation vorrangeschreitet, bevor der Callback aufgerufen wird. Asynchrones Verhalten entsteht in einem eigenen Geltungsbereich des Callstacks. Aus diesem Grund ist es schwer, ohne Promises, in asynchron operierenden Code Fehler bzw. Exceptions zu verwalten. Da jedes Callback mit einem leerem stack startet, werden die catch handler in einem try-catch Block nicht im gleichen stack sein, wenn die Exception geworfen wird.
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-try {
-  setTimeout(() => {
-    throw new Error("Woosh");
-  }, 20);
-} catch (_) {
-  console.log("Caught!");
-}
-\end{lstlisting}
-\caption{Console.log() wird nicht ausgeführt.}
-\end{figure}
-
-\noindent
-Promises lösen sich immer auf als entweder eingetroffenes oder fehlgeschlagenes Ereignis. Selbst wenn ein Promise auf Anhieb eintrifft, wartet der Callstack bis der aktuelle Skript fertiggestellt wurde.
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-Promise.resolve('Done').then(console.log);
-console.log('Me first!');
-// Me first!
-// Done
-\end{lstlisting}
-\end{figure}
-
-\noindent
-Die Event-Schleife bestimmt in welchem Fall in welchem Ausführungskontext Code ausgeführt wird. Der Ansatz der asynchronen Verarbeitung ermöglicht es das Warten für zeitintensive Aktionen zu simulieren, ohne das Programm im Stillstand zu setzen. Javascript ermöglicht dies mit dem Ansatz der Callbacks, die es ermöglicht Funktionen aufzurufen, wenn Aktionen abschließen. Eine Event-Schleife steuert, wenn ein Callback zum passendem Zeitpunkt aufgerufen werden kann. Somit wird verhindert dass zwei Exekutionen innerhalb der Event-Schleife sich überlappen. Asynchrones Programmieren wurde mit der Einführung von Promises erleichtert. Promises sind Objekte, die zukünftige eingetroffene oder fehlgeschlagene Aktionen repräsentieren. Mit async await ist es Möglich asynchron operierenden Code zu schreiben als würde dieser synchron ausgeführt werden. Observables sind ein komplett neuer Ansatz der asynchronen Datenverarbeitung und der Programmierung. In einer reaktiven Anwendung, dass aus Observables besteht, werden Datenströme durch auslösende Events an Beobachter weitergereicht. Im Gegensatz zu Callbacks und Promises können Observables mehrere Werte mit der Zeit ausgeben.
+Erst dann schiebt die Event-Loop die Funktion die diese Aktion verarbeitet in den Call stack rein. So handhabt Javascripts Interpreter asynchrone Operationen. Um diese asynchrone Operationen zu verarbeiten bietet Javascript, die in dieser Arbeit gegenübergestellten Methodiken zur Verfügung. Callbacks gründeten den Anfang der asynchronen Verarbeitung. Callbacks sind selbst heutzutage ein durchaus valider Ansatz zur asynchronen Verarbeitung. Insbesondere in sofern, da dieser Ansatz das Kernkonzept der funktionalen Programmierung bildet. Javascript ist multiparadigmatisch. Promises werden syntaktisch \glqq sauberer\grqq{} verarbeitet. Demzufolge wurde, ähnlich wie in RxJS heute, die Nutzung von Promises durch externe Bibliotheken herangezogen. Als Promises nativ nutzbar waren, kam bereits kurze Zeit später async await raus. Async await bedienen sich die Nutzung von Promises in einer neuen Art und Weise. Promises konnten von nun an ohne Verschachtelung genutzt werden. Async await sollte jedoch nur eingesetzt werden, wenn man das Prinzip der Promises versteht. Ansonsten lässt die synchron dargestellte Code Struktur andeuten, dass await den synchronen Fluss stoppt. Observables bieten ein komplett neuen Ansatz der asynchronen Verarbeitung. In einem Anwendungsfall an dem eine Monitoring Applikation die aktuell angemeldeten Nutzer einer anderen Applikation verfolgt, würde in einer klassischen Implementierung beispielsweise alle 10 Sekunden ein Aufruf am Endpunkt gemacht werden müssen. Eine elegantere Variante wäre ein Observable mit einem Endpunkt zu verbinden und Änderungen der Nutzeranzahl führen zu einem neuen Wert an einem Observable. Somit ist es unter Anderem Möglich Daten in Echtzeit zu verarbeiten. Observables sind ein neuer Ansatz eines Push-Systems.
