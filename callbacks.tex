@@ -19,6 +19,7 @@ module.exports = {
     ...
 }
 \end{lstlisting}
+\caption{Die webpack.config.js Datei befindet sich im Hauptverzeichnis des Projekts.}
 \end{figure}
 
 \begin{figure}[H]
@@ -38,7 +39,7 @@ function f(x: string): void {
 
 f('a'); // (D)
 \end{lstlisting}
-\caption{Fiktives Beispiel}
+\caption{Nutzung von abhängigen Funktionen in einem synchronen Programmiermodell.}
 \end{figure}
 
 \noindent
@@ -139,7 +140,18 @@ Die Methode filter() nimmt Elemente einer Liste heraus, basierend einer Funktion
 In den jeweiligen Sektionen wird das gleiche Beispiel, in verschiedenen Ausprägungen angewendet und gegenübergestellt. Mit der REST-Api \textbf{JSONPlaceholder} wird ein Endpunkt für die Datenabfrage definiert. Hierbei handelt es sich um eine Open Source Endstelle, die Beispieldaten für das Prototyping oder zum Testen zur Verfügung stellt. Je nach Anwendungsfall werden verschiedene Ausführungen von Anfragen an diese Endstelle gemacht, um die Code-Beispiele so praxisnah wie Möglich zu halten.\\
 
 \noindent
-Das folgende Beispiel richtet sich nach dem funktionalen Programmierparadigma, da durch die Nutzungen von \textbf{puren Funktionen}, das Callback Prinzip besser zur Geltung kommt. Eine pure Funktion, ist eine Funktion, die beim selben Input jedes mal das gleiche Output wiedergibt. Zu erwähnen ist jedoch, dass das Prinzip der Callbacks auch im objektorientiertem Schema umgesetzt werden kann. Für das Beispiel sollte ../callbacks/stories-usage.ts als Eingangsdatei in die webpack.config.js definiert werden.
+Das folgende Beispiel richtet sich nach dem funktionalen Programmierparadigma, da durch die Nutzungen von \textbf{puren Funktionen}, das Callback Prinzip besser zur Geltung kommt. Eine pure Funktion, ist eine Funktion, die beim selben Input jedes mal das gleiche Output wiedergibt. Zu erwähnen ist jedoch, dass das Prinzip der Callbacks auch im objektorientiertem Schema umgesetzt werden kann. 
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/callbacks/stories-usage.ts',
+    ...
+}
+\end{lstlisting}
+\caption{Für die folgenden Beispiele sollte ../callbacks/stories-usage.ts als Eingangsdatei in die webpack.config.js definiert werden.}
+\end{figure}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -213,7 +225,7 @@ function displayFinished(): void {
 
 const loadingIcon = createElm('<svg>..</svg>');
 \end{lstlisting}
-\caption{Durch das funktionale Programmierparadigma verhindert man die Abhängigkeit von externen Variablen und umgeht somit unerwünschte \textit{Side Effects}}
+\caption{Durch das funktionale Programmierparadigma verhindert man die Abhängigkeit von externen Variablen und umgeht somit unerwünschte \textit{Side Effects}.}
 \end{figure}
 
 \noindent
@@ -226,7 +238,7 @@ getAllChapters(function(response) {
     displayFinished();
 });
 \end{lstlisting}
-\caption{Zuerst wird der API-Aufruf ausgeführt, und mit dem daraus resultierendem Objekt wird spawn() aufgerufen.}
+\caption{Zuerst wird der API-Aufruf ausgeführt und mit dem daraus resultierendem Objekt wird spawn() aufgerufen.}
 \end{figure}
 
 \noindent

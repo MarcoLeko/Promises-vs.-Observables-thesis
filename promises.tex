@@ -36,10 +36,19 @@ new Promise( /* executor */ (resolve, reject) => { ... } );
 \caption{Erzeugung einer neuen Promise-Instanz.}
 \end{figure}
 
-Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt\cite{promise-executor}. Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders wird bei einem Fehler die reject Funktion mit der jeweiligen Fehlernachricht aufgerufen. Zur Einführung ein einfaches Beispiel:\\
+Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt\cite{promise-executor}. Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders wird bei einem Fehler die reject Funktion mit der jeweiligen Fehlernachricht aufgerufen.
 
-\noindent
-Vor dem Ausführen des Beispiels sollte ../promises/introduction.ts als Eingangsdatei in der webpack.config.js definiert werden.
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/promises/introduction.ts',
+    ...
+}
+\end{lstlisting}
+\caption{Vor dem Ausführen der Beispiele sollte ../promises/introduction.ts als Eingangsdatei in der webpack.config.js definiert werden.}
+\end{figure}
+
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -193,7 +202,6 @@ get('story.json').then((response) => {
 \noindent
 Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then()-Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Die wichtigsten dabei sind:
 
-
 \begin{description}
 
 \begin{figure}[H]
@@ -209,8 +217,18 @@ Promise.all(iterable)
 \end{description}
 
 \noindent
-Diese Methoden helfen Promises leichter zu verarbeiten. Beispielsweise, wenn es darum geht mehrere Promises voneinander abhängig auszuführen, hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array zu lagern und dann die nötigen Aktionen mit der Sammlung von Promises auszuführen. Im nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt. Zum Ausführen des Beispiels muss ../promises/stories-usage.ts als Eingangsdatei konfiguriert werden.
+Diese Methoden helfen Promises leichter zu verarbeiten. Beispielsweise, wenn es darum geht mehrere Promises voneinander abhängig auszuführen, hat man entweder die Wahl die Promise-Verkettung zu nutzen oder die Promises in einem Array zu lagern und dann die nötigen Aktionen mit der Sammlung von Promises auszuführen. Im nächsten Beispiel wird die \textbf{Promise-Verkettung}, \textbf{Promise.all()} und \textbf{Promise.race()} gegenübergestellt.
 
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/promises/stories-usage.ts',
+    ...
+}
+\end{lstlisting}
+\caption{Zum Ausführen der Beispiele muss ../promises/stories-usage.ts als Eingangsdatei konfiguriert werden.}
+\end{figure}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -327,15 +345,13 @@ Alle Kapitel werden mit einem Aufruf am Endpunkt angefragt. Ist das Promise in d
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-story.getChapter(1).then(response1 => // (*)
-    story.spawn(response1)
-).then(() => // (**)
-    story.getChapter(2).then(response2 => story.spawn(response2))
-).then(() => // (***)
-    story.getChapter(3).then(response3 => story.spawn(response3))
-).finally(() =>  // (****)
-    story.displayFinished()
-);
+story.getChapter(1) // (*)
+    .then((response1) => story.spawn(response1))
+    .then(() => story.getChapter(2)) // (**)
+    .then((response2) => story.spawn(response2))
+    .then(() => story.getChapter(3)) // (***)
+    .then((response3) => story.spawn(response3))
+    .finally(() => story.displayFinished());
 \end{lstlisting}
 \caption{Promise-Verkettung für sequentielle Ausführungen}
 \label{Promises-sequential-calls}
@@ -360,12 +376,13 @@ Dieser Vorgang endet mit der finally() Verarbeitungsmethode. Zu beachten ist, da
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-story.getChapter(1).then((response1) => // (*)
-    story.spawn(response1)
-).then(() => // (**)
-    new Promise(resolve => setTimeout(() => resolve(story.getChapter(2)), 5000))
-        .then((response2) => story.spawn(response2))
-).then() => ...
+story.getChapter(1)
+    .then((response1) => story.spawn(response1))
+    .then(() =>
+        new Promise(resolve =>
+            setTimeout(() => resolve(story.getChapter(2)), 5000)))
+    .then((response2) => story.spawn(response2))
+    .then() => ...
 \end{lstlisting}
 \caption{Es wird eine weitere Verzögerung des Aufrufs von story.getChapter(2) auf weitere fünf Sekunden angewendet.}
 \end{figure}

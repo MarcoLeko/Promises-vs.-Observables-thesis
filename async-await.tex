@@ -1,5 +1,16 @@
 \section{Async await}
-Wenn es um das Verarbeiten von asynchronen Operationen geht, sind Promises ein erheblicher Fortschritt im Vergleich zum Callback Prinzip. Jedoch wurde ein grundlegendes Problem noch nicht gelöst: Mit der Nutzung von Promises ist der Code immer noch geschachtelt. Ziel ist es, asynchrone Aktionen so abzubilden, als ob diese synchron ausgeführt werden. Die webpack.config.js sollte als Eingangspunkt die ../async-await/introduction.ts Datei annehmen.
+Wenn es um das Verarbeiten von asynchronen Operationen geht, sind Promises ein erheblicher Fortschritt im Vergleich zum Callback Prinzip. Jedoch wurde ein grundlegendes Problem noch nicht gelöst: Mit der Nutzung von Promises ist der Code immer noch geschachtelt. Ziel ist es, asynchrone Aktionen so abzubilden, als ob diese synchron ausgeführt werden. 
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/async-await/introduction.ts',
+    ...
+}
+\end{lstlisting}
+\caption{Die webpack.config.js sollte im Folgenden als Eingangspunkt die ../async-await/introduction.ts Datei annehmen.}
+\end{figure}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -96,8 +107,18 @@ helloWorldFailure();
 \end{figure}
 
 \noindent
-Um sich ein besseres Bild von der Nützlichkeit von async await zu machen, werden die Kapitelaufrufe in der Promise Sektion mit async await nachgestellt. Vor dem Ausführen des Beispiels sollte die ../async-await/stories-usage.ts als Eingangsdatei definiert werden.
+Um sich ein besseres Bild von der Nützlichkeit von async await zu machen, werden die Kapitelaufrufe in der Promise Sektion mit async await nachgestellt. 
 
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/async-await/stories-usage.ts',
+    ...
+}
+\end{lstlisting}
+\caption{Vor dem Ausführen der Beispiele sollte die ../async-await/stories-usage.ts als Eingangsdatei definiert werden.}
+\end{figure}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
