@@ -273,7 +273,11 @@ export class Story {
     public getChapter(chapter: number): Promise<string> {
         return this.http.makeRequest(Story.BASE_URL + chapter.toString());
     }
-    
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]  
     public spawn(content): void {
         if (content instanceof Array === false) {
             content = [content];
@@ -291,11 +295,7 @@ export class Story {
         });
 
     }
-\end{lstlisting}
-\end{figure}
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
+    
     public displayFinished(): void {
         this.spinnerElement.style.display = 'none';
         Story.createElement('All done!');
@@ -304,6 +304,7 @@ export class Story {
 
 const story = new Story();
 \end{lstlisting}
+\caption{Der Vorteil der Objektorientierung ist die Kapselung der Logik in: Endpunkt-Aufruf zur Verfügung stellen und Ergebnis des Endpunkt-Aufrufs abbilden.}
 \end{figure}
 
 \noindent
@@ -366,6 +367,7 @@ story.getChapter(1).then((response1) => // (*)
         .then((response2) => story.spawn(response2))
 ).then() => ...
 \end{lstlisting}
+\caption{Es wird eine weitere Verzögerung des Aufrufs von story.getChapter(2) auf weitere fünf Sekunden angewendet.}
 \end{figure}
 
 \noindent
@@ -435,6 +437,7 @@ story.getChapter(1)
             });
     });
 \end{lstlisting}
+\caption{Schachtelung nach dem Callback Muster.}
 \end{figure}
 
 \noindent
@@ -444,16 +447,19 @@ Mit dem ursprünglichen Beispiel ist es jedoch Möglich Fehler zwischen der Kett
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
 story.getChapter(1)
-    .then((response1) =>
-        story.spawn(response1);
-    )
-    .catch((err) => ('Catched: ' + err))
-    .then(() => story.getChapter(2)
-        .then((response2) => 
-            story.spawn(response2);
-        ))
-    ...
-    \end{lstlisting}
+    .then(() => {
+        throw new Error('Faked Error');
+    })
+    .catch((err) => {
+        console.log(err);
+        return story.getChapter(2);
+    })
+    .then((response2) => story.spawn(response2))
+    .then(() => story.getChapter(3))
+    .then(response3 => story.spawn(response3))
+    .finally(() => story.displayFinished());
+\end{lstlisting}
+\caption{Das erste Kapitel wird nicht abgebildet, jedoch alle folgenden.}
 \end{figure}
 
 \noindent

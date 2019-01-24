@@ -106,6 +106,7 @@ const bar = RxJS.Observable.create((observer) => {
 
 bar.subscribe((x) => console.log(x));
 \end{lstlisting}
+\caption{Mit der subscribe() Methode schließen sich Observer einem Observable Stream an.}
 \end{figure}
 
 \begin{figure}[H]
@@ -180,6 +181,7 @@ randomNumber.subscribe(value =>
 randomNumber.subscribe(value =>
     console.log('2nd subscription emits: ', value));
 \end{lstlisting}
+\caption{Zwei Observer schließen sich einer Observable Quelle an.}
 \end{figure}
 
 \begin{figure}[H]
@@ -187,10 +189,11 @@ randomNumber.subscribe(value =>
 1st subscription emits: 0.4993735404857842
 2nd subscription emits: 0.9537401571843251
 \end{lstlisting}
+\caption{Das Ergebnis sind zwei verschiedene Werte, bei zwei Subscriptions - an einem Observable.}
 \end{figure}
 
 \noindent
-Das Ergebnis sind zwei verschiedene Werte, bei zwei Subscriptions - an einem Observable. Diese Eigenschaft wird als \textbf{unicasting} bezeichnet. Das ist nur Möglich, da die Funktion random() erst dann aufgerufen wird, wenn die Datenübertragung gestartet wird. Somit hat jede Subscription eine eigene Ausführung des Datenproduzenten. Es gibt nun mehrere Möglichkeiten, wie sich Observer den gleichen Datenfluss mit der gleichen Quelle teilen. Eine Möglichkeit wäre, den Datenproduzent außerhalb des Observable auszulagern. 
+Diese Eigenschaft wird als \textbf{unicasting} bezeichnet. Das ist nur Möglich, da die Funktion random() erst dann aufgerufen wird, wenn die Datenübertragung gestartet wird. Somit hat jede Subscription eine eigene Ausführung des Datenproduzenten. Es gibt nun mehrere Möglichkeiten, wie sich Observer den gleichen Datenfluss mit der gleichen Quelle teilen. Eine Möglichkeit wäre, den Datenproduzent außerhalb des Observable auszulagern. 
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -201,6 +204,7 @@ const randomNumber = new Observable<number>(observer => {
 
 ...
 \end{lstlisting}
+\caption{Der numerische Wert steht schon vor der Initialisierung des Observables fest.}
 \end{figure}
 
 \noindent
@@ -227,6 +231,7 @@ Wie im obigen Beispiel zu sehen ist, werden Operatoren mit der pipe() Methode au
 1st subscription emits: 0.19630068183646832
 2nd subscription emits: 0.19630068183646832
 \end{lstlisting}
+\caption{Das Ergebnis sind zwei gleiche Werte, bei zwei Subscriptions - an einem Observable.}
 \end{figure}
 
 \noindent
@@ -258,10 +263,11 @@ Die statische Methode interval() erstellt ein Observable, dass aufsteigend Numme
 2nd subscriber: 4
 ...
 \end{lstlisting}
+\caption{Es hängt vom Observable ab, wann die Sequenz von Werten emittiert werden.}
 \end{figure}
 
 \noindent
-Es hängt vom Observable ab, wann die Sequenz von Werten emittiert werden. Ein hot Observable könnte Werte ausstoßen, sobald es erstellt wird. Und deshalb könnten Observer, die sich später am Observable-Stream einhängen, Werte zwischenzeitlich verpassen. Wenn der gleiche Datenproduzent über verschiedene Subscriptions genutzt wird, ist dies ebenfalls ein Indikator dafür, dass es sich um ein hot Observable handelt. Ein cold Observable dagegen wartet mit dem emittieren der Werte, bis eine Subscription eines Observers stattgefunden hat. Dieser Observer empfängt dementsprechend die gesamten Werte der Sequenz. In manchen Versionen von Rx gibt es auch die Bezeichnung connectable Observable. In solchen Fällen werden erst dann Werte emittiert, wenn die dazugehörige connect() Methode aufgerufen wurde, unabhängig davon ob eine Subscription an dem Observable stattfindet oder nicht\cite{hot-vs-cold-part-2}.
+Ein hot Observable könnte Werte ausstoßen, sobald es erstellt wird. Und deshalb könnten Observer, die sich später am Observable-Stream einhängen, Werte zwischenzeitlich verpassen. Wenn der gleiche Datenproduzent über verschiedene Subscriptions genutzt wird, ist dies ebenfalls ein Indikator dafür, dass es sich um ein hot Observable handelt. Ein cold Observable dagegen wartet mit dem emittieren der Werte, bis eine Subscription eines Observers stattgefunden hat. Dieser Observer empfängt dementsprechend die gesamten Werte der Sequenz. In manchen Versionen von Rx gibt es auch die Bezeichnung connectable Observable. In solchen Fällen werden erst dann Werte emittiert, wenn die dazugehörige connect() Methode aufgerufen wurde, unabhängig davon ob eine Subscription an dem Observable stattfindet oder nicht\cite{hot-vs-cold-part-2}.
 
 \subsection{Subscription}
 
@@ -327,7 +333,7 @@ observable.subscribe(
 Wenn es um Operatoren geht, sind diese die wahre Stärke der Observables. Operatoren manipulieren das Stream-Verhalten oder beeinflussen die Werte innerhalb eines Streams. Deshalb ist es mit ihnen möglich komplexen asynchronen Code, leicht und deklarativ zusammenzustellen.\\
 
 \noindent
-Operatoren sind Methoden eines Observable Objekts. Wenn ein Operator an einem Observable angewendet wird, wird eine neue Observable Instanz mit einem neuen Datenfluss erstellt. Der ursprüngliche Datenfluss wird nicht verändert. Das liegt daran, dass Observables an sich unveränderlich sind. Bei Anwendung wird somit das aktuelle Observable als Input genommen und ein neues Observable als Output generiert. Deshalb wird bei einer Subscription des Output Observables auch eine des Input Observables stattfinden. Im folgenden Beispiel wird ein selbstkreiertes Observable erstellt, dass alle numerischen Werte mit 10 multipliziert:
+Operatoren sind Methoden eines Observable Objekts. Wenn ein Operator an einem Observable angewendet wird, wird eine neue Observable Instanz mit einem neuen Datenfluss erstellt. Der ursprüngliche Datenfluss wird nicht verändert. Das liegt daran, dass Observables an sich unveränderlich sind. Bei Anwendung wird somit das aktuelle Observable als Input genommen und ein neues Observable als Output generiert. Deshalb wird bei einer Subscription des Output Observables auch eine des Input Observables stattfinden. Im folgenden Beispiel wird ein eigenes Observable erstellt.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -344,6 +350,7 @@ const source = from([1, 2, 3, 4]);
 const output = multiplyByTen(source);
 output.subscribe(res => console.log(res));
 \end{lstlisting}
+\caption{Alle numerischen Werte werden mit 10 multipliziert}
 \end{figure}
 
 \noindent
@@ -368,6 +375,7 @@ RxJS.Observable.prototype.multiplyByTen = function() {
     );
 };
 \end{lstlisting}
+\caption{Implementation mit einem fiktiven Beispiel.}
 \end{figure}
 
 \noindent
@@ -378,6 +386,7 @@ Instanz Operatoren sind Funktionen die den \textbf{this} Ausdruck als Referenz d
 const source = RxJS.from([1, 2, 3, 4]).multiplyByTen();
 source.subscribe(result => console.log(result));
 \end{lstlisting}
+\caption{Ausführung des selbsterstellten Observables.}
 \end{figure}
 
 \noindent
@@ -401,6 +410,7 @@ const result = source
     .filter(num => !isNaN(num))
     .reduce((previous: number, current: number) => previous + current);
 \end{lstlisting}
+\caption{Die dargestellten Funktionen werden in der Praxis häufig verwendet um Arrays zu verarbeiten.}
 \end{figure}
 
 \noindent
@@ -415,6 +425,7 @@ const result$ = from(source).pipe(
 
 result$.subscribe(res => console.log(res));
 \end{lstlisting}
+\caption{Observable bieten Array-ähnliche Verarbeitungsmethoden.}
 \end{figure}
 
 \noindent
@@ -455,6 +466,7 @@ export class Story {
 
 const story = new Story();
 \end{lstlisting}
+\caption{Das Beispiel der vorherigen Sektionen wird hier Ebenfalls gegenübergestellt.}
 \end{figure}
 
 \noindent
@@ -468,6 +480,7 @@ from([1, 2, 3]).pipe(
         finalize(() => story.displayFinished())
 ).subscribe();
 \end{lstlisting}
+\caption{Jeweils from() und concatMap() erstellen eigene Datenströme.}
 \end{figure}
 
 \noindent
@@ -499,6 +512,7 @@ from([1, 2, 3]).pipe(
     complete: () => story.displayFinished()
 });
 \end{lstlisting}
+\caption{CatchError() ist in diesem Fall keine selbsterstellte Methode der Klasse Story, sondern ein Observable Operator.}
 \end{figure}
 
 \noindent
@@ -540,6 +554,7 @@ subject.subscribe({
 subject.next(1);
 subject.next(2);
 \end{lstlisting}
+\caption{Subscriptions können auch an Subjects Objekte stattfinden.}
 \end{figure}
 
 \begin{figure}[H]
@@ -549,6 +564,7 @@ observerB: 1
 observerA: 2
 observerB: 2
 \end{lstlisting}
+\caption{Alle Observer bekommen die gleichen Werte.}
 \end{figure}
 
 \noindent
@@ -564,11 +580,12 @@ subject.subscribe(v2 => console.log('ObserverB: ', v2));
 const source = RxJS.Observable.from([1, 2, 3]);
 source.subscribe(subject);
 \end{lstlisting}
+\caption{Mit diesem Beispiel wurde ein Unicast Observable in ein multicastingfähiges konvertiert.}
 \end{figure}
 
 
 \noindent
-Mit diesem Beispiel wurde ein Unicast Observable in ein multicastingfähiges konvertiert. Dies ist ein weiteres Beispiel einer Umwandlung eines cold- in ein hot Observable. In Wahrheit, ohne den Datenproduzent außerhalb des Observables zu lagern, sind Subjects die einzige Möglichkeit eine Observable Exekution an mehrere Observer zu verteilen. Mit der ursprünglichen Konvertierung in Abb. \ref{unicast-transformation} wurde mit dem shareReplay() Operator eine Funktion genutzt, die intern mit einem ReplaySubject arbeitet.\\
+Dies ist ein weiteres Beispiel einer Umwandlung eines cold- in ein hot Observable. In Wahrheit, ohne den Datenproduzent außerhalb des Observables zu lagern, sind Subjects die einzige Möglichkeit eine Observable Exekution an mehrere Observer zu verteilen. Mit der ursprünglichen Konvertierung in Abb. \ref{unicast-transformation} wurde mit dem shareReplay() Operator eine Funktion genutzt, die intern mit einem ReplaySubject arbeitet.\\
 
 \noindent
 Es gibt weitere Arten von Subjects, die in Folge gegenübergestellt werden: \textbf{BehaviourSubject}, \textbf{ReplaySubject}, \textbf{AsyncSubject}.
@@ -611,7 +628,7 @@ observerB: 3
 \end{figure}
 
 \subsubsection{ReplaySubject}
-Ein ReplaySubject ist ähnlich zum BehaviourSubject, jedoch werden auch alte Werte gespeichert und an neue Subscriber ausgestoßen. Im Konstruktor kann explizit angegeben Werden wie viele alte Werte zwischengespeichert werden.
+Ein ReplaySubject ist ähnlich zum BehaviourSubject, jedoch werden auch alte Werte gespeichert und an neue Subscriber ausgestoßen.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -631,6 +648,7 @@ replay.subscribe({
 
 replay.next(4);
 \end{lstlisting}
+\caption{Im Konstruktor kann explizit angegeben Werden wie viele alte Werte zwischengespeichert werden.}
 \end{figure}
 
 \noindent
@@ -646,6 +664,7 @@ observerB: 3
 observerA: 4
 observerB: 4
 \end{lstlisting}
+\caption{Das Ergebnis der beiden Subscriptions von ObserverA und ObserverB.}
 \end{figure}
 
 \subsubsection{AsyncSubject}

@@ -213,6 +213,7 @@ function displayFinished(): void {
 
 const loadingIcon = createElm('<svg>..</svg>');
 \end{lstlisting}
+\caption{Durch das funktionale Programmierparadigma verhindert man die Abhängigkeit von externen Variablen und umgeht somit unerwünschte \textit{Side Effects}}
 \end{figure}
 
 \noindent
@@ -225,6 +226,7 @@ getAllChapters(function(response) {
     displayFinished();
 });
 \end{lstlisting}
+\caption{Zuerst wird der API-Aufruf ausgeführt, und mit dem daraus resultierendem Objekt wird spawn() aufgerufen.}
 \end{figure}
 
 \noindent
@@ -243,6 +245,7 @@ getChapter(1, function(response1) { // (*)
     });
 });
 \end{lstlisting}
+\caption{Mit der Übergabe von response1 in spawn() beginnt die Nebenläufigkeit.}
 \end{figure}
 
 \noindent

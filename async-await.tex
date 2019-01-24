@@ -74,10 +74,7 @@ console.log('bar');
 \end{figure}
 
 \noindent
-Await stoppt die weitere Ausführung des Funktionsrumpfes bis der Promise in den settled Zustand angelangt ist. Aber diese Auflösung wird erst, wenn der Call stack vollständig verarbeitet wurde. Dieses Konzept wird auch \textbf{run to completion} genannt.\\
-
-\noindent
-Die Stärke von async await ist die Syntax. Eine Applikation, die von asynchronen Operationen getrieben ist, kann nun in der Code Struktur synchron abgebildet werden. 
+Await stoppt die weitere Ausführung des Funktionsrumpfes bis der Promise in den settled Zustand angelangt ist. Aber diese Auflösung wird erst, wenn der Call stack vollständig verarbeitet wurde. Dieses Konzept wird auch \textbf{run to completion} genannt. Die Stärke von async await ist die Syntax. Eine Applikation, die von asynchronen Operationen getrieben ist, kann nun in der Code Struktur synchron abgebildet werden. 
 
 \subsection{Error Handling}
 Wenn ein Promise eintrifft, liefert der await Ausdruck das Ergebnis zurück. Hingegen wird bei einem Promise Fehlschlag ein Error geworfen, ähnlich wie bei einem \textbf{throw} Ausdruck. Wie in Java oder Swift gibt es auch in Javascript ein \textbf{try-catch} Block. Wenn ein Promise fehlschlägt, kann daraufhin mit dem catch Block der Fehler gefangen werden. Code-technisch würde dies so aussehen: 
@@ -142,6 +139,7 @@ async function getFirstSectionsInParallel() {
 
 getFirstSectionsInParallel();
 \end{lstlisting}
+\caption{Async await nutzt intern Promise Objekte.}
 \end{figure}
 
 \noindent
