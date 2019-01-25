@@ -707,7 +707,14 @@ from([1, 2, 3]).pipe(
 \end{figure}
 
 \noindent
-Für jeden Wert der from() ausgibt wird mit dem concatMap() Operator ein weiteres Observable angeschlossen. Das jeweils angeschlossene Observable ist story.getChapter(). Am Ende werden alle entstandenen getChapter()-Aufrufe innerhalb einer Observable Sequenz ausgeführt. Wenn die Observable Sequenz erfolgreich ausgeführt wurde kann vor der Fertigstellung des Observables finalize() aufgerufen werden. Mit dem tap() Operator wird für jede Emission der Sequenz eine Operation ausgeführt. Die Aktionen, die in tap() und finalize() durchgeführt werden, können auch durch den next() und dem complete() Callback des Observer Objekts ersetzt werden.\\
+Für jeden Wert den from() ausgibt, gibt concatMap() ein Observable zurück je nach angewendeter Funktion. In diesem Fall ist die angewendete Funktion story.getChapter(n). ConcatMap() flacht alle aus story.getChapter(n) resultierenden Observables zu einem zusammen. Somit werden alle entstandenen Ergebnisse der getChapter()-Aufrufe innerhalb einer Observable Sequenz zurückgegeben. Mit dem tap() Operator wird für jede Emission der Sequenz eine Nebenoperation ausgeführt. Tap() beeinflusst die Werte der Observable-Sequenz nicht. Die Aktionen, die in tap() und finalize() durchgeführt werden, können auch durch den next() und dem complete() Callback des Observer Objekts ersetzt werden. Schließlich wird vor Abschluss des Observables mit finalize() eine Funktion aufgerufen. In einem Marble-Diagramm abgebildet, wird deutlich, wie mit der Anwendung der Operatoren der Fluss verändert wird.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=8cm]{getchapters-fluss}
+\caption{Finalize() ruft story.displayFinished(), wenn das Observable komplettiert.}
+\end{figure}
+
 
 \noindent
 Es ist ebenfalls möglich Werte aus verschiedenen Observable Sequenzen gleichzeitig auszugeben. Mit dem statischen Operator \textbf{forkJoin()} kann ein Observable Array oder mehrere Observables als Argument übergeben werden. Sobald alle Observables erfolgreich ihre Werte emittiert haben und die Sequenzen abgeschlossen sind, werden die gesamte Anzahl an Werten an die Observer verteilt. Forkjoin() führt die Observables in der Reihenfolge aus, in der sie als Argument übergeben worden sind. Dementsprechend wird auf jede Sequenz gewartet bis die Werte ausgegeben und das Observable fertiggestellt wird. Somit addiert sich die Zeit bis alle Sequenzen abgeschlossen sind. Observables forkJoin() ist das Gegenstück zum \textbf{Promise.all()}. Es gibt noch zahlreiche weitere Operatoren die mehrere Observables kombinieren können. Dazu gehören unter anderem \textbf{MergeMap()}, \textbf{concat()}, \textbf{merge()}, \textbf{combineLatest()} etc.\\
