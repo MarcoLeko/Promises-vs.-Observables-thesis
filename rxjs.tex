@@ -500,46 +500,14 @@ asyncSubject.complete();
 
 \subsection{Schedulers}
 
-Rx Schedulers bietet eine Abstraktion die es erlaubt wann Operationen (in der Zukunft) ausgeführt werden, ohne dass der ausführende Code davon weiß wie der Mechanismus zur Steuerung der Arbeit funktioniert. Wann auch immer eine Rx Methode einen Wert produziert, wird die Ausführung an einem Scheduler übergeben. Mit dem Einbezug eines Schedulers kann nun genau geplant werden wann die Nachricht an die Zuhörenden übergeben werden. In einer serverseitigen Implementierung von Rx wie \textbf{Rx.NET} spielen Schedulers eine wichtige Rolle. Man kann beispielsweise bestimmen wann resourcenintensive Operationen in einem Thread Pool ausgeführt werden und daraufhin die Subscription im UI-Thread gestartet wird, um die Oberfläche zu aktualisieren\cite{rx-schedulers}.\\
+Rx Schedulers bietet eine Abstraktion die es erlaubt wie Observables Werte emittieren, ohne dass der angeschlossene Observer davon weiß wie die Werte ankommen (synchron oder asynchron). Wann auch immer eine Rx Methode einen Wert produziert, wird die Ausführung an einem Scheduler übergeben. Mit dem Einbezug eines Schedulers kann nun genau geplant werden wann die Nachricht an die Zuhörenden übergeben werden. In einer serverseitigen Implementierung von Rx wie \textbf{Rx.NET} spielen Schedulers eine wichtige Rolle. Man kann beispielsweise bestimmen wann resourcenintensive Operationen in einem Thread Pool ausgeführt werden und daraufhin die Subscription im UI-Thread gestartet wird, um die Oberfläche zu aktualisieren\cite{rx-schedulers}.\\
 
 \noindent
-In RxJS dagegen finden Schedulers ziemlich selten Anwendung. Da Javascript grundsätzlich single-threaded ist, wird die Nutzung von Schedulers vermieden. Wenige Operatoren wie \textbf{debounceTime()} nutzen intern Schedulers, da mit diesem Operator die Aktion innerhalb des Observables mit einer festgelegten Verzögerung aufgerufen werden. Dies kann praktisch sein, wenn ein Input-Feld ein Autovervollständigungs-Mechanismus hat. Um nicht nach jedem Tastendruck-Event eine Anfrage gegen ein Backend zu starten, können die Aktionen eines Observables innerhalb einer festgelegten Zeit gedrosselt werden.\\
+Da Javascript grundsätzlich single-threaded ist, finden Schedulers In RxJS finden kaum Anwendung. Im zweiten Praxis Beispiel dieser Sektion wird jedoch ein Operator angewendet, dass intern ein Scheduler nutzt. In dieser Arbeit wird auf die Einführung von Schedulers verzichtet. Unter folgendem Link kann man mehr über Schedulers erfahren:
 
-\noindent
-Ein Scheduler somit definiert in welchem Ausführungskontext ein Observable seine Observer benachrichtigt. Im folgenden Beispiel wird der Code aus Abbildung \ref{creation-of-observable-first-example} erweitert.
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-const scheduled = RxJS.Observable.create((obs) => {
-    obs.next(1);
-    obs.next(2);
-    obs.next(3);
-    obs.complete();
-}).pipe(observeOn(async));
-
-console.log('just before subscribe');
-scheduled.subscribe(observer);
-console.log('just after subscribe');
-\end{lstlisting}
-\caption{Mit dem Operator observeOn() wird die Scheduler Art bestimmt}
-\end{figure}
-
-\noindent
-In diesem Fall werden die Werte in folgender Werte in folgender Reihenfolge ausgeführt:
-
-\begin{figure}[H]
-\begin{lstlisting}
-just before subscribe
-just after subscribe
-Value: 1
-Value: 2
-Value: 3
-Done!
-\end{lstlisting}
-\end{figure}
-
-\noindent
-Der async Scheduler nutzt intern setTimeout() oder setInterval(), auch wenn die Verzögerung 0 beträgt. Da in Javascript setTimeout(Funktion,0) die Funktion erst in der nächsten Eventschleifen-Itereation ausführt, wird der erste Wert erst Abgebildet nachdem \glqq just after subscribe\grqq{} in der Konsole ausgegeben wird. Der observeOn Operator nimmt ein delay Argument entgegen. Dieser bestimmt die Verzögerung in Millisekunden.
+\begin{center}
+    \url{http://reactivex.io/rxjs/manual/overview.html#scheduler}
+\end{center}
 
 \subsection{Operatoren}
 Wenn es um Operatoren geht, sind diese die wahre Stärke der Observables. Operatoren manipulieren das Stream-Verhalten oder beeinflussen die Werte innerhalb eines Streams. Deshalb ist es mit ihnen möglich komplexen asynchronen Code, leicht und deklarativ zusammenzustellen.\\
