@@ -536,26 +536,17 @@ module.exports = {
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
 export class HTTP {
+
     public makeRequest(url): Observable<any> {
-        return from(new Promise((resolve, reject) => {
-                const req = new XMLHttpRequest();
-                req.open('GET', url);
-
-                req.onload = () => {
-                    if (req.status === 200) {
-                        this.fakeLatency().then(() => resolve(JSON.parse(req.response)));
-                    } else {
-                        reject(Error(req.statusText));
-                    }
-                };
-
-                req.onerror = () => {
-                    reject(Error('Network Error'));
-                };
-
-                req.send();
-            })
+        return from(fetch(url).then(response =>
+            this.fakeLatency().then(() =>
+                response.json()))
         );
+    }
+
+    private fakeLatency() {
+        return new Promise((resolve) =>
+            setTimeout(resolve, 3000 * Math.random()));
     }
 }
 
@@ -704,7 +695,7 @@ fromEvent(wikipediaSearch, 'input').pipe(
 \end{figure}
 
 \noindent
-Die \textbf{Fetch API} stellt ein Javascript Interface zur Verfügung um Ressourcen zwischen dem Netzwerk anzufragen. Im Gegensatz zur bisher genutzten API \textbf{XMLHttpRequest}, gibt fetch ein Promise Objekt zurück. In diesem Fall wird mit searchWikipedia() die Wikipedia API aufgerufen, die die Daten im JSON-Format zurückgibt. Der reaktive Teil der Anwendung beginnt mit dem Kreationsoperator \textbf{fromEvent()}. Hierbei wird als Argument ein HTMLElement und das auslösende Event-Ereignis übergeben. Nach jedem Input-Event wird ein neuer Wert innerhalb der Sequenz ausgelöst. \textbf{DebounceTime()} ist ein Operator, dass intern Schedulers nutzt. Mit dem übergebenen Anzahl der Millisekunden als Parameter, kann bestimmt werden nach welcher Verzögerung ein Wert in die Sequenz angenommen wird. Der Timer wird nach jedem Input-Event zurückgesetzt. Ist der Timer abgelaufen wird der zuletzt entstandene Input-Event als neuen Wert in die Sequenz aufgenommen. \textbf{SwitchMap()} stellt sicher, dass nur die Ergebnisse aus der aktuellsten GET-Anfrage emittiert werden. SwitchMap() nimmt ein Callback an, dass immer ein Obsevable zurückgibt. Wenn eine neuer Suchwert als Sequenz ankommt, wird das alte Observable aufgegeben und zu dem neuen Observable gewechselt. In diesem Fall wird eine neue API-Anfrage mit dem neuem Suchwert gestartet.\\
+In diesem Fall wird mit searchWikipedia() die Wikipedia API aufgerufen, die die Daten im JSON-Format zurückgibt. Der reaktive Teil der Anwendung beginnt mit dem Kreationsoperator \textbf{fromEvent()}. Hierbei wird als Argument ein HTMLElement und das auslösende Event-Ereignis übergeben. Nach jedem Input-Event wird ein neuer Wert innerhalb der Sequenz ausgelöst. \textbf{DebounceTime()} ist ein Operator, dass intern Schedulers nutzt. Mit dem übergebenen Anzahl der Millisekunden als Parameter, kann bestimmt werden nach welcher Verzögerung ein Wert in die Sequenz angenommen wird. Der Timer wird nach jedem Input-Event zurückgesetzt. Ist der Timer abgelaufen wird der zuletzt entstandene Input-Event als neuen Wert in die Sequenz aufgenommen. \textbf{SwitchMap()} stellt sicher, dass nur die Ergebnisse aus der aktuellsten GET-Anfrage emittiert werden. SwitchMap() nimmt ein Callback an, dass immer ein Obsevable zurückgibt. Wenn eine neuer Suchwert als Sequenz ankommt, wird das alte Observable aufgegeben und zu dem neuen Observable gewechselt. In diesem Fall wird eine neue API-Anfrage mit dem neuem Suchwert gestartet.\\
 
 \noindent
 Der Vorteil von RxJS sind die mitgelieferten Features, die mit den Operatoren zur Verfügung gestellt wird. Besonders in Javascript ist es wichtig zu wissen, dass das Rad nicht neu erfunden werden muss. In einer klassischen Implementierung wäre die Umsetzung der Anforderungsliste deutlich umfangreicher. 

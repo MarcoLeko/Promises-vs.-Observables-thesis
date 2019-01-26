@@ -235,25 +235,10 @@ module.exports = {
 export class HTTP {
 
     public makeRequest(url: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const req = new XMLHttpRequest();
-            req.open('GET', url);
+        return fetch(url).then(response =>
+            this.fakeLatency().then(() =>
+                response.json()));
 
-            req.onload = () => {
-                if (req.status === 200) {
-                    this.fakeLatency()
-                        .then(() => resolve(JSON.parse(req.response)));
-                } else {
-                    reject(Error(req.statusText));
-                }
-            };
-
-            req.onerror = () => {
-                reject(Error('Network Error'));
-            };
-
-            req.send();
-        });
     }
 
     private fakeLatency() {
@@ -261,14 +246,10 @@ export class HTTP {
             setTimeout(resolve, 3000 * Math.random()));
     }
 }
-\end{lstlisting}
-\end{figure}
 
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
 export class Story {
 
-    public static BASE_URL = 'https://jsonplaceholder.typicode.com/posts/';
+    public static BASE_URL = 'https://jsonplace.../posts/';
     public spinnerElement: HTMLElement;
 
     public http: HTTP = new HTTP();
@@ -283,7 +264,11 @@ export class Story {
         document.body.appendChild(div);
         return div;
     }
-    
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
     public getAllStories(): Promise<string> {
         return this.http.makeRequest(Story.BASE_URL);
     }
@@ -291,16 +276,9 @@ export class Story {
     public getChapter(chapter: number): Promise<string> {
         return this.http.makeRequest(Story.BASE_URL + chapter.toString());
     }
-\end{lstlisting}
-\end{figure}
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]  
+    
     public spawn(content): void {
-        if (content instanceof Array === false) {
-            content = [content];
-        }
-
+        ...
         content.forEach(elm => {
             const snippet = document.createElement('div');
             snippet.innerHTML = '<h1>${elm.title}</h1>
@@ -326,7 +304,7 @@ const story = new Story();
 \end{figure}
 
 \noindent
-Ähnlich wie im Beispiel des Callback-Kapitels wird von der REST-Api JSONPlaceholder Kapitel in die DOM geladen. In diesem Fall wurde hingegen das objektorientierte Paradigma gewählt. Die Klasse \textbf{HTTP} stellt mit makeRequest() eine Methode zur Verfügung, die eine Http-Anfrage gegen einen übergebenen Endpunkt macht. Mit der \textbf{Story} Klasse wird der Endpunkt der Datenabfrage als Klassenvariable definiert. Darüberhinaus werden mit getAllStories() und getChapter() die Methoden für die Abfrage definiert. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code mit Promises so aussehen:
+Ähnlich wie im Beispiel des Callback-Kapitels wird von der REST-API JSONPlaceholder Kapitel in die DOM geladen. In diesem Fall wurde hingegen das objektorientierte Paradigma gewählt. Die Klasse \textbf{HTTP} stellt mit makeRequest() eine Http-Anfrage gegen einen übergebenen Endpunkt. Die \textbf{Fetch API} stellt ein Javascript Interface zur Verfügung um Ressourcen zwischen dem Netzwerk anzufragen. Im Gegensatz zur bisher genutzten Klasse \textbf{XMLHttpRequest}, gibt fetch ein Promise Objekt zurück. Mit der \textbf{Story} Klasse wird der Endpunkt der Datenabfrage als Klassenvariable definiert. Darüberhinaus werden mit getAllStories() und getChapter() die Methoden für die Abfrage definiert. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code mit Promises so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
