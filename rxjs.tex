@@ -22,7 +22,7 @@ wird bereits beschrieben, dass Reactive Programming als Programmierung mit async
 \end{description}
 
 \noindent
-In dieser Arbeit wird der Fokus hauptsächlich auf Observables und dessen Nutzung mit Operatoren gelegt. Die Einführung von Subjects und Schedulers wird nur oberflächlich thematisiert. Am Ende dieser Sektion wird noch ein zusätzliches Praxisbeispiel dargestellt. Es wird eine Wikipedia Such-App entwickelt, die nach jedem Tasten-Event einen API Aufruf initiiert und das Ergebnis der Suche in Form von Artikel-Snippets präsentiert. Die reine Logik hinter dieser Anwendung wird mit zehn Zeilen Code implementiert.
+In dieser Arbeit wird der Fokus hauptsächlich auf Observables und dessen Nutzung mit Operatoren gelegt. Die Einführung von Subjects und Schedulers wird nur oberflächlich thematisiert. Am Ende dieser Sektion wird noch ein zusätzliches Praxisbeispiel dargestellt. Es wird eine Wikipedia Such-App entwickelt, die nach jedem Tasten-Event einen API Aufruf initiiert und das Ergebnis der Suche in Form von Artikel-Snippets präsentiert. Die reine Logik hinter dieser Anwendung wird mit 15 Zeilen Code implementiert.
 
 \subsection{Observables}
 
@@ -631,6 +631,75 @@ Wie man nun gesehen hat bilden Operatoren etliche Möglichkeiten das Verhalten v
 
 \subsection{Optional: Wikipedia Such-App}
 
+Ein Autovervollständigungsmechanismus ist üblich für die Suche von Inhalten in einer Web-Applikation. Sie beschleunigen die Interaktion zwischen Nutzer und Applikation, da sofort eine Rückmeldung der Suchanfrage vorausgeht. Eine naive Implementation eines solchen Mechanismus, würde nach jeder Veränderung des Suchworts eine neue GET-Anfrage an den Server schicken. Da die durchschnittliche Tippgeschwindigkeit bei 40 bis 50 Wörtern liegt, könnte dies den Server relativ schnell überlasten. Aus diesem Grund, sollte vor dem Beginn der Implementierung eine Anforderungsliste erstellt werden:
+
+\begin{description}
+ \item Die Suchmaske sollte mindestens zwei Buchstaben enthalten, um eine Anfrage zu starten. Zusätzlich sollte dem Nutzer ein Ergebnis gezeigt werden, wenn das Suchfeld leer ist (keine Ergebnisse).
+ \item Mit jedem neuen Ergebnis sollte sich die Oberfläche aktualisieren. 
+ \item Das Suchfeld sollte nur alle 250 Millisekunden ein Tasten-Event registrieren. Wenn ein neues Event ausgelöst wird, wird der Timer zurückgesetzt. Nach Ablauf des Timers soll das zuletzt eingetretene Event wahrgenommen werden.
+ \item Es sollte nur eine Anfrage an den Server gestellt werden, wenn sich das Suchwort ändert: Beim Tippen von \glqq S-T-E-V-E \grqq{} und löschen des letzten Buchstaben \glqq S-T-E-V\grqq{} soll keine weitere Anfrage gesendet werden, da das erste Ergebnis sich vom letzten nicht unterscheidet.
+\end{description}
+
+\noindent
+Da nun die Anforderung der Such-App festgelegt wurden, kann nun mit der Implementation begonnen werden.
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+module.exports = {
+    mode: 'development',
+    entry: './src/modules/rxjs/wikipedia-search.ts',
+    ...
+}
+\end{lstlisting}
+\caption{Im Folgenden muss ../rxjs/wikipedia-search.ts als Eingangsdatei definiert werden.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
+const wikipediaSearch = document.createElement('div');
+...
+const searchResult = document.createElement('section');
+...
+
+function searchWikipedia(query: string) {
+    return fetch(`https://en.wikipedia.org/w/api.php?action=query...search=${query}`)
+        .then(data => data.json())
+        .then(results => results.query.search);
+}
+
+function insertArticle(article: any) {
+    const url = encodeURI(`https://en.wikipedia.org/wiki/${article.title}`);
+
+    searchResult.insertAdjacentHTML('beforeend',
+        `<div class="resultItem">
+        <h3 class="resultItem-title">
+          <a href="${url}" target="_blank" rel="noopener">${article.title}</a>
+        </h3>
+        ...
+      </div>`
+    );
+}
+
+fromEvent(wikipediaSearch, 'input').pipe(
+    debounceTime(250),
+    map((eventObj: Event) => eventObj.target.value),
+    filter(query => query.length > 1 || query.length === 0),
+    distinctUntilChanged(),
+    switchMap(query => query ?
+        from(searchWikipedia(query)) : from(Promise.resolve([]))
+    )
+).subscribe((articles: Array<any>) => {
+    searchResult.innerHTML = '';
+
+    if (articles.length === 0) {
+        return;
+    } else {
+        articles.forEach(article => insertArticle(article));
+    }
+});
+\end{lstlisting}
+\caption{Simple Einrichtung einer Such-App mit der Hilfe von Observable-Sequenzen.}
+\end{figure}
 
 \subsection{Fazit}
 RxJS und das Prinzip der reaktiven Programmierung zu lernen kann hart sein. Speziell RxJS bietet eine riesige API und verlangt ein umdenken vom imperativen- zum deklarativen Programmierstil. Ohne einem fundamentalen Wissensstand wie Observables intern funktionieren, kann durchaus gedacht werden, dass RxJS viel \glqq Magie\grqq{} praktiziert. Diese Sektion sollte eine Einführung in die Konzeption eines Observables geben. Als Faustregel: Observables können sowohl synchron als auch asynchron agieren. Im Gegensatz zu Funktionen können mehrere Werte mit der Zeit ausgegeben werden. Sinnbildlich kann man ein Observable mit einem Array gleichsetzen, dass mit der Zeit Werte erstellt. Funktionen, die mit dieser speziellen Form eines Array operieren, haben die Möglichkeit auf neu entstandene Werte zuzugreifen. Unterschiedliche Observable Typen offenbaren unterschiedliche Verhaltensmechanismen. Observables können cold oder hot sein. Cold Observables rufen den Datenproduzenten beim Start einer Subscription auf. Infolgedessen bekommt jeder Observer einen eigene Sequenz an Werten vom Datenproduzenten zugesprochen. Bei einer Subscription eines hot Observables hingegen, kann es durchaus sein, dass obwohl Werte erwartet werden, keine ankommen. In diesem Fall bekommen alle Observer die gleiche Sequenz an Werten und wenn spät angeschlossene Observer sich anschließen - können diese mögliche Werte verpassen. Eine spezielle Form von Observables sind Subjects. Subjects sind von vornherein multicasting fähig. Das bedeutet, angeschlossene Observer werden in einer Liste von Observer registriert und alle registrierten Observer bekommen die gleiche Exekution des Datenproduzenten. Zudem können Subjects als Observable oder als Observer operieren. Deshalb ist es auch Möglich ein Subject Objekt als Argument einer subscribe() Methode zu übergeben. Schedulers finden in RxJS selten an Anwendung. Mit Ihnen kann man steuern wann ein Observable seine Observer benachrichtigt. Um dies zu ermöglichen arbeiten Schedulers mit einer virtuellen Uhr.
