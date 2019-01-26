@@ -289,10 +289,12 @@ const subscriber: Subscription = multicast.subscribe(value => console.log(value)
 
 subscriber.unsubscribe();
 \end{lstlisting}
+
+\caption{Die subscribe() Methode löst bei cold Observables, eine eigenständige  Exekution des Datenproduzenten aus.}
 \end{figure}
 
 \noindent
-Wenn also die subscribe() Methode aufgerufen wird, bekommt der Observer eine eigenständige Observable Exekution. Dieser Aufruf gibt dabei ein Subscription Objekt zurück. Mit diesem Objekt ist es daraufhin möglich \textbf{unsubscribe()} aufzurufen, um die Exekution zu stoppen. Es sollte dabei beachtet werden, dass nur die Übertragung an die jeweilige Subscription gestoppt wird.
+Dieser Aufruf gibt dabei ein Subscription Objekt zurück. Mit diesem Objekt ist es daraufhin möglich \textbf{unsubscribe()} aufzurufen, um die Exekution zu stoppen. Es sollte dabei beachtet werden, dass nur die Übertragung an die jeweilige Subscription gestoppt wird.
 
 \subsection{Observer}
 
@@ -381,13 +383,13 @@ In diesem Beispiel wurde ein Subject mit jeweils zwei Subscriptions erstellt. Da
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-const subject = new RxJS.Subject();
+const subjectAsObserver = new RxJS.Subject();
 
-subject.subscribe(v1 => console.log('ObserverA: ', v1));
-subject.subscribe(v2 => console.log('ObserverB: ', v2));
+subjectAsObserver.subscribe(v1 => console.log('ObserverA: ', v1));
+subjectAsObserver.subscribe(v2 => console.log('ObserverB: ', v2));
 
-const source = RxJS.Observable.from([1, 2, 3]);
-source.subscribe(subject);
+const source$ = RxJS.from([1, 2, 3]);
+source$.subscribe(subjectAsObserver);
 \end{lstlisting}
 \caption{Mit diesem Beispiel wurde ein Unicast Observable in ein multicastingfähiges konvertiert.}
 \end{figure}
@@ -700,6 +702,12 @@ fromEvent(wikipediaSearch, 'input').pipe(
 \end{lstlisting}
 \caption{Simple Einrichtung einer Such-App mit der Hilfe von Observable-Sequenzen.}
 \end{figure}
+
+\noindent
+Die \textbf{Fetch API} stellt ein Javascript Interface zur Verfügung um Ressourcen zwischen dem Netzwerk anzufragen. Im Gegensatz zur bisher genutzten API \textbf{XMLHttpRequest}, gibt fetch ein Promise Objekt zurück. In diesem Fall wird mit searchWikipedia() die Wikipedia API aufgerufen, die die Daten im JSON-Format zurückgibt. Der reaktive Teil der Anwendung beginnt mit dem Kreationsoperator \textbf{fromEvent()}. Hierbei wird als Argument ein HTMLElement und das auslösende Event-Ereignis übergeben. Nach jedem Input-Event wird ein neuer Wert innerhalb der Sequenz ausgelöst. \textbf{DebounceTime()} ist ein Operator, dass intern Schedulers nutzt. Mit dem übergebenen Anzahl der Millisekunden als Parameter, kann bestimmt werden nach welcher Verzögerung ein Wert in die Sequenz angenommen wird. Der Timer wird nach jedem Input-Event zurückgesetzt. Ist der Timer abgelaufen wird der zuletzt entstandene Input-Event als neuen Wert in die Sequenz aufgenommen. \textbf{SwitchMap()} stellt sicher, dass nur die Ergebnisse aus der aktuellsten GET-Anfrage emittiert werden. SwitchMap() nimmt ein Callback an, dass immer ein Obsevable zurückgibt. Wenn eine neuer Suchwert als Sequenz ankommt, wird das alte Observable aufgegeben und zu dem neuen Observable gewechselt. In diesem Fall wird eine neue API-Anfrage mit dem neuem Suchwert gestartet.\\
+
+\noindent
+Der Vorteil von RxJS sind die mitgelieferten Features, die mit den Operatoren zur Verfügung gestellt wird. Besonders in Javascript ist es wichtig zu wissen, dass das Rad nicht neu erfunden werden muss. In einer klassischen Implementierung wäre die Umsetzung der Anforderungsliste deutlich umfangreicher. 
 
 \subsection{Fazit}
 RxJS und das Prinzip der reaktiven Programmierung zu lernen kann hart sein. Speziell RxJS bietet eine riesige API und verlangt ein umdenken vom imperativen- zum deklarativen Programmierstil. Ohne einem fundamentalen Wissensstand wie Observables intern funktionieren, kann durchaus gedacht werden, dass RxJS viel \glqq Magie\grqq{} praktiziert. Diese Sektion sollte eine Einführung in die Konzeption eines Observables geben. Als Faustregel: Observables können sowohl synchron als auch asynchron agieren. Im Gegensatz zu Funktionen können mehrere Werte mit der Zeit ausgegeben werden. Sinnbildlich kann man ein Observable mit einem Array gleichsetzen, dass mit der Zeit Werte erstellt. Funktionen, die mit dieser speziellen Form eines Array operieren, haben die Möglichkeit auf neu entstandene Werte zuzugreifen. Unterschiedliche Observable Typen offenbaren unterschiedliche Verhaltensmechanismen. Observables können cold oder hot sein. Cold Observables rufen den Datenproduzenten beim Start einer Subscription auf. Infolgedessen bekommt jeder Observer einen eigene Sequenz an Werten vom Datenproduzenten zugesprochen. Bei einer Subscription eines hot Observables hingegen, kann es durchaus sein, dass obwohl Werte erwartet werden, keine ankommen. In diesem Fall bekommen alle Observer die gleiche Sequenz an Werten und wenn spät angeschlossene Observer sich anschließen - können diese mögliche Werte verpassen. Eine spezielle Form von Observables sind Subjects. Subjects sind von vornherein multicasting fähig. Das bedeutet, angeschlossene Observer werden in einer Liste von Observer registriert und alle registrierten Observer bekommen die gleiche Exekution des Datenproduzenten. Zudem können Subjects als Observable oder als Observer operieren. Deshalb ist es auch Möglich ein Subject Objekt als Argument einer subscribe() Methode zu übergeben. Schedulers finden in RxJS selten an Anwendung. Mit Ihnen kann man steuern wann ein Observable seine Observer benachrichtigt. Um dies zu ermöglichen arbeiten Schedulers mit einer virtuellen Uhr.
