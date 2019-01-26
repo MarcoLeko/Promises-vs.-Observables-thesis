@@ -21,6 +21,8 @@ wird bereits beschrieben, dass Reactive Programming als Programmierung mit async
     \item Schedulers: Steuerungsmechanismen die bestimmen, wann eine Subscription startet und wann Werte aus dem Stream an die Observer übermittelt werden.
 \end{description}
 
+\noindent
+In dieser Arbeit wird der Fokus hauptsächlich auf Observables und dessen Nutzung mit Operatoren gelegt. Die Einführung von Subjects und Schedulers wird nur oberflächlich thematisiert. Am Ende dieser Sektion wird noch ein zusätzliches Praxisbeispiel dargestellt. Es wird eine Wikipedia Such-App entwickelt, die nach jedem Tasten-Event einen API Aufruf initiiert und das Ergebnis der Suche in Form von Artikel-Snippets präsentiert. Die reine Logik hinter dieser Anwendung wird mit zehn Zeilen Code implementiert.
 
 \subsection{Observables}
 
@@ -303,7 +305,10 @@ const observer: Observer<number> = {
     error: err => console.error('Got an error: ' + err),
     complete: () => console.log('Got a complete notification')
 };
+
+observable.subscribe(observer);
 \end{lstlisting}
+\caption{Ein Observer Objekt besteht aus drei Callback Funktionen.}
 \end{figure}
 
 \noindent
@@ -316,16 +321,7 @@ Eines der Funktionen wird aufgerufen, wenn:
 \end{description}
 
 \noindent
-Daraufhin kann das Observer Objekt als Argument in die Subscription übergeben werden:
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-observable.subscribe(observer);
-\end{lstlisting}
-\end{figure}
-
-\noindent
-Es ist jedoch auch Möglich die Funktionen, direkt in subscribe() als Argument anzugeben. Es wird dann intern ein Observer Objekt erstellt mit der ersten Funktion als den next Callback.
+Daraufhin kann das Observer Objekt als Argument in die Subscription übergeben werden. Es ist jedoch auch Möglich die Funktionen, direkt in subscribe() als Argument anzugeben. Es wird dann intern ein Observer Objekt erstellt mit der ersten Funktion als den next Callback.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -335,7 +331,7 @@ observable.subscribe(
   () => console.log('Got a complete notification')
 );
 \end{lstlisting}
-\caption{In diesem Fall wurden drei Callback Funktionen als Argument eingegeben.}
+\caption{In diesem Fall wurden drei Callback Funktionen direkt als Argument eingegeben.}
 \end{figure}
 
 \subsection{Subjects}
@@ -401,115 +397,25 @@ source.subscribe(subject);
 Dies ist ein weiteres Beispiel einer Umwandlung eines cold- in ein hot Observable. In Wahrheit, ohne den Datenproduzent außerhalb des Observables zu lagern, sind Subjects die einzige Möglichkeit eine Observable Exekution an mehrere Observer zu verteilen. Mit der ursprünglichen Konvertierung in Abb. \ref{unicast-transformation} wurde mit dem shareReplay() Operator eine Funktion genutzt, die intern mit einem ReplaySubject arbeitet.\\
 
 \noindent
-Es gibt weitere Arten von Subjects, die in Folge gegenübergestellt werden: \textbf{BehaviourSubject}, \textbf{ReplaySubject}, \textbf{AsyncSubject}.
+Es gibt weitere Arten von Subjects. Diese sind: \textbf{BehaviourSubject}, \textbf{ReplaySubject}, \textbf{AsyncSubject}. Um mehr von ihnen zu erfahren kann, wird hier fündig:
 
-\subsubsection{BehaviourSubject}
-
-Eine Variante eines Subjects ist das BehaviourSubject. Mit ihm wird immer der stets aktuell übergebene Wert gespeichert und an angeschlossene Abnehmer übergeben.
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-const behaviour = new RxJS.BehaviorSubject(0);
-
-behaviour.subscribe({
-    next: (v) => console.log('observerA: ', v)
-});
-
-behaviour.next(1);
-behaviour.next(2);
-
-behaviour.subscribe({
-    next: (v) => console.log('observerB: ', v)
-});
-
-behaviour.next(3);
-\end{lstlisting}
-\end{figure}
-
-\noindent
-BehaviourSubjects sind nützlich wenn Werte mit der Zeit repräsentiert werden sollen. In einem realen Anwendungsfall wäre ein Eregnisstrom von Geburtstagen ein Subject. Der Strom des Alters einer Person hingegen wäre ein BehaviourSubject.
-
-\begin{figure}[H]
-\begin{lstlisting}
-observerA: 0
-observerA: 1
-observerA: 2
-observerB: 2
-observerA: 3
-observerB: 3
-\end{lstlisting}
-\end{figure}
-
-\subsubsection{ReplaySubject}
-Ein ReplaySubject ist ähnlich zum BehaviourSubject, jedoch werden auch alte Werte gespeichert und an neue Subscriber ausgestoßen.
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-const replay = new RxJS.ReplaySubject(2);
-
-replay.subscribe({
-    next: (v) => console.log('observerA: ', v)
-});
-
-replay.next(1);
-replay.next(2);
-replay.next(3);
-
-replay.subscribe({
-    next: (v) => console.log('observerB: ', v)
-});
-
-replay.next(4);
-\end{lstlisting}
-\caption{Im Konstruktor kann explizit angegeben Werden wie viele alte Werte zwischengespeichert werden.}
-\end{figure}
-
-\noindent
-Der Vorteil eines ReplaySubjects im Gegensatz zum Subject ist, dass spät angeschlossene Beobachter die Werte vom Datenstrom empfangen können, da ReplaySubject die Fähigkeit besitzt, alte Werte wiedereinzuspielen. In der Praxis ist es durchaus gewöhnlich ein Observable, welches ein Netzwerkaufruf ausführt, in ein multicastinfähiges Observable umzuwandeln. Somit wird verhindert, dass bei jeder Subscription ein Aufruf am Server gemacht wird. Da ist es von Vorteil, wenn spät angeschlossene Beobachter auf die Werte des alten Datenstroms zugreifen können.
-
-\begin{figure}[H]
-\begin{lstlisting}
-observerA: 1
-observerA: 2
-observerA: 3
-observerB: 2
-observerB: 3
-observerA: 4
-observerB: 4
-\end{lstlisting}
-\caption{Das Ergebnis der beiden Subscriptions von ObserverA und ObserverB.}
-\end{figure}
-
-\subsubsection{AsyncSubject}
-Als letztes wird mit dem AsyncSubject erst dann ein Wert an die Subscriber emittiert, wenn das Subject fertiggestellt wird. Dabei wird nur der zuletzt eintretende Wert ausgegeben. Sollte ein Subject mit der complete() Methode nicht fertiggestellt werden, wird nie ein Wert an Angeschlossene übergeben.
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-const asyncSubject = new RxJS.AsyncSubject();
-
-asyncSubject.subscribe({
-    next: (v) => console.log('observerA: ', v)
-});
-
-asyncSubject.next(1);
-asyncSubject.next(2);
-asyncSubject.complete();
-\end{lstlisting}
-\caption{Das Ergebnis ist die Konsolenausgabe: \glqq observerA:  2 \grqq{}}
-\end{figure}
+\begin{center}
+    \url{http://reactivex.io/rxjs/manual/overview.html#subject}
+\end{center}
 
 \subsection{Schedulers}
 
 Rx Schedulers bietet eine Abstraktion die es erlaubt wie Observables Werte emittieren, ohne dass der angeschlossene Observer davon weiß wie die Werte ankommen (synchron oder asynchron). Wann auch immer eine Rx Methode einen Wert produziert, wird die Ausführung an einem Scheduler übergeben. Mit dem Einbezug eines Schedulers kann nun genau geplant werden wann die Nachricht an die Zuhörenden übergeben werden. In einer serverseitigen Implementierung von Rx wie \textbf{Rx.NET} spielen Schedulers eine wichtige Rolle. Man kann beispielsweise bestimmen wann resourcenintensive Operationen in einem Thread Pool ausgeführt werden und daraufhin die Subscription im UI-Thread gestartet wird, um die Oberfläche zu aktualisieren\cite{rx-schedulers}.\\
 
 \noindent
-Da Javascript grundsätzlich single-threaded ist, finden Schedulers In RxJS finden kaum Anwendung. Im zweiten Praxis Beispiel dieser Sektion wird jedoch ein Operator angewendet, dass intern ein Scheduler nutzt. In dieser Arbeit wird auf die Einführung von Schedulers verzichtet. Unter folgendem Link kann man mehr über Schedulers erfahren:
+Da Javascript grundsätzlich single-threaded ist, finden Schedulers In RxJS finden kaum Anwendung. Im zweiten Praxisbeispiel dieser Sektion wird jedoch ein Operator angewendet, dass intern ein Scheduler nutzt. In dieser Arbeit wird auf die Einführung von Schedulers verzichtet. Unter folgendem Link kann man mehr über Schedulers erfahren:
 
 \begin{center}
     \url{http://reactivex.io/rxjs/manual/overview.html#scheduler}
 \end{center}
 
 \subsection{Operatoren}
+
 Wenn es um Operatoren geht, sind diese die wahre Stärke der Observables. Operatoren manipulieren das Stream-Verhalten oder beeinflussen die Werte innerhalb eines Streams. Deshalb ist es mit ihnen möglich komplexen asynchronen Code, leicht und deklarativ zusammenzustellen.\\
 
 \noindent
@@ -657,11 +563,11 @@ export class Story {
 
 const story = new Story();
 \end{lstlisting}
-\caption{Das Beispiel der vorherigen Sektionen wird hier Ebenfalls gegenübergestellt.}
+\caption{Das Praxisbeispiel der vorherigen Sektionen wird hier ebenfalls gegenübergestellt.}
 \end{figure}
 
 \noindent
-Als einzige Änderung im Vergleich zum Beispiel in der Sektion Promises, gibt in diesem Fall die makeRequest()-Methode kein Promise, sondern ein Observable zurück. Um die Kapitelaufrufe eins bis drei innerhalb einer Observable Sequenz auszugeben, würde der Code hierfür so aussehen:
+Als einzige Änderung im Vergleich zum Beispiel der Sektion Promises, gibt in diesem Fall die makeRequest()-Methode kein Promise, sondern ein Observable zurück. Um die Kapitelaufrufe eins bis drei innerhalb einer Observable Sequenz auszugeben, würde der Code hierfür so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -675,12 +581,12 @@ from([1, 2, 3]).pipe(
 \end{figure}
 
 \noindent
-Für jeden Wert den from() ausgibt, gibt concatMap() ein Observable zurück je nach angewendeter Funktion. In diesem Fall ist die angewendete Funktion story.getChapter(n). ConcatMap() flacht alle aus story.getChapter(n) resultierenden Observables zu einem zusammen. Somit werden alle entstandenen Ergebnisse der getChapter()-Aufrufe innerhalb einer Observable Sequenz zurückgegeben. Mit dem tap() Operator wird für jede Emission der Sequenz eine Nebenoperation ausgeführt. Tap() beeinflusst die Werte der Observable-Sequenz nicht. Die Aktionen, die in tap() und finalize() durchgeführt werden, können auch durch den next() und dem complete() Callback des Observer Objekts ersetzt werden. Schließlich wird vor Abschluss des Observables mit finalize() eine Funktion aufgerufen. In einem Marble-Diagramm abgebildet, wird deutlich, wie mit der Anwendung der Operatoren der Fluss verändert wird.
+Für jeden Wert den from() ausgibt, gibt concatMap() ein Observable zurück je nach angewendeter Funktion. In diesem Fall ist die angewendete Funktion story.getChapter(n). ConcatMap() flacht alle aus story.getChapter(n) resultierenden Observables zu einem zusammen. Somit werden alle entstandenen Ergebnisse der getChapter()-Aufrufe innerhalb einer Observable Sequenz zurückgegeben. Mit dem tap() Operator wird für jede Emission der Sequenz eine Nebenoperation ausgeführt. Tap() beeinflusst die Werte der Observable-Sequenz nicht. Schließlich wird vor Abschluss des Observables mit finalize() eine Funktion aufgerufen. Die Aktionen, die in tap() und finalize() durchgeführt werden, können auch durch den next() und dem complete() Callback des Observer Objekts ersetzt werden. In einem Marble-Diagramm abgebildet, wird deutlich, wie mit der Anwendung der Operatoren der Fluss verändert wird.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=8cm]{getchapters-fluss}
-\caption{Finalize() ruft story.displayFinished(), wenn das Observable komplettiert.}
+\caption{Finalize() ruft story.displayFinished() auf, wenn das Observable komplettiert.}
 \end{figure}
 
 
@@ -722,6 +628,8 @@ Wie man nun gesehen hat bilden Operatoren etliche Möglichkeiten das Verhalten v
 \begin{center}
 \url{http://reactivex.io/rxjs/manual/overview.html#operators} 
 \end{center}
+
+\subsection{Optional: Wikipedia Such-App}
 
 
 \subsection{Fazit}
