@@ -25,7 +25,7 @@ Das heißt:
 \end{description}
 
 \noindent
-Dabei gibt es zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
+Es gibt zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
 
 \subsubsection{Erstellen eines Promises}
 
@@ -36,7 +36,7 @@ new Promise( /* executor */ (resolve, reject) => { ... } );
 \caption{Erzeugung einer neuen Promise-Instanz.}
 \end{figure}
 
-Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt\cite{promise-executor}. Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchrone Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders wird bei einem Fehler die reject Funktion mit der jeweiligen Fehlernachricht aufgerufen.
+Der Konstruktor nimmt eine Rückruffunktion als Eingangsparameter. Diese Funktion wird auch \textbf{Executor} genannt\cite{promise-executor}. Der Executor akzeptiert zwei Parameter \textbf{resolve} und \textbf{reject}. Innerhalb dieser Funktion wird eine asynchron blockierende Operation initiiert (z.B. Das suchen einer Datei, eine Datenbankabfrage etc.). Wurde diese asynchrone Operation erfolgreich ausgeführt, ruft der Promise-Konstruktor die resolve Funktion mit dem entsprechendem Ergebnis auf. Anders wird bei einem Fehler die reject Funktion mit der jeweiligen Fehlernachricht aufgerufen.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -49,38 +49,55 @@ module.exports = {
 \caption{Vor dem Ausführen der Beispiele sollte ../promises/introduction.ts als Eingangsdatei in der webpack.config.js definiert werden.}
 \end{figure}
 
+\noindent
+Da man nun weiß wie man ein Promise erstellt, kann nun auf die Unterschiede der Vorgehensweisen von Callbacks und Promises eingegangen werden. Die Nutzung von Promises und Callbacks differenzieren sich hauptsächlich im Design und in der Verarbeitung.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-const keepsHisWord = true;
-const resolveRightAway = new Promise((resolve, reject) => {
-    if (keepsHisWord) {
-        resolve('Promises kept!');
-    } else {
-        reject('Promise NOT kept!');
-    }
-});
+/*** Callback **/
+function getA(callback) {
+    return setTimeout(() => callback('a'), 100);
+}
 
-console.log(resolveRightAway);
+function getB(callback) {
+    return setTimeout(() => callback('b'), 200);
+}
+
+function getC(callback) {
+    return setTimeout(() => callback('c'), 300);
+}
+
+getA(a =>
+    getB(b =>
+        getC(c => console.log(a + b + c))
+    )
+);
 \end{lstlisting}
-\caption{Eine Executer Funktion nimmt zwei Callbacks als Argument an.}
+\caption{Darstellung mit Callbacks.}
 \end{figure}
 
 \noindent
-Promises haben einen Status und einen Wert. Bei der Initialisierung einer Promise-Instanz ist der Status erstmals immer ausstehend. In diesem Beispiel löst sich das Promise auf Anhieb vom ausstehenden in den eingetroffenen (resolved) Zustand auf, da die abhängige boolean-Variable vorher auf true gesetzt wurde. Umgekehrt, würde die boolean Variable auf false gesetzt werden, würde der Status abgelehnt (rejected) entsprechen.
+Die Funktionen werden \textbf{ineinandergeschachtelt}. Die Rückgabewerte befinden sich alle innerhalb des Geltungsbereiches von Funktion getA().
 
 \begin{figure}[H]
-\begin{lstlisting}
-Promise {<resolved>: "Promises kept!"}
-    [[PromiseStatus]]: "resolved"
-    [[PromiseValue]]: "Promises kept!"
+\begin{lstlisting}[basicstyle=\small]
+/*** Promises **/
+function getA(): Promise<string>  {
+    return new Promise(resolve =>
+        setTimeout(() => resolve('a'), 100));
+}
+...
+
+getA()
+    .then((a: string) => getB().then(b => a + b))
+    .then((ab: string) => getC().then(c => ab + c))
+    .then((result: string) => console.log(result));
 \end{lstlisting}
-\caption{Ausgabe eines Promise Objekts in der Konsole.}
+\caption{Darstellung mit Promises.}
 \end{figure}
 
-
 \noindent
-Der Initialstatus eines Promise wird im nächsten Beispiel verdeutlicht:
+Die Funktionen werden \textbf{aneinandergeschachtelt}. Die Rückgabewerte müssen innerhalb der Kette weitergereicht werden. Hier wird bereits ein kleiner Einblick gewährt, wie man Promises verarbeitet. Promises haben einen Status und einen Wert. Das Promise Objekt, welches getA() zurückgibt, ist beim Aufruf im ausstehenden (pending) Zustand und der Wert ist undefined. Gibt die Funktion setTimeout() den Wert nach der Zeitverzögerung zurück, werden Status und Wert des Promise aktualisiert. Hierbei spricht man vom \textbf{auflösen} eines Promise. Trifft der Wert 'a' ein wechselt der Status in den eingetroffenen (resolved) Zustand.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -89,39 +106,41 @@ export interface FakeHttpResponse {
     message: string;
 }
 
-const pendingPromise = new Promise<FakeHttpResponse>((resolve, reject) => {
+const rejectedPromise = new Promise<FakeHttpResponse>((resolve, reject) => {
     setTimeout(() => {
-        resolve({
-            code: '200',
-            message: 'Promise kept!'
+        reject({
+            code: '404',
+            message: 'Not Found!'
         });
-    }, 10 * 1000);
+    }, 1000);
 });
 
-console.log(pendingPromise);
-setTimeout(() => console.log(pendingPromise), 10 * 1000);
+rejectedPromise.catch((fakeResponse) => {
+    console.log(fakeResponse);
+    console.log(rejectedPromise);
+});
 \end{lstlisting}
 \caption{Beim Eintreffen einer Aktion werden Status und Wert aktualisiert.}
 \end{figure}
 
 \noindent
-Im oberen Beispiel wird das Promise vorbehaltlos nach zehn Sekunden aufgelöst, solange ist der Status ausstehend (pending). Nachdem das Promise aufgelöst wurde, werden Status und Wert aktualisiert. Dabei können nicht nur primitive Typen wie number, boolean oder strings zurückgegeben werden, sondern auch Objekt-Typen und komplexe Typen. Mit anderen Worten: Promises sind generisch.
+Umgekehrt, kann der Status eines Promise fehlgeschlagen (rejected) entsprechen. Im oberen Beispiel wird nach einer Sekunden der reject Callback aufgerufen, solange ist der Status des Promise ausstehend. Je nach Aufruf der Callback Funktion, variiert der Status eines Promise. Dabei können nicht nur primitive Typen wie number, boolean oder strings zurückgegeben werden, sondern auch Objekt-Typen und komplexe Typen. Mit anderen Worten: Promises sind generisch.
 
 \begin{figure}[H]
 \begin{lstlisting}
-Promise {<pending>}
-    [[PromiseStatus]]: "pending"
-    [[PromiseValue]]: undefined
+// Erste Konsolenausgabe - verarbeiteter Wert
+code: "404"
+message: "Not Found!"
     
-// Nach 10 Sekunden
+// Zweite Konsolenausgabe - Promise Objekt
 Promise {<resolved>: {...}}
-    [[PromiseStatus]]: "resolved"
+    [[PromiseStatus]]: "rejected"
     [[PromiseValue]]: {
           code: "200"
           message: "Promise kept!"
 }
 \end{lstlisting}
-\caption{Dieser Promise hat anfangs den Status \glqq{}ausstehend\grqq{}}
+\caption{Dieser Promise hat nach dem Aufruf des reject() Callbacks den Status rejected.}
 \end{figure}
 
 \noindent
@@ -304,7 +323,7 @@ const story = new Story();
 \end{figure}
 
 \noindent
-Ähnlich wie im Beispiel des Callback-Kapitels wird von der REST-API JSONPlaceholder Kapitel in die DOM geladen. In diesem Fall wurde hingegen das objektorientierte Paradigma gewählt. Die Klasse \textbf{HTTP} macht mit makeRequest() eine Http-Anfrage gegen einen übergebenen Endpunkt. Die \textbf{Fetch API} stellt ein Javascript Interface zur Verfügung, um Ressourcen zwischen dem Netzwerk anzufragen. Im Gegensatz zur bisher genutzten Klasse \textbf{XMLHttpRequest}, gibt fetch() ein Promise Objekt zurück. Mit der \textbf{Story} Klasse wird der Endpunkt der Datenabfrage als Klassenvariable definiert. Darüberhinaus werden mit getAllStories() und getChapter() die Methoden für die Abfrage definiert. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code mit Promises so aussehen:
+Ähnlich wie im Beispiel des Callback-Kapitels wird von der REST-API JSONPlaceholder Kapitel in die DOM geladen. In diesem Fall wurde hingegen das objektorientierte Paradigma gewählt. Die Klasse HTTP macht mit makeRequest() eine Http-Anfrage gegen einen übergebenen Endpunkt. Die \textbf{Fetch API} stellt ein Javascript Interface zur Verfügung, um Ressourcen zwischen dem Netzwerk anzufragen. Im Gegensatz zur bisher genutzten Klasse \textbf{XMLHttpRequest}, gibt fetch() ein Promise Objekt zurück. Mit der Story Klasse wird der Endpunkt der Datenabfrage als Klassenvariable definiert. Darüberhinaus werden mit getAllStories() und getChapter() die Methoden für die Abfrage definiert. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code mit Promises so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]

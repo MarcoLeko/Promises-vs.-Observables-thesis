@@ -624,7 +624,7 @@ Wie man nun gesehen hat bilden Operatoren etliche Möglichkeiten das Verhalten v
 
 \subsection{Optional: Wikipedia Such-App}
 
-Ein Autovervollständigungsmechanismus ist üblich für die Suche von Inhalten in einer Web-Applikation. Sie beschleunigen die Interaktion zwischen Nutzer und Applikation, da sofort eine Rückmeldung der Suchanfrage vorausgeht. Eine naive Implementation eines solchen Mechanismus, würde nach jeder Veränderung des Suchworts eine neue GET-Anfrage an den Server schicken. Da die durchschnittliche Tippgeschwindigkeit bei 40 bis 50 Wörtern liegt, könnte dies den Server relativ schnell überlasten. Aus diesem Grund, sollte vor dem Beginn der Implementierung eine Anforderungsliste erstellt werden:
+Ein Autovervollständigungsmechanismus ist üblich für die Suche von Inhalten in einer Web-Applikation. Sie beschleunigen die Interaktion zwischen Nutzer und Applikation, da sofort eine Rückmeldung der Suchanfrage erwartet wird. Eine naive Implementation eines solchen Mechanismus, würde nach jeder Veränderung des Suchworts eine neue GET-Anfrage an den Server schicken. Da die durchschnittliche Tippgeschwindigkeit bei 40 bis 50 Wörtern liegt, könnte dies den Server relativ schnell überlasten. Aus diesem Grund, sollte vor dem Beginn der Implementierung eine Anforderungsliste erstellt werden:
 
 \begin{description}
  \item Die Suchmaske sollte mindestens zwei Buchstaben enthalten, um eine Anfrage zu starten. Zusätzlich sollte dem Nutzer ein Ergebnis gezeigt werden, wenn das Suchfeld leer ist (keine Ergebnisse).
