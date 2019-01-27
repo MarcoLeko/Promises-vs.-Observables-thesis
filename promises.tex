@@ -300,16 +300,16 @@ export class Story {
 
 const story = new Story();
 \end{lstlisting}
-\caption{Der Vorteil der Objektorientierung ist die Kapselung der Logik in: Endpunkt-Aufruf zur Verfügung stellen und Ergebnis des Endpunkt-Aufrufs abbilden.}
+\caption{Der Vorteil der Objektorientierung in diesem Fall ist die Kapselung der Logik in: Endpunkt-Aufruf anbieten und Endpunkt-Aufruf verarbeiten.}
 \end{figure}
 
 \noindent
-Ähnlich wie im Beispiel des Callback-Kapitels wird von der REST-API JSONPlaceholder Kapitel in die DOM geladen. In diesem Fall wurde hingegen das objektorientierte Paradigma gewählt. Die Klasse \textbf{HTTP} stellt mit makeRequest() eine Http-Anfrage gegen einen übergebenen Endpunkt. Die \textbf{Fetch API} stellt ein Javascript Interface zur Verfügung um Ressourcen zwischen dem Netzwerk anzufragen. Im Gegensatz zur bisher genutzten Klasse \textbf{XMLHttpRequest}, gibt fetch ein Promise Objekt zurück. Mit der \textbf{Story} Klasse wird der Endpunkt der Datenabfrage als Klassenvariable definiert. Darüberhinaus werden mit getAllStories() und getChapter() die Methoden für die Abfrage definiert. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code mit Promises so aussehen:
+Ähnlich wie im Beispiel des Callback-Kapitels wird von der REST-API JSONPlaceholder Kapitel in die DOM geladen. In diesem Fall wurde hingegen das objektorientierte Paradigma gewählt. Die Klasse \textbf{HTTP} macht mit makeRequest() eine Http-Anfrage gegen einen übergebenen Endpunkt. Die \textbf{Fetch API} stellt ein Javascript Interface zur Verfügung, um Ressourcen zwischen dem Netzwerk anzufragen. Im Gegensatz zur bisher genutzten Klasse \textbf{XMLHttpRequest}, gibt fetch() ein Promise Objekt zurück. Mit der \textbf{Story} Klasse wird der Endpunkt der Datenabfrage als Klassenvariable definiert. Darüberhinaus werden mit getAllStories() und getChapter() die Methoden für die Abfrage definiert. Sollte ein Anwendungsfall sein, alle Kapitel anzuzeigen, würde der Code mit Promises so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
 story.getAllStories()
-    .then((response: XMLHttpRequestResponseType) =>
+    .then((response) =>
         story.spawn(response)
     )
     .finally(() =>
@@ -323,13 +323,17 @@ Alle Kapitel werden mit einem Aufruf am Endpunkt angefragt. Ist das Promise in d
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
+console.time('Promise-Verkettung');
 story.getChapter(1) // (*)
     .then((response1) => story.spawn(response1))
     .then(() => story.getChapter(2)) // (**)
     .then((response2) => story.spawn(response2))
     .then(() => story.getChapter(3)) // (***)
     .then((response3) => story.spawn(response3))
-    .finally(() => story.displayFinished());
+    .finally(() => {
+        story.displayFinished();
+        console.timeEnd('Promise-Verkettung');
+    });
 \end{lstlisting}
 \caption{Promise-Verkettung für sequentielle Ausführungen}
 \label{Promises-sequential-calls}
@@ -339,9 +343,11 @@ story.getChapter(1) // (*)
 In diesem Fall werden nacheinander drei Kapitel angefragt und im Browser angezeigt. Da die Aufrufe im verketteten Konstrukt voneinander abhängig sind, addiert sich die Zeit die gebraucht wird, um ein Kapitel anzufragen und abzubilden. Die Idee dahinter ist, dass nach jedem Kapitelaufruf und -anzeige gewartet wird, bis dieser Vorgang abgeschlossen ist. Der Fluss sieht dabei so aus:
 
 \begin{enumerate}
-    \item Das initiale Promise wird aufgerufen und das Kapitel angezeigt. Das Promise gelangt in den settled Status. (*)
-    \item Die nächste Stelle der Sequenz wird gestartet, diese endet erst, wenn die Operation innerhalb der then() Methode erfüllt ist (**)
-    \item Die nächste Stelle der Sequenz wird initiiert...(***)
+    \item Das erste Promise getChapter(1) wird aufgerufen (*). Der Status dieses Promise ist erstmal im pending Zustand.
+    \item Bei Ankunft der Antwort, gelangt getChapter(1) in den settled Zustand. Die Daten \textit{response1} werden mit spawn(\textit{response1}) in einer neuen Stelle der Kette in die DOM geladen.
+    \item Das nächste Promise getChapter(2) wird aufgerufen (**). Der Status dieses Promise ist erstmal im pending Zustand. 
+    \item Bei Ankunft der Antwort, gelangt getChapter(2) in den settled Zustand. Die Daten \textit{response2} werden mit spawn(\textit{response2}) in einer neuen Stelle der Kette in die DOM geladen.
+    ...
 \end{enumerate}
 
 \begin{figure}[H]
@@ -350,23 +356,7 @@ In diesem Fall werden nacheinander drei Kapitel angefragt und im Browser angezei
 \end{figure}
 
 \noindent
-Dieser Vorgang endet mit der finally() Verarbeitungsmethode. Zu beachten ist, dass das gesamte Verkettete Konstrukt in einem eigenen Thread läuft. Innerhalb dieses Threads verlaufen die Operationen jedoch sequentiell. Selbst bei einer weiteren Verzögerung der Kapitel innerhalb der Kette, wäre immer noch gewährleistet, dass die Kapitelaufrufe sequentiell ausgeführt werden:
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
-story.getChapter(1)
-    .then((response1) => story.spawn(response1))
-    .then(() =>
-        new Promise(resolve =>
-            setTimeout(() => resolve(story.getChapter(2)), 5000)))
-    .then((response2) => story.spawn(response2))
-    .then() => ...
-\end{lstlisting}
-\caption{Es wird eine weitere Verzögerung des Aufrufs von story.getChapter(2) auf weitere fünf Sekunden angewendet.}
-\end{figure}
-
-\noindent
-Das liegt daran, da die jeweilige then() Methode ein Promise-Objekt weiterreicht. Somit kann das nächste then() entsprechend nach entstandenem Status und Wert weiterarbeiten. Obwohl die Aufrufe in der Darstellung deutlich lesbarer als geschachtelte Callbacks sind, wird mit diesem Beispiel ebenfalls deutlich, dass bei Promise-Verkettungen der Code in die Länge gezogen wird. Zudem wird hier auch deutlich, dass asynchron Operationen ausgeführt werden. Eine zweite Variante ist, die Kapitel in einem Array Promise zu lagern und parallel mit Promise.all() auszuführen: 
+Dieser Vorgang endet mit der finally() Verarbeitungsmethode. Zu beachten ist, dass das gesamte verkettete Konstrukt in einem eigenen Thread läuft. Innerhalb dieses Threads verlaufen die Operationen sequentiell. Das liegt daran, da die jeweilige then() Methode ein Promise-Objekt weiterreicht. Somit kann das nächste then() entsprechend nach entstandenem Status und Wert weiterarbeiten. Obwohl die Aufrufe in der Darstellung deutlich lesbarer als ineinandergeschachtelte Callbacks sind, wird mit diesem Beispiel ebenfalls deutlich, dass bei Promise-Verkettungen der Code nun aneinandergeschachtelt ist. Es ist immer noch zur erkennen, dass Operationen nicht innerhalb des synchronen Flusses verarbeitet werden. Die nächste Variante ist, die Kapitel in einem Array Promise zu lagern und parallel mit Promise.all() auszuführen.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -376,21 +366,32 @@ for (const n of [1, 2, 3]) {
     chapters.push(story.getChapter(n));
 }
 
+console.time('Promise-all');
 Promise.all(chapters).then((response) =>
     story.spawn(response)
-).finally(() =>
-    story.displayFinished()
-);
+).finally(() => {
+    story.displayFinished();
+    console.timeEnd('Promise-all');
+});
 \end{lstlisting}
 \caption{Promise.all(iterable) bekommt ein iterierbares Objekt als Parameter übergeben}
 \label{Promise-all-example}
 \end{figure}
 
 \noindent
-Ein Promise.all() kann dabei abhängig vom Übergabeparameter verschiedene Rückgabewerte haben. Sollte das eingegebene iterable Argument leer sein, wird Promise.all() synchron erfüllt. Wenn das eingegebene iterable Argument keine Promises enthält, kommt ein asynchron eingelöstes Promise heraus. In allen anderen Fällen gibt ein Promise.all() ein einzelnes ausstehendes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays eingetroffen sind. Die Rückgabewerte entsprechen dann der Reihenfolge der Promises, unabhängig von der Reihenfolge der Erfüllung\cite{promise-all}. Sollte ein Promise fehlschlagen, wird dieser ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promise\cite{promise-executor}.\\
+Ein Promise.all() kann dabei abhängig vom Übergabeparameter verschiedene Rückgabewerte haben. Sollte das eingegebene iterable Argument leer sein, wird Promise.all() synchron erfüllt. Wenn das eingegebene iterable Argument keine Promises enthält, kommt ein asynchron eingelöstes Promise heraus. In allen anderen Fällen gibt ein Promise.all() ein einzelnes ausstehendes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays eingetroffen sind. Die Rückgabewerte entsprechen dann der Reihenfolge der Promises in dem Array, unabhängig von der Reihenfolge des Erfüllungszeitpunkts \cite{promise-all}. Sollte ein Promise fehlschlagen, wird promise.all() ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promises \cite{promise-executor}.\\
+
+\begin{figure}[H]
+\begin{lstlisting}
+Promise-all: 1974.587890625ms
+Promise-Verkettung: 4905.918701171875ms
+\end{lstlisting}
+\caption{Vergleich der Gesamtausführungszeit.}
+\label{comparison-promise-all-and-chained-promise}
+\end{figure}
 
 \noindent
-Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Der unterschied der verketteten Variante zu Promise.all() liegt in der Art und Weise der Ausführung. Ein Promise.all() führt die Promises parallel aus und es löst sich nur so schnell auf wie das langsamste eintreffende Promise im iterable. Solange passiert nichts. In diesem Fall wird solange wird kein Kapitel in die DOM geladen, bis das langsamste Kapitel eingetroffen ist. In der verketteten Variante hingegen werden die Kapitel nacheinander im Browser geladen. Der Nutzer bekommt den Ladevorgang und das sequentiell laden der Kapitel mit. In der Praxis machen solche Kleinigkeiten eine nutzerfreundliche Applikation aus. 
+Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Der unterschied der verketteten Variante zu Promise.all() liegt in der Art und Weise der Ausführung. Ein Promise.all() führt die Promises parallel aus und löst sich nur so schnell auf wie das langsamste eintreffende Promise im iterable. Solange passiert nichts. In diesem Fall wird solange wird kein Kapitel in die DOM geladen, bis das langsamste Kapitel eingetroffen ist. Dafür ist aufgrund der parallelen Ausführung die Gesamtladezeit mit Promise-all() schneller (siehe Abb. \ref{comparison-promise-all-and-chained-promise}). In der verketteten Variante hingegen werden die Kapitel nacheinander verarbeitet. Der Nutzer bekommt die sequentielle Verarbeitung der Kapitel mit. In der Praxis sollte genau abgewogen werden, welches Umsetzungskonzept in welcher Situation mehr Sinn macht.
 
 \begin{figure}[H]
 \centering
