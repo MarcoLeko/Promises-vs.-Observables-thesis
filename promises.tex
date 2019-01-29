@@ -50,7 +50,7 @@ module.exports = {
 \end{figure}
 
 \noindent
-Da man nun weiß wie man ein Promise erstellt, kann nun auf die Unterschiede der Vorgehensweisen von Callbacks und Promises eingegangen werden. Die Nutzung von Promises und Callbacks differenzieren sich hauptsächlich im Design und in der Verarbeitung.
+Da man nun weiß wie ein Promise erstellt wird, kann auf die unterschiedlichen Vorgehensweisen von Callbacks und Promises eingegangen werden. Die Nutzung von Promises und Callbacks differenzieren sich hauptsächlich im Design und in der Verarbeitung.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -97,7 +97,7 @@ getA()
 \end{figure}
 
 \noindent
-Die Funktionen werden \textbf{aneinandergeschachtelt}. Die Rückgabewerte müssen innerhalb der Kette weitergereicht werden. Hier wird bereits ein kleiner Einblick gewährt, wie man Promises verarbeitet. Promises haben einen Status und einen Wert. Das Promise Objekt, welches getA() zurückgibt, ist beim Aufruf im ausstehenden (pending) Zustand und der Wert ist undefined. Gibt die Funktion setTimeout() den Wert nach der Zeitverzögerung zurück, werden Status und Wert des Promise aktualisiert. Hierbei spricht man vom \textbf{auflösen} eines Promise. Trifft der Wert 'a' ein wechselt der Status in den eingetroffenen (resolved) Zustand.
+Die Funktionen werden \textbf{aneinandergeschachtelt}. Die Rückgabewerte müssen innerhalb der Kette weitergereicht werden. Hier wird bereits ein kleiner Einblick gewährt, wie man Promises verarbeitet. Promises haben einen Status und einen Wert. Das Promise Objekt, welches getA() zurückgibt, ist beim Aufruf im ausstehenden (pending) Zustand und der Wert ist undefined. Gibt die Funktion setTimeout() den Wert nach der Zeitverzögerung zurück, werden Status und Wert des Promise aktualisiert. Hierbei spricht man vom \textbf{auflösen} eines Promise. Trifft somit der Wert 'a' ein wechselt der Status in den eingetroffenen (resolved) Zustand.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -121,10 +121,11 @@ rejectedPromise.catch((fakeResponse) => {
 });
 \end{lstlisting}
 \caption{Beim Eintreffen einer Aktion werden Status und Wert aktualisiert.}
+\label{rejected-promise}
 \end{figure}
 
 \noindent
-Umgekehrt, kann der Status eines Promise fehlgeschlagen (rejected) entsprechen. Im oberen Beispiel wird nach einer Sekunden der reject Callback aufgerufen, solange ist der Status des Promise ausstehend. Je nach Aufruf der Callback Funktion, variiert der Status eines Promise. Dabei können nicht nur primitive Typen wie number, boolean oder strings zurückgegeben werden, sondern auch Objekt-Typen und komplexe Typen. Mit anderen Worten: Promises sind generisch.
+Umgekehrt, kann der Status eines Promise fehlgeschlagen (rejected) entsprechen. Im Beispiel von Abb. \ref{rejected-promise} wird nach einer Sekunden der reject Callback aufgerufen, solange ist der Status des Promise ausstehend. Je nach Aufruf der Callback Funktion, variiert der Status eines Promise. Dabei können nicht nur primitive Typen wie number, boolean oder strings zurückgegeben werden, sondern auch Objekt-Typen und komplexe Typen. Mit anderen Worten: Promises sind generisch.
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -171,15 +172,16 @@ Promise.prototype.finally(onFinally)
 \end{description}
 
 \noindent
-Die untenstehende Grafik zeigt den Ablauf für das Eintreten der Events (onFulfilled, onRejected und onFinally) und wie man diese verarbeitet. Mit den Methoden \textbf{then()} und \textbf{catch()} werden auf eintretenden Aktionen reagiert. Diese Verarbeitungsmethoden werden aufgerufen wenn ein Promise in den settled Zustand angekommen ist. Im Erfolgsfall wird das Promise mit der then() Methode weiterverarbeitet. Im Fehlerfall hingegen wird die catch() Methode aufgerufen. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally()} an ein Promise Objekt angebunden wird, wird diese Methode in jedem Fall aufgerufen, unabhängig davon ob das Promise eingetroffen oder fehlgeschlagen ist.
+Die Grafik in Abb. \ref{promise-chain-graphic} zeigt den Ablauf für das Eintreten der Events (onFulfilled, onRejected und onFinally) und wie diese verarbeitet werden. Mit den Methoden \textbf{then()} und \textbf{catch()} werden auf eintretenden Aktionen reagiert. Diese Verarbeitungsmethoden werden aufgerufen wenn ein Promise in den settled Zustand angekommen ist. Im Erfolgsfall wird das Promise mit der then() Methode weiterverarbeitet. Im Fehlerfall hingegen wird die catch() Methode aufgerufen. Da beide Methoden ein Promise-Objekt zurückgeben, können Promises reibungslos aneinandergekettet werden. Wenn \textbf{finally()} an ein Promise Objekt angebunden wird, wird diese Methode in jedem Fall aufgerufen, unabhängig davon ob das Promise eingetroffen oder fehlgeschlagen ist.
 
 \begin{figure}[H]
 \includegraphics[width=13cm]{Promises-workflow}
 \caption{Weiterreichung eines Promise-Objekts\cite{promise-executor}.}
+\label{promise-chain-graphic}
 \end{figure}
 
 \noindent
-Promise-Fehlschläge können dabei auf zwei verschiedene Wege gefangen werden. Innerhalb der then()-Methode kann eine zweite, optionale Funktion für das \textbf{Nicht-Eintreffen} der Operation festgelegt werden. Ein Beispiel dafür wäre:
+Promise-Fehlschläge können dabei auf zwei verschiedene Wege gefangen werden. Innerhalb der then()-Methode kann eine zweite, optionale Funktion für das \textbf{Nicht-Eintreffen} der Operation festgelegt werden. In einem fiktiven Beispiel würde dies wie folgt aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -189,7 +191,7 @@ get('story.json').then((response) => {
   console.log('Failed!', error);
 })
 \end{lstlisting}
-\caption{Error-Handling innerhalb der then()-Methode\cite{callback-vs-promises}.}
+\caption{Error-Handling innerhalb der then() Methode\cite{callback-vs-promises}.}
 \end{figure}
 
 \begin{figure}[H]
@@ -200,7 +202,7 @@ get('story.json').then((response) => {
   console.log('Failed!', error);
 })
 \end{lstlisting}
-\caption{Error-Handling mit der catch()-Methode\cite{callback-vs-promises}.}
+\caption{Error-Handling mit der catch() Methode\cite{callback-vs-promises}.}
 \label{error-with-catch}
 \end{figure}
 
@@ -215,11 +217,11 @@ get('story.json').then((response) => {
   console.log('Failed!', error);
 })
 \end{lstlisting}
-\caption{Verhält sich ähnlich wie in Abbildung\ref{error-with-catch}.}
+\caption{Verhält sich ähnlich wie in Abbildung \ref{error-with-catch}.}
 \end{figure}
 
 \noindent
-Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then()-Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Die wichtigsten dabei sind:
+Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then() Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Die wichtigsten dabei sind:
 
 \begin{description}
 
@@ -283,11 +285,7 @@ export class Story {
         document.body.appendChild(div);
         return div;
     }
-\end{lstlisting}
-\end{figure}
-
-\begin{figure}[H]
-\begin{lstlisting}[basicstyle=\small]
+    
     public getAllStories(): Promise<string> {
         return this.http.makeRequest(Story.BASE_URL);
     }
@@ -295,7 +293,11 @@ export class Story {
     public getChapter(chapter: number): Promise<string> {
         return this.http.makeRequest(Story.BASE_URL + chapter.toString());
     }
-    
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
     public spawn(content): void {
         if (content instanceof Array === false) {
             content = [content];
@@ -364,9 +366,9 @@ story.getChapter(1) // (*)
 In diesem Fall werden nacheinander drei Kapitel angefragt und im Browser angezeigt. Da die Aufrufe im verketteten Konstrukt voneinander abhängig sind, addiert sich die Zeit die gebraucht wird, um ein Kapitel anzufragen und abzubilden. Die Idee dahinter ist, dass nach jedem Kapitelaufruf und -anzeige gewartet wird, bis dieser Vorgang abgeschlossen ist. Der Fluss sieht dabei so aus:
 
 \begin{enumerate}
-    \item Das erste Promise getChapter(1) wird aufgerufen (*). Der Status dieses Promise ist erstmal im pending Zustand.
+    \item Das erste Promise getChapter(1) wird aufgerufen(*). Der Status dieses Promise ist erstmal im pending Zustand.
     \item Bei Ankunft der Antwort, gelangt getChapter(1) in den settled Zustand. Die Daten \textit{response1} werden mit spawn(\textit{response1}) in einer neuen Stelle der Kette in die DOM geladen.
-    \item Das nächste Promise getChapter(2) wird aufgerufen (**). Der Status dieses Promise ist erstmal im pending Zustand. 
+    \item Das nächste Promise getChapter(2) wird aufgerufen(**). Der Status dieses Promise ist erstmal im pending Zustand. 
     \item Bei Ankunft der Antwort, gelangt getChapter(2) in den settled Zustand. Die Daten \textit{response2} werden mit spawn(\textit{response2}) in einer neuen Stelle der Kette in die DOM geladen.
     \item ...
 \end{enumerate}
@@ -377,7 +379,7 @@ In diesem Fall werden nacheinander drei Kapitel angefragt und im Browser angezei
 \end{figure}
 
 \noindent
-Dieser Vorgang endet mit der finally() Verarbeitungsmethode. Zu beachten ist, dass das gesamte verkettete Konstrukt in einem eigenen Thread läuft. Innerhalb dieses Threads verlaufen die Operationen sequentiell. Das liegt daran, da die jeweilige then() Methode ein Promise-Objekt weiterreicht. Somit kann das nächste then() entsprechend nach entstandenem Status und Wert weiterarbeiten. Obwohl die Aufrufe in der Darstellung deutlich lesbarer als ineinandergeschachtelte Callbacks sind, wird mit diesem Beispiel ebenfalls deutlich, dass bei Promise-Verkettungen der Code nun aneinandergeschachtelt ist. Es ist immer noch zur erkennen, dass Operationen nicht innerhalb des synchronen Flusses verarbeitet werden. Die nächste Variante ist, die Kapitel in einem Array Promise zu lagern und parallel mit Promise.all() auszuführen.
+Dieser Vorgang endet mit der finally() Verarbeitungsmethode. Zu beachten ist, dass das gesamte verkettete Konstrukt in einem eigenen Thread läuft. Innerhalb dieses Threads verlaufen die Operationen sequentiell. Das liegt daran, da die jeweilige then() Methode ein Promise-Objekt weiterreicht. Somit kann das nächste then() entsprechend nach entstandenem Status und Wert weiterarbeiten. Obwohl die Aufrufe in der Darstellung deutlich lesbarer als ineinandergeschachtelte Callbacks sind, wird mit diesem Beispiel ebenfalls deutlich, dass bei Promise-Verkettungen der Code nun aneinandergeschachtelt ist. Es ist immer noch zur erkennen, dass Operationen nicht innerhalb des synchronen Flusses verarbeitet werden. Die nächste Variante ist, die Kapitel in einem Promise Array zu lagern und parallel mit Promise.all() auszuführen.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -412,7 +414,7 @@ Promise-Verkettung: 4905.918701171875ms
 \end{figure}
 
 \noindent
-Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Der unterschied der verketteten Variante zu Promise.all() liegt in der Art und Weise der Ausführung. Ein Promise.all() führt die Promises parallel aus und löst sich nur so schnell auf wie das langsamste eintreffende Promise im iterable. Solange passiert nichts. In diesem Fall wird solange wird kein Kapitel in die DOM geladen, bis das langsamste Kapitel eingetroffen ist. Dafür ist aufgrund der parallelen Ausführung die Gesamtladezeit mit Promise-all() schneller (siehe Abb. \ref{comparison-promise-all-and-chained-promise}). In der verketteten Variante hingegen werden die Kapitel nacheinander verarbeitet. Der Nutzer bekommt die sequentielle Verarbeitung der Kapitel mit. In der Praxis sollte genau abgewogen werden, welches Umsetzungskonzept in welcher Situation mehr Sinn macht.
+Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Der unterschied der verketteten Variante zu Promise.all() liegt in der Art und Weise der Ausführung. Ein Promise.all() führt die Promises parallel aus und löst sich nur so schnell auf wie das langsamste eintreffende Promise im iterable. Solange passiert nichts. In diesem Fall wird solange wird kein Kapitel in die DOM geladen, bis das langsamste Kapitel eingetroffen ist. Dafür ist aufgrund der parallelen Ausführung die Gesamtladezeit mit Promise.all() schneller (siehe Abb. \ref{comparison-promise-all-and-chained-promise}). In der verketteten Variante hingegen werden die Kapitel nacheinander verarbeitet. Der Nutzer bekommt den sequentiellen Ladevorgang der Kapitel mit. In der Praxis sollte genau abgewogen werden, welches Umsetzungskonzept in welcher Situation mehr Sinn macht.
 
 \begin{figure}[H]
 \centering
@@ -436,7 +438,7 @@ Promise.race(chapters).then((response) =>
 
 \subsection{Anti-Patterns und Best Practices}
 
-Ob bei der Erstellung oder bei der Verarbeitung von Promises - Es gibt gewisse Ansätze nach denen man sich bei der Nutzung richten sollte. Ein negativ Beispiel für die Verarbeitung von Promises, wäre folgendes:
+Ob bei der Erstellung oder bei der Verarbeitung von Promises - es gibt gewisse Ansätze nach denen man sich bei der Nutzung richten sollte. Ein negativ Beispiel für die Verarbeitung von Promises, wäre folgendes:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -458,8 +460,8 @@ story.getChapter(1)
 \end{figure}
 
 \noindent
-Diese Methoden rufen ähnlich wie in Abbildung \ref{Promises-sequential-calls} drei Kapitel nacheinander auf. Obwohl sie im positiv Fall der API-Aufrufe die Kapitel sequentiell laden, wird hier komplett auf den Vorteil, den Promises gegenüber Callbacks bietet, verzichtet. Zudem ist die Ganze Kette davon abhängig, ob der erste Promise-Aufruf eintrifft. Hier wird keinerlei Möglichkeit gewährleistet ein Fehlschlag des ersten Aufrufs zu fangen ohne Code-Duplizierung. Solche ineinandergegliederte Promise-Verschachtelungen werden unter Entwicklern auch als \glqq{}Promise-Hell\grqq{} bezeichnet.
-Mit dem ursprünglichen Beispiel ist es jedoch Möglich Fehler zwischen der Kette zu fangen:
+Diese Methoden rufen ähnlich wie in Abbildung \ref{Promises-sequential-calls} drei Kapitel nacheinander auf. Obwohl sie im positiv Fall der API-Aufrufe die Kapitel sequentiell laden, wird hier komplett auf den Vorteil, den Promises gegenüber Callbacks bieten, verzichtet. Zudem ist die gesamte Kette davon abhängig, ob der erste Promise-Aufruf eintrifft. Hier wird keinerlei Möglichkeit gewährleistet ein Fehlschlag des ersten Aufrufs zu fangen ohne Code-Duplizierung. Solche ineinandergegliederte Promise-Verschachtelungen werden unter Entwicklern auch als \glqq{}Promise-Hell\grqq{} bezeichnet.
+Mit dem ursprünglichen Beispiel von Abb. \ref{Promises-sequential-calls} ist es jedoch Möglich Fehler zwischen der Kette zu fangen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
