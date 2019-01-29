@@ -97,7 +97,7 @@ getA()
 \end{figure}
 
 \noindent
-Die Funktionen werden \textbf{aneinandergeschachtelt}. Die Rückgabewerte müssen innerhalb der Kette weitergereicht werden. Hier wird bereits ein kleiner Einblick gewährt, wie man Promises verarbeitet. Promises haben einen Status und einen Wert. Das Promise Objekt, welches getA() zurückgibt, ist beim Aufruf im ausstehenden (pending) Zustand und der Wert ist undefined. Gibt die Funktion setTimeout() den Wert nach der Zeitverzögerung zurück, werden Status und Wert des Promise aktualisiert. Hierbei spricht man vom \textbf{auflösen} eines Promise. Trifft somit der Wert 'a' ein wechselt der Status in den eingetroffenen (resolved) Zustand.
+Die Funktionen werden \textbf{aneinandergeschachtelt}. Die Rückgabewerte müssen entlang der Kette weitergereicht werden. Hier wird bereits ein kleiner Einblick gewährt, wie man Promises verarbeitet. Promises haben einen Status und einen Wert. Das Promise Objekt, welches getA() zurückgibt, ist beim Aufruf im ausstehenden (pending) Zustand und der Wert ist undefined. Gibt die Funktion setTimeout() den Wert nach der Zeitverzögerung zurück, werden Status und Wert des Promise aktualisiert. Hierbei spricht man vom \textbf{auflösen} eines Promise. Trifft somit der Wert 'a' ein wechselt der Status in den eingetroffenen (resolved) Zustand.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -147,7 +147,7 @@ Promise {<resolved>: {...}}
 \noindent
 Wie man nun gesehen hat kann ein Promise Objekt den Status \textbf{pending}, \textbf{resolved} oder \textbf{rejected} haben. Im Status pending ist der Ausgang der Aktion noch ungewiss und deshalb der Promise-Wert undefined. Ändert sich der Status bzw. ist die Aktion zum Promise eingetroffen oder fehlgeschlagen, ist der Status \textbf{settled}. Grundsätzlich läuft ein Promise also vom pending in den settled Status. In der nächsten Sektion wird auf das Verarbeiten von Promises näher eingegangen.
 
-\subsubsection{Verarbeiten von Promises}
+\subsubsection{Verarbeitung von Promises}
 
 Zur Wiederholung: Ein Promise-Objekt repräsentiert das eventuelle Eintreffen oder Fehlschlagen einer asynchronen Operation, einschließlich des entstandenen Wertes. Ein solches Objekt bietet \textbf{statische}- und \textbf{Prototyp}-Methoden. Die statischen Methoden können unabhängig von der Instanz aufgerufen werden, während die Prototyp-Methoden nur mit einer Promise Instanz aufrufbar sind.
 
@@ -181,26 +181,23 @@ Die Grafik in Abb. \ref{promise-chain-graphic} zeigt den Ablauf für das Eintret
 \end{figure}
 
 \noindent
-Promise-Fehlschläge können dabei auf zwei verschiedene Wege gefangen werden. Innerhalb der then()-Methode kann eine zweite, optionale Funktion für das \textbf{Nicht-Eintreffen} der Operation festgelegt werden. In einem fiktiven Beispiel würde dies wie folgt aussehen:
+Promise-Fehlschläge können dabei auf zwei verschiedene Wege gefangen werden. Innerhalb der then()-Methode kann eine zweite, optionale Funktion für das \textbf{Nicht-Eintreffen} der Operation festgelegt werden. In einem Beispiel würde dies wie folgt aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-get('story.json').then((response) => {
-  console.log('Success!', response);
-}, (error) => {
-  console.log('Failed!', error);
-})
+getA()
+    .then(value => console.log('Success! ', value),
+          err => console.log('Failed! ', err)
+    );
 \end{lstlisting}
 \caption{Error-Handling innerhalb der then() Methode\cite{callback-vs-promises}.}
 \end{figure}
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-get('story.json').then((response) => {
-  console.log('Success!', response);
-}).catch((error) => {
-  console.log('Failed!', error);
-})
+getA()
+    .then(value => console.log('Success! ', value))
+    .catch(err => console.log('Failed! ', err));
 \end{lstlisting}
 \caption{Error-Handling mit der catch() Methode\cite{callback-vs-promises}.}
 \label{error-with-catch}
@@ -211,17 +208,15 @@ Im Gegensatz zur oberen Variante führt die catch()-Methode keine zusätzlichen 
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-get('story.json').then((response) => {
-  console.log('Success!', response);
-}).then(undefined, (error) => {
-  console.log('Failed!', error);
-})
+getA()
+    .then(value => console.log('Success! ', value))
+    .then(undefined, err => console.log('Failed! ', err));
 \end{lstlisting}
 \caption{Verhält sich ähnlich wie in Abbildung \ref{error-with-catch}.}
 \end{figure}
 
 \noindent
-Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then() Methode in den fehlgeschlagen Callback weiter oder in die catch Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Die wichtigsten dabei sind:
+Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then() Methode in den fehlgeschlagen Callback weiter oder in die catch() Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Die wichtigsten sind:
 
 \begin{description}
 
@@ -296,7 +291,7 @@ export class Story {
 \end{lstlisting}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[H]\ContinuedFloat
 \begin{lstlisting}[basicstyle=\small]
     public spawn(content): void {
         if (content instanceof Array === false) {
@@ -402,7 +397,7 @@ Promise.all(chapters).then((response) =>
 \end{figure}
 
 \noindent
-Ein Promise.all() kann dabei abhängig vom Übergabeparameter verschiedene Rückgabewerte haben. Sollte das eingegebene iterable Argument leer sein, wird Promise.all() synchron erfüllt. Wenn das eingegebene iterable Argument keine Promises enthält, kommt ein asynchron eingelöstes Promise heraus. In allen anderen Fällen gibt ein Promise.all() ein einzelnes ausstehendes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays eingetroffen sind. Die Rückgabewerte entsprechen dann der Reihenfolge der Promises in dem Array, unabhängig von der Reihenfolge des Erfüllungszeitpunkts \cite{promise-all}. Sollte ein Promise fehlschlagen, wird promise.all() ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promises \cite{promise-executor}.\\
+Ein Promise.all() kann abhängig vom Übergabeparameter verschiedene Rückgabewerte haben. Sollte das eingegebene iterable Argument leer sein, wird Promise.all() synchron erfüllt. Wenn das eingegebene iterable Argument keine Promises enthält, kommt ein asynchron eingelöstes Promise heraus. In allen anderen Fällen gibt ein Promise.all() ein einzelnes ausstehendes Promise zurück, dass eintrifft wenn alle Promises innerhalb des übergebenen Promise-Arrays eingetroffen sind. Die Rückgabewerte entsprechen dann der Reihenfolge der Promises in dem Array, unabhängig von der Reihenfolge des Erfüllungszeitpunkts \cite{promise-all}. Sollte ein Promise fehlschlagen, wird promise.all() ebenfalls fehlschlagen mit der Fehlernachricht des ersten fehlgeschlagenen Promises \cite{promise-executor}.\\
 
 \begin{figure}[H]
 \begin{lstlisting}
