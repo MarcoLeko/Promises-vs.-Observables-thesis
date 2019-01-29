@@ -297,7 +297,9 @@ export class Story {
     }
     
     public spawn(content): void {
-        ...
+        if (content instanceof Array === false) {
+            content = [content];
+        }
         content.forEach(elm => {
             const snippet = document.createElement('div');
             snippet.innerHTML = '<h1>${elm.title}</h1>
@@ -366,7 +368,7 @@ In diesem Fall werden nacheinander drei Kapitel angefragt und im Browser angezei
     \item Bei Ankunft der Antwort, gelangt getChapter(1) in den settled Zustand. Die Daten \textit{response1} werden mit spawn(\textit{response1}) in einer neuen Stelle der Kette in die DOM geladen.
     \item Das nächste Promise getChapter(2) wird aufgerufen (**). Der Status dieses Promise ist erstmal im pending Zustand. 
     \item Bei Ankunft der Antwort, gelangt getChapter(2) in den settled Zustand. Die Daten \textit{response2} werden mit spawn(\textit{response2}) in einer neuen Stelle der Kette in die DOM geladen.
-    ...
+    \item ...
 \end{enumerate}
 
 \begin{figure}[H]
