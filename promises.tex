@@ -13,7 +13,7 @@ Promises \textit{(Versprechen)} verhalten sich in Javascript ähnlich wie im ech
 \noindent
 Das heißt:
 
-\begin{enumerate}
+\begin{itemize}
     \item Ein Versprechen ist eine Absicherung, dass etwas gemacht wird. Unabhängig davon, ob das Versprechen sich selbst oder von einer anderen Partei gegeben wird.
     
     \item Ein Versprechen kann eingehalten oder gebrochen werden.
@@ -22,7 +22,7 @@ Das heißt:
     
     \item Beim Zeitpunkt eines Versprechens hat man nur die Absicherung. Man kann damit erstmal noch nichts anfangen. Es kann nur geplant werden was nach dem Einhalten des Versprechens gemacht wird. Dementsprechend kann man auch Maßnahmen setzen beim Nichteinhalten dieser Absicherung.
     
-\end{enumerate}
+\end{itemize}
 
 \noindent
 Es gibt zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
@@ -318,7 +318,7 @@ export class Story {
 
 const story = new Story();
 \end{lstlisting}
-\caption{Der Vorteil der Objektorientierung in diesem Fall ist die Kapselung der Logik in: Endpunkt-Aufruf anbieten und Endpunkt-Aufruf verarbeiten.}
+\caption{Durch das objektorientierte Schema wird die Logik gekapselt in: Endpunkt-Aufruf anbieten und Endpunkt-Aufruf verarbeiten.}
 \end{figure}
 
 \noindent
@@ -337,7 +337,7 @@ story.getAllStories()
 \end{figure}
 
 \noindent
-Alle Kapitel werden mit einem Aufruf am Endpunkt angefragt. Ist das Promise in den settled Zustand angelangt, werden die Kapitel im Browser abgebildet. Als letzte Stelle der Kette wird mit finally der Lade-Icon ausgeblendet und eine Nachricht angezeigt, dass alle Stories abgebildet wurden. Sollte jedoch ein Anwendungsfall sein, dass nur drei Stories im Browser angezeigt werden sollen, könnte das wie folgt aussehen: 
+Alle Kapitel werden mit einem Aufruf am Endpunkt angefragt. Ist das Promise in den settled Zustand angelangt, werden die Kapitel im Browser abgebildet. Als letzte Stelle der Kette wird mit finally der Lade-Icon ausgeblendet und eine Nachricht angezeigt, dass alle Stories abgebildet wurden. Sollte jedoch ein Anwendungsfall sein, dass nur drei Stories im Browser angezeigt werden, könnte das wie folgt aussehen: 
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -409,7 +409,7 @@ Promise-Verkettung: 4905.918701171875ms
 \end{figure}
 
 \noindent
-Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Der unterschied der verketteten Variante zu Promise.all() liegt in der Art und Weise der Ausführung. Ein Promise.all() führt die Promises parallel aus und löst sich nur so schnell auf wie das langsamste eintreffende Promise im iterable. Solange passiert nichts. In diesem Fall wird solange wird kein Kapitel in die DOM geladen, bis das langsamste Kapitel eingetroffen ist. Dafür ist aufgrund der parallelen Ausführung die Gesamtladezeit mit Promise.all() schneller (siehe Abb. \ref{comparison-promise-all-and-chained-promise}). In der verketteten Variante hingegen werden die Kapitel nacheinander verarbeitet. Der Nutzer bekommt den sequentiellen Ladevorgang der Kapitel mit. In der Praxis sollte genau abgewogen werden, welches Umsetzungskonzept in welcher Situation mehr Sinn macht.
+Dabei ist zu beachten, dass die Promises parallel voneinander ausgeführt werden. Der unterschied der verketteten Variante zu Promise.all() liegt in der Art und Weise der Ausführung. Ein Promise.all() führt die Promises parallel aus und löst sich nur so schnell auf wie das langsamste eintreffende Promise im iterable. Solange passiert nichts. In diesem Fall wird solange kein Kapitel in die DOM geladen, bis das langsamste Kapitel eingetroffen ist. Dafür ist aufgrund der parallelen Ausführung die Gesamtladezeit mit Promise.all() schneller (siehe Abb. \ref{comparison-promise-all-and-chained-promise}). In der verketteten Variante hingegen werden die Kapitel nacheinander verarbeitet. Der Nutzer bekommt den sequentiellen Ladevorgang der Kapitel mit. In der Praxis sollte genau abgewogen werden, welches Umsetzungskonzept in welcher Situation mehr Sinn macht.
 
 \begin{figure}[H]
 \centering
@@ -428,7 +428,7 @@ Promise.race(chapters).then((response) =>
     story.displayFinished()
 );
 \end{lstlisting}
-\caption{Es wird schnellste ladende Kapitel angezeigt.}
+\caption{Es wird das schnellste ladende Kapitel angezeigt.}
 \end{figure}
 
 \subsection{Anti-Patterns und Best Practices}
@@ -455,8 +455,8 @@ story.getChapter(1)
 \end{figure}
 
 \noindent
-Diese Methoden rufen ähnlich wie in Abbildung \ref{Promises-sequential-calls} drei Kapitel nacheinander auf. Obwohl sie im positiv Fall der API-Aufrufe die Kapitel sequentiell laden, wird hier komplett auf den Vorteil, den Promises gegenüber Callbacks bieten, verzichtet. Zudem ist die gesamte Kette davon abhängig, ob der erste Promise-Aufruf eintrifft. Hier wird keinerlei Option gewährleistet ein Fehlschlag des ersten Aufrufs zu fangen ohne Code-Duplizierung. Solche ineinandergegliederte Promise-Verschachtelungen werden unter Entwicklern auch als \glqq{}Promise-Hell\grqq{} bezeichnet.
-Mit dem ursprünglichen Beispiel von Abb. \ref{Promises-sequential-calls} ist es jedoch möglich Fehler zwischen der Kette zu fangen:
+Diese Methoden rufen ähnlich wie in Abbildung \ref{Promises-sequential-calls} drei Kapitel nacheinander auf. Obwohl sie im positiven Fall der API-Aufrufe die Kapitel sequentiell laden, wird hier komplett auf den Vorteil, den Promises gegenüber Callbacks bieten, verzichtet. Zudem ist die gesamte Kette davon abhängig, ob der erste Promise-Aufruf eintrifft. Hier werden keinerlei Möglichkeiten gewährleistet ein Fehlschlag des ersten Aufrufs zu fangen ohne Code-Duplizierung. Solche ineinandergegliederten Promise-Verschachtelungen werden unter Entwicklern auch als \glqq{}Promise-Hell\grqq{} bezeichnet.
+Mit dem ursprünglichen Beispiel von Abb. \ref{Promises-sequential-calls} kann man jedoch Fehler zwischen der Kette fangen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -477,7 +477,7 @@ story.getChapter(1)
 \end{figure}
 
 \noindent
-Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig auftretende asynchrone Events genutzt werden sollten. Der Verarbeitungsstatus eines Promise kann folgend sein:
+Als Faustregel für Promises sollte beachtet werden, dass sie nur für einmalig auftretende asynchrone Events genutzt werden sollten. Der Verarbeitungsstatus eines Promises kann wie folgt aussehen:
 
 \begin{description} 
 \item Pending: Der Ausgang des Promises ist noch ungewiss.
