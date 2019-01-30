@@ -1,5 +1,5 @@
 \section{Async await}
-Wenn es um das Verarbeiten von asynchronen Operationen geht, sind Promises ein erheblicher Fortschritt im Vergleich zum Callback Prinzip. Jedoch wurde ein grundlegendes Problem noch nicht gelöst: Mit der Nutzung von Promises ist der Code immer noch geschachtelt. Ziel ist es, asynchrone Aktionen so abzubilden, als ob diese synchron ausgeführt werden. 
+Wenn es um das Verarbeiten von asynchronen Operationen geht, sind Promises ein erheblicher Fortschritt im Vergleich zum Callback Prinzip. Jedoch wurde ein grundlegendes Problem noch nicht gelöst: Mit der Nutzung von Promises ist der Code immer noch geschachtelt. Das liegt daran, da Verarbeitungsmethoden wie then() oder catch() weitere Callback Funktionen als Argument annehmen. Ziel ist es, asynchrone Aktionen so abzubilden, als ob diese synchron ausgeführt werden. 
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]

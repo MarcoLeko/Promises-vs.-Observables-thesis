@@ -1,9 +1,9 @@
 \section{Promises}
 
-Das Prinzip der asynchronen Verarbeitung, bringt Komplexität nach sich. Um dem entgegenzuwirken, hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Rückruffunktionen bieten eine Alternative auf asynchron, blockierende Aktionen zu warten bis diese eingetroffen sind. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. \ref{Nested-Callback-with-catch-error}). Mit Promises können voneinander abhängige Operationen übersichtlich dargestellt werden.\\
+Das Prinzip der asynchronen Verarbeitung, bringt Komplexität nach sich. Um dem entgegenzuwirken, hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Rückruffunktionen bieten eine Alternative auf asynchrone Aktionen zu warten bis diese eingetroffen sind. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. \ref{Nested-Callback-with-catch-error}). Mit Promises können voneinander abhängige Operationen übersichtlich dargestellt werden.\\
 
 \noindent
-Ein Promise repräsentiert ein Objekt das noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, da die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen Prozess asynchron aus. Wenn die Daten angekommen sind, führt das Promise-Objekt die Aktionen mit den erstellten Verarbeitungsmethoden fort. Dank der Promise-Verkettung können auch Fehlerbehandlungen übersichtlich abgedeckt werden. Während bei Callbacks das Ergebnis der Interaktion sofort verarbeitet werden muss, basieren Promises nach ihrem Verarbeitungsstatus. Das heißt sie können mit dem Ergebnis auch \glqq{}später\grqq{} interagieren.
+Ein Promise repräsentiert ein Objekt, das noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, da die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen Prozess asynchron aus. Wenn die Daten angekommen sind, führt das Promise-Objekt die Aktionen mit den erstellten Verarbeitungsmethoden fort. Dank der Promise-Verkettung können auch Fehlerbehandlungen übersichtlich abgedeckt werden. Während bei Callbacks das Ergebnis der Interaktion sofort verarbeitet werden muss, basieren Promises nach ihrem Verarbeitungsstatus. Das heißt sie können mit dem Ergebnis auch \glqq{}später\grqq{} interagieren.
 
 \subsection{Funktionsweise}
 
@@ -13,7 +13,7 @@ Promises \textit{(Versprechen)} verhalten sich in Javascript ähnlich wie im ech
 \noindent
 Das heißt:
 
-\begin{description}
+\begin{enumerate}
     \item Ein Versprechen ist eine Absicherung, dass etwas gemacht wird. Unabhängig davon, ob das Versprechen sich selbst oder von einer anderen Partei gegeben wird.
     
     \item Ein Versprechen kann eingehalten oder gebrochen werden.
@@ -22,7 +22,7 @@ Das heißt:
     
     \item Beim Zeitpunkt eines Versprechens hat man nur die Absicherung. Man kann damit erstmal noch nichts anfangen. Es kann nur geplant werden was nach dem Einhalten des Versprechens gemacht wird. Dementsprechend kann man auch Maßnahmen setzen beim Nichteinhalten dieser Absicherung.
     
-\end{description}
+\end{enumerate}
 
 \noindent
 Es gibt zwei grundlegende Prinzipien der Promises, die zu Verstehen sind: Das \textbf{Erstellen von Promises} und das \textbf{Verarbeiten von Promises}.
@@ -97,7 +97,7 @@ getA()
 \end{figure}
 
 \noindent
-Die Funktionen werden \textbf{aneinandergeschachtelt}. Die Rückgabewerte müssen entlang der Kette weitergereicht werden. Hier wird bereits ein kleiner Einblick gewährt, wie man Promises verarbeitet. Promises haben einen Status und einen Wert. Das Promise Objekt, welches getA() zurückgibt, ist beim Aufruf im ausstehenden (pending) Zustand und der Wert ist undefined. Gibt die Funktion setTimeout() den Wert nach der Zeitverzögerung zurück, werden Status und Wert des Promise aktualisiert. Hierbei spricht man vom \textbf{auflösen} eines Promise. Trifft somit der Wert 'a' ein wechselt der Status in den eingetroffenen (resolved) Zustand.
+Die Funktionen sind zwar immer noch eingerückt, werden jedoch \textbf{aneinandergereiht}. Die Rückgabewerte müssen entlang der Kette weitergereicht werden. Hier wird bereits ein kleiner Einblick gewährt, wie man Promises verarbeitet. Promises haben einen Status und einen Wert. Das Promise Objekt, welches getA() zurückgibt, ist beim Aufruf im ausstehenden (pending) Zustand und der Wert ist undefined. Gibt die Funktion setTimeout() den Wert nach der Zeitverzögerung zurück, werden Status und Wert des Promise aktualisiert. Hierbei spricht man vom \textbf{auflösen} eines Promise. Trifft somit der Wert 'a' ein, wechselt der Status in den eingetroffenen (resolved) Zustand.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -125,7 +125,7 @@ rejectedPromise.catch((fakeResponse) => {
 \end{figure}
 
 \noindent
-Umgekehrt, kann der Status eines Promise fehlgeschlagen (rejected) entsprechen. Im Beispiel von Abb. \ref{rejected-promise} wird nach einer Sekunden der reject Callback aufgerufen, solange ist der Status des Promise ausstehend. Je nach Aufruf der Callback Funktion, variiert der Status eines Promise. Dabei können nicht nur primitive Typen wie number, boolean oder strings zurückgegeben werden, sondern auch Objekt-Typen und komplexe Typen. Mit anderen Worten: Promises sind generisch.
+Umgekehrt, kann der Status eines Promise bei einem Fehlschlag rejected entsprechen. Im Beispiel von Abb. \ref{rejected-promise} wird nach einer Sekunden der reject Callback aufgerufen, solange ist der Status des Promise ausstehend. Je nach Aufruf der Callback Funktion, variiert der Status eines Promise. Dabei können nicht nur primitive Typen wie number, boolean oder strings zurückgegeben werden, sondern auch Objekt-Typen und komplexe Typen. Mit anderen Worten: Promises sind generisch.
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -166,7 +166,7 @@ Promise.prototype.catch(onRejected)
 \item \begin{lstlisting}[basicstyle=\small]
 Promise.prototype.finally(onFinally)
 \end{lstlisting}
-\caption{Eine oder mehrere der drei Prototyp-Methoden werden aufgerufen, wenn ein Promise in den settled Zustand eingetroffen ist}
+\caption{Eine oder mehrere der drei Prototyp-Methoden werden aufgerufen, wenn ein Promise in den settled Zustand eingetroffen ist.}
 \end{figure}
 
 \end{description}
@@ -374,7 +374,7 @@ In diesem Fall werden nacheinander drei Kapitel angefragt und im Browser angezei
 \end{figure}
 
 \noindent
-Dieser Vorgang endet mit der finally() Verarbeitungsmethode. Zu beachten ist, dass das gesamte verkettete Konstrukt in einem eigenen Thread läuft. Innerhalb dieses Threads verlaufen die Operationen sequentiell. Das liegt daran, da die jeweilige then() Methode ein Promise-Objekt weiterreicht. Somit kann das nächste then() entsprechend nach entstandenem Status und Wert weiterarbeiten. Obwohl die Aufrufe in der Darstellung deutlich lesbarer als ineinandergeschachtelte Callbacks sind, wird mit diesem Beispiel ebenfalls deutlich, dass bei Promise-Verkettungen der Code nun aneinandergeschachtelt ist. Es ist immer noch zur erkennen, dass Operationen nicht innerhalb des synchronen Flusses verarbeitet werden. Die nächste Variante ist, die Kapitel in einem Promise Array zu lagern und parallel mit Promise.all() auszuführen.
+Dieser Vorgang endet mit der finally() Verarbeitungsmethode. Zu beachten ist, dass das gesamte verkettete Konstrukt in einem eigenen Thread läuft. Innerhalb dieses Threads verlaufen die Operationen sequentiell. Das liegt daran, da die jeweilige then() Methode ein Promise-Objekt weiterreicht. Somit kann das nächste then() entsprechend nach entstandenem Status und Wert weiterarbeiten. Obwohl die Aufrufe in der Darstellung deutlich lesbarer als ineinandergeschachtelte Callbacks sind, wird mit diesem Beispiel ebenfalls deutlich, dass bei Promise-Verkettungen der Code nun aneinandergekettet ist. Es ist immer noch zur erkennen, dass Operationen nicht innerhalb des synchronen Flusses verarbeitet werden. Die nächste Variante ist, die Kapitel in einem Promise Array zu lagern und parallel mit Promise.all() auszuführen.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
