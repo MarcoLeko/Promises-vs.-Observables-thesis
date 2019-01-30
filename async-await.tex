@@ -173,12 +173,11 @@ Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exe
 
 Mit dem Ansatz der Callbacks war es in Javascript erstmals Möglich asynchrone Operationen sequentiell zu verarbeiten. Callbacks sind leicht zu verstehen, jedoch werden sie ineinandergeschachtelt schnell chaotisch und schwer nachzuvollziehen. Entwickler neigten dazu Libraries für asynchrone Verarbeitung zu nutzen wie:
 
-\begin{description}
-\item Q
-\item when
-\item WinJS
-\item RSVP.js
-\end{description}
+\begin{center}
+\begin{tabular}{ l c c r }
+  Q & when & WinJS & RSVP.js\\
+\end{tabular}
+\end{center}
 
 \noindent
 Durch diese externe Libraries war es Möglich Promises in Javascript zu nutzen. All diese Libraries teilen die gleiche Anatomie eines Promises und verhalten sich nach dem Standard \textbf{Promises/A+}\cite{promises-a+}. Promises wurden mit der Zeit immer beliebter. Sogar so beliebt, dass sie seid der Ecmascript-2015 Version rein nativ nutzbar sind. Mit der Einführung von async await war es sogar erstmals Möglich asynchron operierenden Code übersichtlich abzubilden. Ganz ohne Verschachtelung wurde blockierender Code aufgelöst und in der nächsten Anweisung vorrangeschreitet. All diese Ansätze haben eines gemeinsam: Beim Aufruf werden sie nur einmal verarbeitet. Wenn man mithilfe eines Promise ein Endpunkt-Aufruf macht und dieser eintrifft, ist es irrelevant, ob der Endpunkt nach zehn Sekunden nicht mehr erreichbar ist. Der Aufruf wurde bereits erfolgreich durchgeführt und das Ergebnis fertig verarbeitet. Mit Observables wird in der nächsten Sektion ein komplett neues Vorgehensmodell vorgestellt. Sie haben ein Strom-basiertes Verhalten, dass kein, ein oder multiple Werte mit der Zeit ausgeben. Dieser Ansatz unterscheidet sich grundlegend von den Bisherigen.

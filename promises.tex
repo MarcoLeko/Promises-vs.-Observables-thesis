@@ -1,9 +1,9 @@
 \section{Promises}
 
-Das Prinzip der asynchronen Verarbeitung, bringt Komplexität nach sich. Um dem entgegenzuwirken, hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Dank der Rückruffunktionen ist es Möglich auf blockierende Aktionen zu warten bis diese eingetroffen sind. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. \ref{Nested-Callback-with-catch-error}). Mit Promises können voneinander abhängige Operationen übersichtlich dargestellt werden.\\
+Das Prinzip der asynchronen Verarbeitung, bringt Komplexität nach sich. Um dem entgegenzuwirken, hat man in dieser Arbeit schon das Prinzip der Callbacks kennengelernt. Rückruffunktionen bieten eine Alternative auf asynchron, blockierende Aktionen zu warten bis diese eingetroffen sind. Sollten jedoch mehrere asynchrone Events voneinander Abhängig sein, kann das schnell zu unübersichtlichem Code führen (siehe Abb. \ref{Nested-Callback-with-catch-error}). Mit Promises können voneinander abhängige Operationen übersichtlich dargestellt werden.\\
 
 \noindent
-Ein Promise repräsentiert ein Objekt das noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, da die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen Prozess asynchron aus. Wenn die Daten angekommen sind, führt das Promise-Objekt die Aktionen mit den erstellten Verarbeitungsmethoden fort. Dank der Promise-Verkettung ist es auch möglich Fehlerbehandlungen übersichtlich abzudecken. Während bei Callbacks das Ergebnis der Interaktion sofort verarbeitet werden muss, basieren Promises nach ihrem Verarbeitungsstatus. Das heißt sie können mit dem Ergebnis auch \glqq{}später\grqq{} interagieren.
+Ein Promise repräsentiert ein Objekt das noch nicht absehbar ist, aber in Zukunft genutzt werden soll. Als Beispiel könnte man den Inhalt einer Datei, die von einem File-Server in einem Browser geladen werden soll, nehmen. Dieser ist auf Anhieb nicht verfügbar, da die Daten zunächst über das Netzwerk übertragen werden müssen. Anstatt auf den Download zu warten, führt der Browser diesen Prozess asynchron aus. Wenn die Daten angekommen sind, führt das Promise-Objekt die Aktionen mit den erstellten Verarbeitungsmethoden fort. Dank der Promise-Verkettung können auch Fehlerbehandlungen übersichtlich abgedeckt werden. Während bei Callbacks das Ergebnis der Interaktion sofort verarbeitet werden muss, basieren Promises nach ihrem Verarbeitungsstatus. Das heißt sie können mit dem Ergebnis auch \glqq{}später\grqq{} interagieren.
 
 \subsection{Funktionsweise}
 
@@ -216,7 +216,7 @@ getA()
 \end{figure}
 
 \noindent
-Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then() Methode in den fehlgeschlagen Callback weiter oder in die catch() Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies ist nur Möglich, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Die wichtigsten sind:
+Der Unterschied ist minimal, aber extrem hilfreich. Promise-Fehlschläge gelangen bei der nächsten then() Methode in den fehlgeschlagen Callback weiter oder in die catch() Methode(,wenn vorhanden). Mit then(func1, func2) wird entweder die erste oder die zweite Funktion aufgerufen, aber niemals beide. Jedoch mit then(func1).catch(func2) werden beide Callbacks aufgerufen, sollte die erste Funktion fehlschlagen. Dies liegt daran, da die Funktionen in unterschiedlichen Stellen der Verkettung liegen. Neben den Prototyp-Methoden gibt es, wie bereits erwähnt, die statischen Methoden. Die wichtigsten sind:
 
 \begin{description}
 
@@ -455,8 +455,8 @@ story.getChapter(1)
 \end{figure}
 
 \noindent
-Diese Methoden rufen ähnlich wie in Abbildung \ref{Promises-sequential-calls} drei Kapitel nacheinander auf. Obwohl sie im positiv Fall der API-Aufrufe die Kapitel sequentiell laden, wird hier komplett auf den Vorteil, den Promises gegenüber Callbacks bieten, verzichtet. Zudem ist die gesamte Kette davon abhängig, ob der erste Promise-Aufruf eintrifft. Hier wird keinerlei Möglichkeit gewährleistet ein Fehlschlag des ersten Aufrufs zu fangen ohne Code-Duplizierung. Solche ineinandergegliederte Promise-Verschachtelungen werden unter Entwicklern auch als \glqq{}Promise-Hell\grqq{} bezeichnet.
-Mit dem ursprünglichen Beispiel von Abb. \ref{Promises-sequential-calls} ist es jedoch Möglich Fehler zwischen der Kette zu fangen:
+Diese Methoden rufen ähnlich wie in Abbildung \ref{Promises-sequential-calls} drei Kapitel nacheinander auf. Obwohl sie im positiv Fall der API-Aufrufe die Kapitel sequentiell laden, wird hier komplett auf den Vorteil, den Promises gegenüber Callbacks bieten, verzichtet. Zudem ist die gesamte Kette davon abhängig, ob der erste Promise-Aufruf eintrifft. Hier wird keinerlei Option gewährleistet ein Fehlschlag des ersten Aufrufs zu fangen ohne Code-Duplizierung. Solche ineinandergegliederte Promise-Verschachtelungen werden unter Entwicklern auch als \glqq{}Promise-Hell\grqq{} bezeichnet.
+Mit dem ursprünglichen Beispiel von Abb. \ref{Promises-sequential-calls} ist es jedoch möglich Fehler zwischen der Kette zu fangen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]

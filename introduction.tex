@@ -5,21 +5,21 @@
 Javascript ist im Aufwind mehr denn je. Sie ist die meist genutzte Programmiersprache unter Entwicklern. Laut der diesjährigen Umfrage von Stackoverflow belegte sie zum sechsten mal in Folge den ersten Platz\cite{programming-language-survey}. Doch woher kommt dieser Erfolg? \\
 
 \noindent
-Wenn es um das Web geht, war Javascript als Skriptsprache schon immer Vorreiter. Doch diese Sprache hat seine Stärken auch in der Vielfalt seiner Einsatzmöglichkeiten. Wie mit dem Framework Node.js, dass ab 2009 in Erscheinung getreten ist, war es Möglich Server-seitigen Javascript-Code zu implementieren. Dies hatte zur Folge, dass man sich nicht mit multiplen Programmiersprachen auseinandersetzen musste. Man hatte eine Vereinheitlichung in seiner Code-Basis gefunden. Zudem bietet Node.js mit npm als Paketmanager die größte Auswahl an Open-Source-Libraries. Ein weiterer Punkt ist die Multi-Plattform-Kompatibilität die Javascript z.B. mit Angular offenbart. Mit diesen Framework ist es Möglich mit einer Code-Basis sowohl Web-Anwendungen als auch Apps für mobile Geräte zu entwickeln. Diese Hybrid Applikationen werden Progressive Web Apps genannt und können durch optimiertes Caching auch im Offline Modus betrieben werden. Das ist nur Möglich, da Javascript's Ausführung vom Betriebssystem unabhängig ist. Und genau das bietet auch Typescript. Da Typescript ein \textit{Superset} von Javascript ist, kann jeder Javascript Code auch in Typescript interpretiert werden. Der Unterschied von Typescript zu Javascript ist die statische Typisierung. Das bedeutet, dass Variablen, Methoden und Funktionsparameter im Vorfeld mit einem Typ versehen werden. Aufgrund dessen können Bugs zur Laufzeit schneller erkannt werden. Zudem lässt sich der Code durch die Kapselung in Objekten leicht modular aufbauen und dokumentieren.\\
+Wenn es um das Web geht, war Javascript als Skriptsprache schon immer Vorreiter. Doch diese Sprache hat seine Stärken auch in der Vielfalt seiner Einsatzmöglichkeiten. Wie mit dem Framework Node.js, dass ab 2009 in Erscheinung getreten ist, war es möglich Server-seitigen Javascript-Code zu implementieren. Dies hatte zur Folge, dass man sich nicht mit multiplen Programmiersprachen auseinandersetzen musste. Man hatte eine Vereinheitlichung in seiner Code-Basis gefunden. Zudem bietet Node.js mit npm als Paketmanager die größte Auswahl an Open-Source-Libraries. Ein weiterer Punkt ist die Multi-Plattform-Kompatibilität die Javascript z.B. mit Angular offenbart. Mit diesem Framework kann man mit einer Code-Basis sowohl Web-Anwendungen als auch Apps für mobile Geräte entwickeln. Diese Hybrid Applikationen werden Progressive Web Apps genannt und können durch optimiertes Caching auch im Offline Modus betrieben werden. Das ist nur möglich, da Javascript's Ausführung vom Betriebssystem unabhängig ist. Und genau das bietet auch Typescript. Da Typescript ein \textit{Superset} von Javascript ist, kann jeder Javascript Code auch in Typescript interpretiert werden. Der Unterschied von Typescript zu Javascript ist die statische Typisierung. Das bedeutet, dass Variablen, Methoden und Funktionsparameter im Vorfeld mit einem Typ versehen werden. Aufgrund dessen können Bugs zur Laufzeit schneller erkannt werden. Zudem lässt sich der Code durch die Kapselung in Objekten leicht modular aufbauen und dokumentieren.\\
 
 \noindent
 Doch mit der Vielfalt steigt auch die Komplexität der Sprache. Schon zum vierten Jahr in Folge erschien eine neue Version von Javascript, die neueste Features mit sich bringt. Beispielsweise ermöglichen Promises und async await einen weiteren Ansatz zur asynchronen Verarbeitung. Somit werden Applikation, die ereignisgesteuert operieren, neue Möglichkeiten geboten. Mit Callbacks, Promises und Streams bekommen Entwickler verschiedene Optionen der asynchronen Datenverarbeitung zur Verfügung. Die Einsatzmöglichkeiten in einem Projekt können variieren, jedoch welcher Ansatz in welcher Situation sinnvoller erscheint, ist besonders für Entwickler mit wenig Erfahrung schwer zu erkennen.
 
 \subsection{Zielsetzung}
 
-Ziel der Arbeit ist die Betrachtung und Aufbereitung des Einsatzes von Sprachmitteln zur asynchronen Verarbeitung in Typescript in einer Form, die Einsteigern in die Thematik hilft, die unterschiedlichen Konzepte voneinander abzugrenzen und richtig einzusetzen. Dazu soll asynchrone Verarbeitung insgesamt anhand brauchbarer und für den Einsatz von Typescript typischer Szenarien motiviert werden. Es werden die zur Verfügung stehenden Sprachmittel wie Callbacks, Promises und Observables mit ihren jeweiligen Features vorgestellt. Nach dem Lesen dieser Arbeit soll der Leser ein gewisses Verständnis dafür gewonnen haben, welche der vorgestellten Sprachmitteln für welchen Anwendungsfall besser geeignet ist.\\
+Ziel der Arbeit ist es die Betrachtung und Aufbereitung des Einsatzes von Sprachmitteln zur asynchronen Verarbeitung in Typescript in einer Form, die Einsteigern in die Thematik hilft, die unterschiedlichen Konzepte voneinander abzugrenzen und richtig einzusetzen. Dazu soll asynchrone Verarbeitung insgesamt anhand brauchbarer und für den Einsatz von Typescript typischer Szenarien motiviert werden. Es werden die zur Verfügung stehenden Sprachmittel wie Callbacks, Promises und Observables mit ihren jeweiligen Features vorgestellt. Nach dem Lesen dieser Arbeit soll der Leser ein gewisses Verständnis dafür gewonnen haben, welche der vorgestellten Sprachmitteln für welchen Anwendungsfall besser geeignet ist.\\
 
 \noindent
 Zielgruppe dieser Arbeit sind Personen, die Grundkenntnisse in der Sprache Javascript/Typescript vorweisen können. Des Weiteren sollte man von dem Modell der asynchronen Datenverarbeitung wie Callbacks, Promises und Oberservables schon mal gehört haben, da diese in der Arbeit gegenübergestellt werden.
 
 \subsection{Aufbau}
 
-In dieser Arbeit werden die jeweiligen Ausarbeitungen der Ansätze mit Code-Beispielen unterstützt. Neben simulierten Anwendungsbeispielen zum Einstieg werden auch praxisnahe Beispiele wie z.B. Aufrufe an einer REST-API dargestellt. Das Code-Projekt lässt sich in den Modulen Callbacks, Promises, Async Await und RxJS unterteilen. Die Module haben jeweils eine introduction.ts Datei zur Einführung, eine stories.ts Datei, die entweder Funktionen oder Klassen anbietet und eine stories-usage.ts Datei, die diese Klassen oder Funktionen ausführt. In den jeweiligen Sektionen wird separat gezeigt, wie die einzelnen Dateien ausgeführt werden. Das Repository für das Projekt ist zu finden unter: 
+In dieser Arbeit werden die jeweiligen Ausarbeitungen der Ansätze mit Code-Beispielen unterstützt. Neben simulierten Anwendungsbeispielen zum Einstieg werden auch praxisnahe Beispiele wie z.B. Aufrufe an einer REST-API dargestellt. Das Code-Projekt lässt sich fachlich in den Modulen Callbacks, Promises, Async Await und RxJS unterteilen. Die Module haben jeweils eine introduction.ts Datei zur Einführung, eine stories.ts Datei, die entweder Funktionen oder Klassen anbietet und eine stories-usage.ts Datei, die diese Klassen oder Funktionen ausführt. In den jeweiligen Sektionen wird separat gezeigt, wie die einzelnen Dateien ausgeführt werden. Das Repository für das Projekt ist zu finden unter: 
 
 \begin{center}
 \url{https://github.com/MarcoLeko/async-patterns.git}
@@ -70,7 +70,7 @@ var Greeter = (function () {
 \end{figure}
 
 \noindent
-Typescript selbst kann nicht selbständig ausgeführt werden. Das heißt in einem Browser oder auf einem Server wird unter Umständen immer noch Javascript genutzt. Mit dem Typescript Compiler werden daher Dateien mit dem Suffix *.ts in *.js überführt. Im oberen Code-Schnipsel wurden die variablen und die Klassenmethoden nach Typescript-Standard deklariert. Diese Typen werden beim transpilieren in Javascript ignoriert. Der Kompiler prüft dann, ob beim übergeben eines Parameters in den Konstruktor ein string Wert eingesetzt wird. Wenn nicht, wird dies als ein Fehler erkannt. In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Methode greet() und des Konstruktors. Zudem werden auch nicht direkt deklarierte (implizite) Typen übersetzt. Wie in diesem Fall wird erkannt, dass die Methode greet() einen String-Wert zurückgibt. Ungleich wie mit Java oder C\# gewährleistet Typescript aus der streng typisierten Welt rauszufahren.
+Typescript selbst kann nicht selbständig ausgeführt werden. Das heißt in einem Browser oder auf einem Server wird unter Umständen immer noch Javascript genutzt. Mit dem Typescript Compiler werden daher Dateien mit dem Suffix *.ts in *.js überführt. Im oberen Code-Schnipsel wurden die Variablen und die Klassenmethoden nach Typescript-Standard deklariert. Diese Typen werden beim transpilieren in Javascript ignoriert. Der Kompiler prüft dann, ob beim übergeben eines Parameters in den Konstruktor ein String Wert eingesetzt wird. Wenn nicht, wird dies als ein Fehler erkannt. In der vom Kompiler auf Javascript übersetzten Version werden die erstellten Klassen und Typen vollständig eliminiert. Was verbleibt ist die Übersetzung der Methode greet() und des Konstruktors. Zudem werden auch nicht direkt deklarierte (implizite) Typen übersetzt. Wie in diesem Fall wird erkannt, dass die Methode greet() ein Wert vom Typ String zurückgibt. Ungleich wie mit Java oder C\# gewährleistet Typescript aus der streng typisierten Welt rauszufahren.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -85,7 +85,7 @@ count = 'Oops transformed to string!'
 Der Kompiler würde hierbei keinen Fehler anzeigen. Obwohl im Idealfall auf die \textbf{any} Notation verzichtet werden sollte, wird dennoch Javascripts Flexibilität geboten. 
 
 \subsubsection{Kompiler}
-Ein großer Vorteil von Typescript ist die Möglichkeit auf verschiedene Javascript/Ecmascript Version zu transpilieren. Wenn bestimmte Browser Javascripts neuster Feature noch nicht unterstützen, kann das Kompilat auf ältere Ecmascript Versionen übersetzt werden. Diese Konfiguration wird mit Hilfe einer \textbf{tsconfig.json} Datei bewältigt. Die Auflistung einer solchen Datei zeigt, dass es sich hierbei um das Stammverzeichnis des Projekts handelt. Hier können die Kompiler-Optionen für Typescript gesetzt werden oder Dateien von der Übersetzung ein- oder ausgeschlossen werden. Ein Beispiel für die Konfiguration einer solchen Datei könnte wie folgt aussehen: 
+Ein großer Vorteil von Typescript ist die Möglichkeit auf verschiedene Javascript/Ecmascript Version zu transpilieren. Wenn bestimmte Browser Javascripts neueste Feature noch nicht unterstützen, kann das Kompilat auf ältere Ecmascript Versionen übersetzt werden. Diese Konfiguration wird mit Hilfe einer \textbf{tsconfig.json} Datei bewältigt. Die Auflistung einer solchen Datei zeigt, dass es sich um das Stammverzeichnis des Projekts handelt. Hier können die Kompiler-Optionen für Typescript gesetzt werden oder Dateien von der Übersetzung ein- oder ausgeschlossen werden. Ein Beispiel für die Konfiguration einer solchen Datei könnte wie folgt aussehen: 
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -93,27 +93,18 @@ Ein großer Vorteil von Typescript ist die Möglichkeit auf verschiedene Javascr
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
-    "declaration": false,
-    "sourceMap": true,
-    "noImplicitAny": false,
+    "lib": ["dom", "es2018"],
     "typeRoots": [
       "node_modules/@types"
-    ],
-    "downlevelIteration": true
-  },
-  "include": [
-    "src/**/*"
-  ]
-} 
+    ]
+  }
+}
 \end{lstlisting}
 \caption{Auflistung einer tsconfig.json Datei}
 \end{figure}
 
 \noindent
-Hier kann z.B. mit der Regel \glqq noImplicitAny\grqq{} festgelegt werden, dass Methoden als auch Parameter und Variablen getypt werden müssen bei ihrer Deklaration. Sind sie nicht getypt: Bedeutet dies für den Kompiler sie sind als any deklariert. Dies würde zu einem Kompilefehler führen\cite{tsconfig}. Mit dem Wert \glqq target\grqq{} wird die zu nutzende Javascript Version eingestellt. Wenn der Wert nicht bestimmt ist, wird standardmäßig nach es3 übersetzt. Um stets die aktuellste Version zu nutzen, wird in diesem Fall \textbf{esnext} angegeben.\\
-
-\noindent
-Zu beachten ist, dass die Konfiguration dieser Datei nur Fehler beim erstellen eines Kompilats entdeckt. Fehler zur Laufzeit sind von der Konfiguration ausgeschlossen. Zudem wird in jedem Fall eine Javascript Datei erstellt, auch wenn der Kompiler einen Fehler anzeigt. Diese Datei ist potenziell auch lauffähig. Um Typescript zu Kompilieren muss im Terminal unter dem Verzeichnis einer Typescript-Datei \textbf{tsc} eingegeben werden. In den für diese Arbeit genutzten Code-Beispiele werden die Startskripte von npm ausgeführt. Ein Skriptbefehl kann wie folgt aussehen:
+Mit dem Wert “target” wird die ausgeführte Javascript Version eingestellt. Wenn der Wert nicht bestimmt ist, wird standardmäßig nach es3 übersetzt. Um stets die aktuellste Version zu nutzen, wird für das Projekt \textbf{esnext} angegeben. Typescript wird im Terminal unter dem Verzeichnis einer Typescript-Datei mit \textit{tsc Dateiname.ts} kompiliert. In den für diese Arbeit genutzten Code-Beispielen werden die Startskripte von npm ausgeführt.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -121,13 +112,18 @@ Zu beachten ist, dass die Konfiguration dieser Datei nur Fehler beim erstellen e
   "scripts": {
     "start": "webpack --watch",
     "build": "webpack"
-  }, 
+  },
+  ...
 \end{lstlisting}
 \caption{Auflistung ist unter der \textbf{package.json} Datei zu finden}
+\label{npm-ex-script}
 \end{figure}
 
 \noindent
-Wie man hier sehen kann führt \textbf{npm run start} nicht tsc aus, sondern \textbf{webpack --watch} aus. Webpack ist ein sog. \textbf{Module-Loader}. Mit ihm ist es Möglich Klassen/Interfaces/Funktionen zu im- und exportieren. Da nur jeweils einzelne Dateien bzw. Code-Segmente für die Ausführung der Beispiele genutzt werden, wird das Projekt modular aufgebaut. In diesem Fall wird die Third-Party Libraries RxJS in dem Projekt genutzt, das externe Klassen und Funktionen mitliefert. Zudem wird mit Hilfe von Webpack Typescript-Dateien (je nach Konfiguration), inklusive aller involvierten Importe und Exporte, zu einer zentralen Javascript-Datei gebündelt. In der Webpack Konfiguration muss lediglich eine Eingangsdatei definiert werden. Mit der Einstellung --watch werden Veränderung des Codes in Echtzeit kompiliert. Sollten nun Änderungen im Code vorgenommen werden, erstellt Webpack ein neues Bündel. Nach dem Kompilieren muss nur noch die HTML-Seite geöffnet/aktualisiert werden. Um mehr von Typescript und dessen Nutzung mit Module-Loaders zu erfahren, sollte die offizielle Dokumentation von Webpack durchgegangen werden.
+Wie man in Abbildung \ref{npm-ex-script} sehen kann, führt \textbf{npm run start} nicht tsc aus, sondern \textbf{webpack --watch} aus. Webpack ist ein sog. \textbf{Module-Bundler}. Das Projekt ist nicht nur fachlich, sondern auch technisch in Modulen gegliedert. Diese Module sollten nach Möglichkeit einzeln ausgeführt werden. Ein Module-Bundler läuft während des Build-Prozesses und erfüllt im Wesentlichen zwei Aufgaben. Den Code mit dem Typescript-Kompiler in Javascript zu transpilieren und die daraus resultierenden Kompilate in einer zentralen Datei (main.js) zu bündeln. Um das zu erreichen, nimmt Webpack eine Eingangsdatei als Einstiegspunkt an und bündelt den Inhalt inklusive aller involvierten Importe. Welchen Mehrwert hat Webpack also für das Projekt? \\
+
+\noindent
+Beim Ausführen der Beispiele muss nicht jedes mal die jeweilige TS-Datei in eine JS-Datei überführt und das erstellte Kompilat daraufhin in die HTML-Datei referenziert werden. Die HTML-Datei hat nur das Bündel main.js als Referenz und je nach definiertem Einstiegspunkt in der \textbf{webpack.config.js} wird ein neues Bündel erzeugt. Mit der Einstellung \textbf{--watch} werden Veränderung des Codes in Echtzeit kompiliert. Sollten nun Änderungen im Code vorgenommen werden, erstellt Webpack ein neues Bündel. Nach dem Kompilieren muss nur noch die HTML-Seite geöffnet/aktualisiert werden. Um mehr von Typescript und dessen Nutzung mit Webpack zu erfahren, findet unter folgendem Link mehr dazu:
 
 \begin{center}
 \url{https://webpack.js.org/guides/typescript/} 
