@@ -83,7 +83,7 @@ Error
 \end{figure}
 
 \noindent
-Javascripts Laufzeitkonzept lässt sich mit einem Warteschlangen-System vergleichen. Unabhängig davon wie zeitnah asynchrone Ereignisse wie timeouts oder Antworten aus einem Netzwerk ankommen, diese Prozesse werden erst in die Schlange gesetzt wenn der Stapel leer ist.
+Javascripts Laufzeitkonzept lässt sich mit einem Warteschlangen-System vergleichen. Unabhängig davon wie zeitnah asynchrone Ereignisse wie timeouts oder Antworten aus einem Netzwerk ankommen, diese Prozesse werden erst in die Schlange gesetzt, wenn der Stapel leer ist.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -106,7 +106,7 @@ console.log('first');
 \end{figure}
 
 \noindent
-Eine Javascript Umgebung führt nur eine Aufgabe nacheinander aus. Während das Programm ausgeführt wird, läuft im Hintergrund eine Eventschleife, die eventuell eintreffende Ereignisse registriert. Diese Schleife wird auch als \textbf{Event Loop} bezeichnet. Im Beispiel von Abbildung \ref{First-timeout-example} wird die setTimout() Funktion genutzt. SetTimeout() ist eine WEB API Methode, die der Browser zur Verfügung stellt. Hierbei wird bestimmt mit welcher Verzögerung in Millisekunden die innere Funktion in den Callstack hinzugefügt wird. Um genau zu sein, wird die innere Funktion nicht direkt in den Call stack hinzugefügt. Die Eventschleife registriert, dass ein Ereignis nach einer Zeitverzögerung ausgelöst wurde, und sorgt dafür dass diese Funktion in den Callstack hinzugefügt wird, sobald dieser Leer ist. Wann auch immer ein Javascript Programm läuft, prüft die Event Loop ob ein neues Ereignis ausgelöst wurde\cite{regular-event-loop}.\\
+Eine Javascript Umgebung führt nur eine Aufgabe nacheinander aus. Während das Programm ausgeführt wird, läuft im Hintergrund eine Eventschleife, die eventuell eintreffende Ereignisse registriert. Diese Schleife wird auch als \textbf{Event Loop} bezeichnet. Im Beispiel von Abbildung \ref{First-timeout-example} wird die setTimout() Funktion genutzt. SetTimeout() ist eine WEB API Methode, die der Browser zur Verfügung stellt. Hierbei wird bestimmt, mit welcher Verzögerung in Millisekunden die innere Funktion in den Callstack hinzugefügt wird. Um genau zu sein, wird die innere Funktion nicht direkt in den Call stack hinzugefügt. Die Eventschleife registriert, dass ein Ereignis nach einer Zeitverzögerung ausgelöst wurde, und sorgt dafür dass diese Funktion in den Callstack hinzugefügt wird, sobald dieser Leer ist. Wann auch immer ein Javascript Programm läuft, prüft die Event Loop, ob ein neues Ereignis ausgelöst wurde\cite{regular-event-loop}.\\
 
 \noindent
 Um eine Funktion nach einer asynchronen Operation auszuführen, können Funktionen geschachtelt werden. Dazu wird eine Funktionen als Argument angenommen und erst dann aufgerufen, wenn eine blockierende Aktion fertig ist. Doch wie genau funktioniert diese Schachtelung von Funktionen?
@@ -177,7 +177,11 @@ function fakeLatency(callback): void {
 function baseUrl(): string {
     return 'https://jsonplaceholder.typicode.com/posts/';
 }
+\end{lstlisting}
+\end{figure}
 
+\begin{figure}[H]
+\begin{lstlisting}[basicstyle=\small]
 function getAllChapters(onSuccess, onFailure?): void {
     makeRequest(baseUrl(), onSuccess, onFailure);
 }
@@ -185,11 +189,7 @@ function getAllChapters(onSuccess, onFailure?): void {
 function getChapter(chapter, onSuccess, onFailure?): void {
     makeRequest(baseUrl() + chapter.toString(), onSuccess, onFailure);
 }
-\end{lstlisting}
-\end{figure}
 
-\begin{figure}[H]\ContinuedFloat
-\begin{lstlisting}[basicstyle=\small]
 function createElm(innerHTML): HTMLElement {
     const div = document.createElement('div');
     div.innerHTML = innerHTML;
@@ -228,7 +228,7 @@ const loadingIcon = createElm('<svg>..</svg>');
 \end{figure}
 
 \noindent
-Dabei sind die wichtigsten Funktionen makeRequest(), getAllChapters(), getChapter() und spawn(). MakeRequest() führt eine Http-Anfrage gegen einen definierten Endpunkt aus. Wenn der Status der Antwort 200 beträgt, wird im Success-Callback vorangeschreitet. Bei einem Fehler wird der Error-Callback aufgerufen. Sowohl getAllChapter() als auch getChapter() führen makeRequest() aus, mit der Option im Erfolgs- und im Fehlerfall der Anfrage eine Aktion auszuführen. Spawn() nimmt ein Kapitel entgegen und lädt diesen in die DOM. Sollte ein Anwendungsfall sein, alle Kapitel der API anzufragen und bei Ankunft der Daten anzuzeigen, würde dies wie folgt aussehen:
+Die wichtigsten Funktionen sind makeRequest(), getAllChapters(), getChapter() und spawn(). MakeRequest() führt eine Http-Anfrage gegen einen definierten Endpunkt aus. Wenn der Status der Antwort 200 beträgt, wird im Success-Callback vorangeschreitet. Bei einem Fehler wird der Error-Callback aufgerufen. Sowohl getAllChapter() als auch getChapter() führen makeRequest() aus, mit der Option im Erfolgs- und im Fehlerfall der Anfrage eine Aktion auszuführen. Spawn() nimmt ein Kapitel entgegen und lädt diesen in die DOM. Sollte ein Anwendungsfall sein, alle Kapitel der API anzufragen und bei Ankunft der Daten anzuzeigen, würde dies wie folgt aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -295,7 +295,7 @@ getChapter(1, response1 => { // (*)
 \end{figure}
 
 \noindent
-Es bildet sich eine Verzweigung, die sich immer weiter nach rechts ausbreitet. Zudem ist es auf dem ersten Blick schwer zu erkennen welcher Error-Callback zu welchem Kapitelaufruf gehört.\\
+Es bildet sich eine Verzweigung, die sich immer weiter nach rechts ausbreitet. Zudem ist es auf dem ersten Blick schwer zu erkennen, welcher Error-Callback zu welchem Kapitelaufruf gehört.\\
 
 \noindent
 Callbacks ist nur eine konventionelle Bezeichnung, für die Nutzung von Javascripts Funktionen. Es gibt kein bestimmtes Schlüsselwort oder Objekt in der Javascript Sprache, dass Callback heißt. Anstatt sofort ein Wert zurückzugeben, sind Callbacks der erste Ansatz Ressourcen zu verarbeiten, die das Programm nicht sofort zur Verfügung hat. Es sollte jedoch nicht davon ausgegangen werden, dass alle höherrangigen Funktionen asynchron operieren (siehe Abb. \ref{callbacks-with-arrays}). Bei mehreren abhängigen asynchronen Prozessen müssen Callbacks ineinandergeschachtelt werden. Mehrere Level von geschachtelten Callbacks führen zu einer schwer nachvollziehbaren Code-Struktur. Deshalb wird der Code in Abbildung \ref{Nested-Callback-with-catch-error} auch als \glqq{}Callback-Hell\grqq{} bezeichnet. Um aus der Callback-Hell zu entkommen, ebnete Ecmascript 6 den Weg der nativen Nutzung von \textbf{Promises}.

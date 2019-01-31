@@ -16,6 +16,7 @@ module.exports = {
 \begin{lstlisting}[basicstyle=\small]
 const hello: Promise<string> = new Promise(resolve =>
     setTimeout(() => resolve('Hello'), 1000));
+    
 const world: string = 'World';
 
 hello
@@ -51,12 +52,13 @@ async function hello() {
 \end{figure}
 
 \noindent
-Der async Ausdruck an einer Funktion wandelt den Rückgabetyp T in ein Promise\textless T\textgreater um. Eine async Funktion kann zudem einen \textbf{await} Ausdruck enthalten. Mit await wird die Ausführung der Funktion pausiert bis das verwendete Promise eingetroffen ist. Daraufhin wird die Ausführung der Funktion mit dem zurückgegeben Wert des Promise fortgesetzt. Ein await ist nur innerhalb einer async Funktion valide einsetzbar. Das Beispiel in Abb. \ref{Promise-comparison-async-await} würde mit async await so aussehen:
+Der async Ausdruck an einer Funktion wandelt den Rückgabetyp T in ein Promise\textless T\textgreater{} um. Eine async Funktion kann zudem einen \textbf{await} Ausdruck enthalten. Mit await wird die Ausführung der Funktion pausiert bis das verwendete Promise eingetroffen ist. Daraufhin wird die Ausführung der Funktion mit dem zurückgegeben Wert des Promise fortgesetzt. Ein await ist nur innerhalb einer async Funktion valide einsetzbar. Das Beispiel in Abb. \ref{Promise-comparison-async-await} würde mit async await so aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
 const hello: Promise<string> = new Promise(resolve =>
     setTimeout(() => resolve('Hello'), 1000));
+    
 const world: string = 'World';
 
 async function hello2() {
@@ -88,25 +90,25 @@ console.log('bar');
 \end{figure}
 
 \noindent
-Promise.resolve() und Promise.reject() sind weitere statische Promise Methoden, die ein neues Promise erstellen, dass entweder eintrifft oder fehlschlägt. Await stoppt die weitere Ausführung des Funktionsrumpfes bis das Promise in den settled Zustand angelangt ist. Aber diese Auflösung findet erst statt, wenn der aktuelle Call stack vollständig verarbeitet wurde. Dieses Konzept wird auch \textbf{run to completion} genannt. Die Stärke von async await ist die Syntax. Eine Applikation, die von asynchronen Operationen getrieben ist, kann nun in der Code Struktur synchron abgebildet werden. 
+Promise.resolve() und Promise.reject() sind weitere statische Promise Methoden, die ein neues Promise erstellen, dass entweder eintrifft oder fehlschlägt. Await stoppt die weitere Ausführung des Funktionsrumpfes, bis das Promise in den settled Zustand angelangt ist. Aber diese Auflösung findet erst statt, wenn der aktuelle Call stack vollständig verarbeitet wurde. Dieses Konzept wird auch \textbf{run to completion} genannt. Die Stärke von async await ist die Syntax. Eine Applikation, die von asynchronen Operationen getrieben ist, kann nun in der Code Struktur synchron abgebildet werden. 
 
 \subsection{Error Handling}
 Wenn ein Promise eintrifft, liefert der await Ausdruck das Ergebnis zurück. Hingegen wird bei einem Promise Fehlschlag ein Error geworfen, ähnlich wie bei einem \textbf{throw} Ausdruck. Wie in Java oder Swift gibt es auch in Javascript ein \textbf{try-catch} Block. Wenn ein Promise fehlschlägt, kann daraufhin mit dem catch Block der Fehler gefangen werden. Code-technisch würde dies so aussehen: 
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
-async function helloWorldFailure() {
+async function fakeError() {
     try {
-        const failure = await Promise.reject('Error');
-        console.log(failure, world);
+        const promise = await Promise.reject('Error');
+        console.log(promise);
     } catch (error) {
-        console.log(error, world + 'should be: Hello', world);
+        console.log('Upps: ', error);
     }
 }
 
-helloWorldFailure();
+fakeError();
 \end{lstlisting}
-\caption{Es wird niemals console.log(failure, world) ausgeführt, da innerhalb des await Konstrukts eine Exception geworfen wird.}
+\caption{Es wird niemals console.log(promise) ausgeführt, da innerhalb des await Konstrukts eine Exception geworfen wird.}
 \end{figure}
 
 \noindent
@@ -167,7 +169,7 @@ getFirstSectionsInParallel();
 \end{figure}
 
 \noindent
-Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zur Abbildung \ref{Promise-all-example}. Beim übergeben der Promises in einem Array sind alle im pending Zustand. Erst mit await Promise.all(iterable) wird parallel auf die Auflösung der Promises gewartet. Die Stärke von async await kommt erst dann zur Geltung, wenn mehrere asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass async Funktionen ein Promise-Objekt zurückgeben. Selbst wenn explizit ein Typ angegeben wird, stellt async sicher, dass dieser Typ immer ein Promise ist. Ein await Ausdruck pausiert die Ausführung einer async Funktion, bis die blockierende Aktion eingetroffen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts try-catch Block angewendet werden. Es sollte unterschieden werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Wenn asynchrone Aktionen parallel voneinander ausgeführt werden, kann man auf die Nutzung von async await verzichten.
+Wie man sehen kann gibt es keinen großen Mehrwert innerhalb der async await Exekution im Vergleich zur Abbildung \ref{Promise-all-example}. Beim übergeben der Promises in einem Array sind alle im pending Zustand. Erst mit await Promise.all(iterable) wird parallel auf die Auflösung der Promises gewartet. Die Stärke von async await kommt erst dann zur Geltung, wenn mehrere asynchrone Operationen sequentiell ausgeführt werden müssen. Als Faustregel kann festgelegt werden, dass async Funktionen ein Promise-Objekt zurückgeben. Selbst wenn explizit ein anderer Typ angegeben wird, stellt async sicher, dass dieser Typ immer ein Promise ist. Ein await Ausdruck pausiert die Ausführung einer async Funktion, bis die blockierende Aktion eingetroffen ist. Dabei können mehrere awaits innerhalb einer async Funktion definiert werden. Um Fehlschläge zu fangen sollte Javascripts try-catch Block angewendet werden. Es sollte unterschieden werden, ob der Code sequentiell oder parallel ausgeführt werden soll. Wenn asynchrone Aktionen parallel voneinander ausgeführt werden, kann man auf die Nutzung von async await verzichten.
 
 \subsection{Fazit}
 
@@ -180,4 +182,4 @@ Mit dem Ansatz der Callbacks war es in Javascript erstmals möglich asynchrone O
 \end{center}
 
 \noindent
-Durch die Einbindung dieser Libraries konnte man in Javascript Promises nutzen. All diese externen Libraries teilen die gleiche Anatomie eines Promises und verhalten sich nach dem Standard \textbf{Promises/A+}\cite{promises-a+}. Promises wurden mit der Zeit immer beliebter. Sogar so beliebt, dass sie seit der Ecmascript-2015 Version rein nativ nutzbar sind. Mit der Einführung von async await war es sogar erstmals Möglich asynchron operierenden Code übersichtlich abzubilden. Ganz ohne Verschachtelung wurde blockierender Code aufgelöst und in der nächsten Anweisung vorrangeschreitet. All diese Ansätze haben Eines gemeinsam: Beim Aufruf werden sie nur einmal verarbeitet. Wenn man mithilfe eines Promise ein Endpunkt-Aufruf macht und dieser eintrifft, ist es irrelevant, ob der Endpunkt nach zehn Sekunden nicht mehr erreichbar ist. Der Aufruf wurde bereits erfolgreich durchgeführt und das Ergebnis fertig verarbeitet. Mit Observables wird in der nächsten Sektion ein komplett neues Vorgehensmodell vorgestellt. Sie haben ein Strom-basiertes Verhalten, dass kein, ein oder multiple Werte mit der Zeit ausgeben. Dieser Ansatz unterscheidet sich grundlegend von den Bisherigen.
+Durch die Einbindung dieser Libraries konnte man in Javascript Promises nutzen. All diese externen Libraries teilen die gleiche Anatomie eines Promises und verhalten sich nach dem Standard \textbf{Promises/A+}\cite{promises-a+}. Promises wurden mit der Zeit immer beliebter. Sogar so beliebt, dass sie seit der Ecmascript-2015 Version rein nativ nutzbar sind. Mit der Einführung von async await war es sogar erstmals möglich asynchron operierenden Code übersichtlich abzubilden. Ganz ohne Verschachtelung wurde blockierender Code aufgelöst und in der nächsten Anweisung vorrangeschreitet. All diese Ansätze haben Eines gemeinsam: Beim Aufruf werden sie nur einmal verarbeitet. Wenn man mithilfe eines Promise ein Endpunkt-Aufruf macht und dieser eintrifft, ist es irrelevant, ob der Endpunkt nach zehn Sekunden nicht mehr erreichbar ist. Der Aufruf wurde bereits erfolgreich durchgeführt und das Ergebnis fertig verarbeitet. Mit Observables wird in der nächsten Sektion ein komplett neues Vorgehensmodell vorgestellt. Sie haben ein Strom-basiertes Verhalten, dass kein, ein oder multiple Werte mit der Zeit ausgeben. Dieser Ansatz unterscheidet sich grundlegend von den Bisherigen.
