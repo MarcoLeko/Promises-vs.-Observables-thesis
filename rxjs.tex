@@ -3,6 +3,7 @@
 Rx ist eine Library, die für zahlreiche Programmiersprachen zur Verfügung gestellt wird. Diese findet sowohl in der Frontend- als auch in der Backend-Implementierung Anwendung. In dieser Arbeit wird der Fokus speziell auf RxJS geworfen. Hierbei handelt es sich um eine Erweiterung speziell für Javascript/Typescript. RxJS erlaubt es mit Hilfe von Observable-Sequenzen Event-basierte Programme zu erstellen. Das Entwurfsmuster wird auch als \textbf{reactive Programming} definiert. Neben der Kernfunktionalität von Observables werden auch Subjects und Schedulers geboten. Sollte man von reactive Programming noch nichts gehört haben, dann wird die größte Herausforderung sein \glqq{}reaktiv\grqq{} zu denken.
 
 \subsection{Reactive Programming}
+
 Im Kern ist reactive Programming ein Programmierparadigma. Im \textbf{reaktiven Manifest}, zu finden unter
 
 \begin{center}
@@ -10,14 +11,14 @@ Im Kern ist reactive Programming ein Programmierparadigma. Im \textbf{reaktiven 
 \end{center}
 
 \noindent
-wird bereits beschrieben, dass Reactive Programming als Programmierung mit asynchronen, unveränderlichen Streams von Events bezeichnet wird. Laut der offiziellen Dokumentation richtet sich ReactiveX nach dem Beobachter-Muster (engl. Observer-Pattern)\cite{rx-intro}. Das Observer-Pattern ist ein Entwurfsmuster, in der Änderungen eines Objektes (Subjects genannt) an einer Liste abhängiger Strukturen weitergereicht wird. Diese abhängigen Strukturen (Observer) werden bei jeder Zustandsveränderung informiert. Eine Veränderung eines Objekts kann hierbei gleichgesetzt werden mit einem neuen Wert innerhalb eines Datenflusses. Als Beispiel für eine reaktive Anwendung kann Excel genommen werden. Ändert man einen Wert in einer Zelle, ändert sich auch der Wert in der Summenzelle. Die Zelle, deren Wert geändert wurde, löst ein Event aus, den die Summen-Zelle empfängt. Daraufhin findet eine Neuberechnung statt\cite{reactive-programming-beispiel}. Datenflüsse können aus verschiedensten Operationen entstehen wie z.B. Klick-Events, Variablen, Cache etc. Als Observer kann man sich in diesem Datenfluss einhängen und entsprechend reagieren. Rx bietet eine enorme Menge an Funktionen diese Datenflüsse zu bearbeiten/ manipulieren. Alle Operatoren komplett abzudecken wird in dieser Arbeit nicht möglich sein, jedoch wird nach dem Behandeln dieses Kapitels ein gewisses Grundverständnis für neue Operatoren entstehen und wie diese in Folge anzuwenden sind. Die grundlegenden Konzepte, um asynchrone Events in RxJS zu steuern, sind:
+wird bereits beschrieben, dass man in diesem \textit{Design Pattern} mit asynchronen unveränderlichen Streams von Events arbeitet. Laut der offiziellen Dokumentation richtet sich ReactiveX nach dem Beobachter-Muster (engl. Observer-Pattern) \cite{rx-intro}. Das Observer-Pattern ist ein Entwurfsmuster, in der Änderungen eines Objektes (Subjects genannt) an einer Liste abhängiger Strukturen weitergereicht wird. Diese abhängigen Strukturen (Observer) werden bei jeder Zustandsveränderung informiert. Eine Veränderung eines Objekts kann hierbei gleichgesetzt werden mit einem neuen Wert innerhalb eines Datenflusses. Als Beispiel für eine reaktive Anwendung kann Excel genommen werden. Ändert man einen Wert in einer Zelle, ändert sich auch der Wert in der Summenzelle. Die Zelle, deren Wert geändert wurde, löst ein Event aus, den die Summen-Zelle empfängt. Daraufhin findet eine Neuberechnung statt \cite{reactive-programming-beispiel}. Datenflüsse können aus verschiedensten Operationen entstehen wie z.B. Klick-Events, Variablen, Cache etc. Als Observer kann man sich in diesem Datenfluss einhängen und entsprechend reagieren. Rx bietet eine enorme Menge an Funktionen diese Datenflüsse zu bearbeiten/ manipulieren. Alle Operatoren komplett abzudecken wird in dieser Arbeit nicht möglich sein, jedoch wird nach dem Behandeln dieses Kapitels ein gewisses Grundverständnis für neue Operatoren entstehen und wie diese in Folge anzuwenden sind. Die grundlegenden Konzepte, um asynchrone Events in RxJS zu steuern, sind:
 
 \begin{itemize}
     \item Observable: Repräsentiert die Idee einer abrufbaren Sammlung, in der zukünftige Werte oder Events gelagert sind.
     \item Subscription: Repräsentiert das Aufrufen eines Observable.
     \item Observer: Ein Objekt, dass eine Sammlung von Callbacks enthält, um die aus dem Observable gelieferten Werte, zu verarbeiten.
     \item Operators: Funktionen, die das Verhalten von Observable-Streams beeinflussen.
-    \item Subjects: Eine spezielle Form von Observable, die sowohl als Observer und als Observable fungiert. Im Gegensatz zu Observables, sind Subjects standardmäßig multicasting fähig.
+    \item Subjects: Eine spezielle Form von Observable, die sowohl als Observer und als Observable fungiert. Im Gegensatz zu Observables, sind Subjects standardmäßig Multicasting fähig.
     \item Schedulers: Steuerungsmechanismen die bestimmen, wann eine Subscription startet und wann Werte aus dem Stream an die Observer übermittelt werden.
 \end{itemize}
 
@@ -26,7 +27,7 @@ In dieser Arbeit wird der Fokus hauptsächlich auf Observables und dessen Nutzun
 
 \subsection{Observables}
 
-Observables sind eine träge Sammlung von multiplen Werten. Sie füllen den fehlenden Platz in der unten stehenden Tabelle:
+Observables sind eine träge Sammlung von multiplen Werten. Sie füllen den fehlenden Platz in der untenstehenden Tabelle:
 
 \begin{center}
     \begin{tabular}{| l | l | l |}
@@ -97,7 +98,7 @@ In Push-Systemen steuert der Datenproduzent, wann die Daten an die Datenverarbei
 \end{itemize}
 
 \noindent
-Hierbei stellt sich die Frage, was bedeutet träge? Träge Funktionen, im englischen auch als \textit{lazy Functions} bezeichnet, sind Funktionen die erst bei ihrem Aufruf Werte produzieren\cite{lazy-functions}.
+Hierbei stellt sich die Frage, was bedeutet träge? Träge Funktionen, im englischen auch als \textit{lazy Functions} bezeichnet, sind Funktionen die erst bei ihrem Aufruf Werte produzieren \cite{lazy-functions}.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -130,10 +131,10 @@ Hello
 \end{figure}
 
 \noindent
-Das liegt daran, da sowohl Funktionen als auch Observables träge sind. Die Aktionen innerhalb beider Typen findet erst beim Aufruf statt. Mit anderen Worten: Das Starten einer Subscription ist analog zum Aufruf einer Funktion. Entgegen der Annahme, dass Observables ausschließlich asynchron operieren, können diese ebenfalls synchron Werte ausgeben (siehe Abb. \ref{creation-of-observable-first-example}). Der Hauptpunkt in dem sich Observables von Funktionen unterscheiden ist, dass Observables mehrere Werte (mit der Zeit) emittieren können. Innerhalb einer Funktion können hingegen nicht mehrere return Ausdrücke aufgerufen werden.
+Das liegt daran, da sowohl Funktionen als auch Observables träge sind. Die Aktionen innerhalb beider Typen findet erst beim Aufruf statt. Mit anderen Worten: Das Starten einer Subscription ist analog zum Aufruf einer Funktion. Entgegen der Annahme, dass Observables ausschließlich asynchron operieren, können diese ebenfalls synchron Werte ausgeben (siehe Abb. \ref{creation-of-observable-first-example}). Der Hauptpunkt, in dem sich Observables von Funktionen unterscheiden, ist, dass Observables mehrere Werte (mit der Zeit) emittieren können. Innerhalb einer Funktion können hingegen nicht mehrere return Ausdrücke aufgerufen werden.
 
 \subsubsection{Anatomie eines Observable}
-Observables werden entweder mit einer der statischen Methoden, mit einer Observable Instanz oder mit der Hilfe eines Observable-Operators \textbf{erstellt}. Der Datenfluss wird an die Observer mit der subscribe() Methode \textbf{überreicht}. Letzteres kann die Exekution der Datenübertragung \textbf{abgesetzt} werden.
+Observables werden entweder mit einer der statischen Methoden, mit einer Observable Instanz oder mit der Hilfe eines Observable-Operators \textbf{erstellt}. Der Datenfluss wird an die Observer mit der subscribe() Methode \textbf{überreicht}. Letzteres kann die Subscription an einem Observable \textbf{abgesetzt} werden.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -146,7 +147,7 @@ const randomNumber = new Observable<number>(observer => {
 \end{figure}
 
 \noindent
-Die statische Methode Observable.create() ist ein alias zum Konstruktoraufruf. Da Observables kein, ein oder unendlich viele Werte ausstoßen können, gibt es Einschränkungen wie Werte an die Observer verteilt werden. Diese Einschränkungen richten sich nach dem sog. \textit{Observable Contract}. Zum Beispiel ist es nicht möglich nachdem Auftreten eines Fehlers oder Fertigstellung eines Observables noch weiter Werte auszugeben:
+Die statische Methode Observable.create() ist ein alias zum Konstruktor Aufruf. Da Observables kein, ein oder unendlich viele Werte ausstoßen können, gibt es Einschränkungen wie Werte an die Observer verteilt werden. Diese Einschränkungen richten sich nach dem sog. \textit{Observable Contract}. Zum Beispiel ist es nicht möglich nachdem Auftreten eines Fehlers oder Fertigstellung eines Observables noch weiter Werte auszugeben:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -178,7 +179,7 @@ const observable = new Observable<number>(observer => {
 \end{figure}
 
 \noindent
-Beim erstellen eines Observable, muss sich vor Augen geführt werden, wie die Daten an die Observer überreicht werden sollen. Wenn ein Observable aufgerufen wird, bekommt der Observer einen eigenständigen Datenfluss vom Datenproduzenten zugesprochen. Das hat zur Folge, dass mehrere Observer sich der gleichen Observable-Quelle anschließen und dennoch unterschiedliche Werte bekommen können.
+Beim Erstellen eines Observable, muss sich vor Augen geführt werden, wie die Daten an die Observer überreicht werden sollen. Wenn ein Observable aufgerufen wird, bekommt der Observer einen eigenständigen Datenfluss vom Datenproduzenten zugesprochen. Das hat zur Folge, dass mehrere Observer sich der gleichen Observable-Quelle anschließen und dennoch unterschiedliche Werte bekommen können.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -203,7 +204,7 @@ randomNumber.subscribe(value =>
 \end{figure}
 
 \noindent
-Diese Eigenschaft wird als \textbf{unicasting} bezeichnet. Das liegt daran, da die Funktion random() erst dann aufgerufen wird, wenn die subscribe() Methode aufgerufen wird. Somit hat jede Subscription eine eigene Ausführung des Datenproduzenten. Es gibt nun mehrere Möglichkeiten, wie sich Observer den gleichen Datenfluss mit der gleichen Quelle teilen. Eine Option wäre, den Datenproduzent außerhalb des Observable auszulagern. 
+Diese Eigenschaft wird als \textbf{Unicasting} bezeichnet. Das liegt daran, da die Funktion random() erst dann aufgerufen wird, wenn die subscribe() Methode aufgerufen wird. Somit hat jede Subscription eine eigene Ausführung des Datenproduzenten. Es gibt nun mehrere Möglichkeiten, wie sich Observer den gleichen Datenfluss mit der gleichen Quelle teilen. Eine Option wäre, den Datenproduzent außerhalb des Observables auszulagern. 
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -234,7 +235,7 @@ multicast.subscribe(value =>
 \end{figure}
 
 \noindent
-Wie im obigen Beispiel zu sehen ist, werden Operatoren mit der pipe() Methode aus der Observable Klasse angeschlossen. Nun können multiple Subscriptions die gleiche Sequenz von Daten empfangen, da shareReplay() dafür sorgt, dass der Datenproduzent nur einmal aufgerufen werden kann und weitere Subscriptions sich diesen Datenproduzenten teilen. Diese Eigenschaft wird auch als \textbf{multicasting} bezeichnet. Das Ergebnis sieht wie folgt aus:
+Wie im obigen Beispiel zu sehen ist, werden Operatoren mit der pipe() Methode aus der Observable Klasse angeschlossen. Nun können multiple Subscriptions die gleiche Sequenz von Daten empfangen, da shareReplay() dafür sorgt, dass der Datenproduzent nur einmal aufgerufen werden kann und weitere Subscriptions sich diesen Datenproduzenten teilen. Diese Eigenschaft wird auch als \textbf{Multicasting} bezeichnet. Das Ergebnis sieht wie folgt aus:
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -245,7 +246,7 @@ Wie im obigen Beispiel zu sehen ist, werden Operatoren mit der pipe() Methode au
 \end{figure}
 
 \noindent
-Wenn Werte eines Streams erst beim Aufruf einer Subscription entstehen, handelt es sich hierbei um ein \textbf{cold Observable}\cite{hot-vs-cold}. Um auf die oben angeführte These zurückzukommen, dass Observables erst mit der subscribe() Methode Werte ausgeben, war zwar dies zum Einstieg in die Thematik hilfreich, aber nur die halbe Wahrheit. Ein \textbf{hot Observable} kann Werte ausstoßen, unabhängig davon ob eine Subscription stattfindet oder nicht. Um einen besseren Einblick zu bekommen, wird ein Observable erstellt, dass unendlich viele Werte ausstößt.
+Wenn Werte eines Streams erst beim Aufruf einer Subscription entstehen, handelt es sich hierbei um ein \textbf{Cold Observable} \cite{hot-vs-cold}. Um auf die oben angeführte These zurückzukommen, dass Observables erst mit der subscribe() Methode Werte ausgeben, war zwar dies zum Einstieg in die Thematik hilfreich, aber nur die halbe Wahrheit. Ein \textbf{Hot Observable} kann Werte ausstoßen, unabhängig davon ob eine Subscription stattfindet oder nicht. Um einen besseren Einblick zu bekommen, wird ein Observable erstellt, dass unendlich viele Werte ausstößt.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -262,7 +263,7 @@ setTimeout(() =>
 \end{figure}
 
 \noindent
-Die statische Methode interval() erstellt ein Observable, dass aufsteigend Nummern innerhalb eines festgelegten Intervalls ausgibt. Der Startindex ist 0. Der publish() Operator sorgt dafür, dass das Observable in einem \textbf{connectable Observable} umgewandelt wird. Das heißt es werden erst Werte innerhalb der Sequenz emittiert, sobald die entsprechende connect() Methode am Observable aufgerufen wird. Alle dazugehörigen Observer bekommen, ab dem Zeitpunkt der Subscription die Werte der Quelle überreicht.\\
+Die statische Methode interval() erstellt ein Observable, dass aufsteigend Nummern innerhalb eines festgelegten Intervalls ausgibt. Der Startindex ist 0. Der publish() Operator sorgt dafür, dass das Observable in einem \textbf{Connectable Observable} umgewandelt wird. Das heißt es werden erst Werte innerhalb der Sequenz emittiert, sobald die entsprechende connect() Methode am Observable aufgerufen wird. Alle dazugehörigen Observer bekommen, ab dem Zeitpunkt der Subscription die Werte der Quelle überreicht.\\
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -277,11 +278,11 @@ Die statische Methode interval() erstellt ein Observable, dass aufsteigend Numme
 \end{figure}
 
 \noindent
-Ein hot Observable könnte Werte ausstoßen, sobald es erstellt wird. Und deshalb könnten Observer, die sich später am Observable-Stream einhängen, Werte zwischenzeitlich verpassen. Wenn der gleiche Datenproduzent über verschiedene Subscriptions genutzt wird, ist dies ebenfalls ein Indikator dafür, dass es sich um ein hot Observable handelt. Ein cold Observable dagegen wartet mit dem emittieren der Werte, bis eine Subscription eines Observers stattgefunden hat. Dieser Observer empfängt dementsprechend die gesamten Werte der Sequenz. In manchen Versionen von Rx gibt es auch die Bezeichnung connectable Observable. In solchen Fällen werden erst dann Werte emittiert, wenn die dazugehörige connect() Methode aufgerufen wurde, unabhängig davon ob eine Subscription an dem Observable stattfindet oder nicht\cite{hot-vs-cold-part-2}.
+Ein Hot Observable könnte Werte ausstoßen, sobald es erstellt wird. Und deshalb könnten Observer, die sich später am Observable-Stream einhängen, Werte zwischenzeitlich verpassen. Wenn der gleiche Datenproduzent über verschiedene Subscriptions genutzt wird, ist dies ebenfalls ein Indikator dafür, dass es sich um ein Hot Observable handelt. Ein Cold Observable dagegen wartet mit dem emittieren der Werte, bis eine Subscription eines Observers stattgefunden hat. Dieser Observer empfängt dementsprechend die gesamten Werte der Sequenz. In manchen Versionen von Rx gibt es auch die Bezeichnung Connectable Observable. In solchen Fällen werden erst dann Werte emittiert, wenn die dazugehörige connect() Methode aufgerufen wurde, unabhängig davon ob eine Subscription an dem Observable stattfindet oder nicht \cite{hot-vs-cold-part-2}.
 
 \subsection{Subscription}
 
-Da Observables potenziell unendlich viele Werte an dessen Observer ausgeben können, ist es üblich, dass ab dem Zeitpunkt, an denen die Werte nicht mehr gebraucht werden, die Übertragung gestoppt wird. Insbesondere bei cold Observables ist die Übertragung der Werte exklusiv. Um keine Rechenleistung oder Speicherressourcen zu verschwenden, können daher Subscriptions aufgegeben werden.
+Da Observables potenziell unendlich viele Werte an dessen Observer ausgeben können, ist es üblich, dass ab dem Zeitpunkt, an denen die Werte nicht mehr gebraucht werden, die Übertragung gestoppt wird. Insbesondere bei Cold Observables ist die Übertragung der Werte exklusiv. Um keine Rechenleistung oder Speicherressourcen zu verschwenden, können daher Subscriptions aufgegeben werden.
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -290,7 +291,7 @@ const subscriber: Subscription = multicast.subscribe(value => console.log(value)
 subscriber.unsubscribe();
 \end{lstlisting}
 
-\caption{Die subscribe() Methode löst bei cold Observables, eine eigenständige  Exekution des Datenproduzenten aus.}
+\caption{Die subscribe() Methode löst bei Cold Observables, eine eigenständige Exekution des Datenproduzenten aus.}
 \end{figure}
 
 \noindent
@@ -338,7 +339,7 @@ observable.subscribe(
 
 \subsection{Subjects}
 
-Ein RxJS Subject ist eine spezialisierte Form eines Observable. Hierbei sind die Datenströme von vornherein multicastingfähig. Ein Subject kennzeichnet zwei Merkmale:
+Ein RxJS Subject ist eine spezialisierte Form eines Observable. Hierbei sind die Datenströme von vornherein Multicasting fähig. Ein Subject kennzeichnet zwei Merkmale:
 
 \begin{description}
 \item Jedes Subject ist ein Observable.
@@ -391,15 +392,15 @@ subjectAsObserver.subscribe(v2 => console.log('ObserverB: ', v2));
 const source$ = RxJS.from([1, 2, 3]);
 source$.subscribe(subjectAsObserver);
 \end{lstlisting}
-\caption{Mit diesem Beispiel wurde ein Unicast Observable in ein multicastingfähiges konvertiert.}
+\caption{Mit diesem Beispiel wurde ein Unicast Observable in ein Multicasting fähiges konvertiert.}
 \end{figure}
 
 
 \noindent
-Dies ist ein weiteres Beispiel einer Umwandlung eines cold- in ein hot Observable. In Wahrheit, ohne den Datenproduzent außerhalb des Observables zu lagern, sind Subjects die einzige Wahl eine Observable Exekution an mehrere Observer zu verteilen. Mit der ursprünglichen Konvertierung in Abb. \ref{unicast-transformation} wurde mit dem shareReplay() Operator eine Funktion genutzt, die intern mit einem ReplaySubject arbeitet.\\
+Dies ist ein weiteres Beispiel einer Umwandlung eines Cold- in ein Hot Observable. In Wahrheit, ohne den Datenproduzent außerhalb des Observables zu lagern, sind Subjects die einzige Wahl eine Observable Exekution an mehrere Observer zu verteilen. Mit der ursprünglichen Konvertierung in Abb. \ref{unicast-transformation} wurde mit dem shareReplay() Operator eine Funktion genutzt, die intern mit einem ReplaySubject arbeitet.\\
 
 \noindent
-Es gibt weitere Arten von Subjects. Diese sind: \textbf{BehaviourSubject}, \textbf{ReplaySubject}, \textbf{AsyncSubject}. Um mehr von Subjects zu erfahren, kann man sich unter folgendem Link informieren:
+Es gibt weitere Arten von Subjects. Diese sind: BehaviourSubject, ReplaySubject, AsyncSubject. Um mehr von Subjects zu erfahren, kann man sich unter folgendem Link informieren:
 
 \begin{center}
     \url{http://reactivex.io/rxjs/manual/overview.html#subject}
@@ -407,10 +408,10 @@ Es gibt weitere Arten von Subjects. Diese sind: \textbf{BehaviourSubject}, \text
 
 \subsection{Schedulers}
 
-Rx Schedulers können die Timing-Strategie einer Observable-Exekution beeinflussen. Somit kann genau gesteuert werden, zu welchem Zeitpunkt die Werte den Observern zugesprochen werden. Wann auch immer eine Rx Methode einen Wert produziert, wird die Ausführung an einem Scheduler übergeben. Mit dem Einbezug eines Schedulers kann nun geplant werden, ob die Werte beispielsweise synchron oder asynchron verarbeitet werden. In einer serverseitigen Implementierung von Rx wie \textbf{Rx.NET} spielen Schedulers eine wichtige Rolle. Man kann z.B. bestimmen, wann resourcenintensive Operationen in einem Thread Pool ausgeführt werden und daraufhin die Subscription im UI-Thread gestartet wird, um die Oberfläche zu aktualisieren\cite{rx-schedulers}.\\
+Rx Schedulers können die Timing-Strategie einer Observable-Exekution beeinflussen. Somit kann genau gesteuert werden, zu welchem Zeitpunkt die Werte den Observern zugesprochen werden. Wann auch immer eine Rx Methode einen Wert produziert, wird die Ausführung an einem Scheduler übergeben. Mit dem Einbezug eines Schedulers kann nun geplant werden, ob die Werte beispielsweise synchron oder asynchron verarbeitet werden. In einer serverseitigen Implementierung von Rx wie Rx.NET spielen Schedulers eine wichtige Rolle. Man kann z.B. bestimmen, wann ressourcenintensive Operationen in einem Thread Pool ausgeführt werden und daraufhin die Subscription im UI-Thread gestartet wird, um die Oberfläche zu aktualisieren \cite{rx-schedulers}.\\
 
 \noindent
-Da Javascript grundsätzlich single-threaded ist, finden Schedulers in RxJS kaum Anwendung. Im zweiten Praxisbeispiel dieser Sektion wird jedoch ein Operator angewendet, dass intern ein Scheduler nutzt. In dieser Arbeit wird jedoch auf die nähere Einführung von Schedulers verzichtet. Unter folgendem Link kann man mehr über Schedulers erfahren:
+Da Javascript grundsätzlich Single-Threaded ist, finden Schedulers in RxJS kaum Anwendung. Im zweiten Praxisbeispiel dieser Sektion wird jedoch ein Operator angewendet, dass intern ein Scheduler nutzt. In dieser Arbeit wird jedoch auf die nähere Einführung von Schedulers verzichtet. Unter folgendem Link kann man mehr über Schedulers erfahren:
 
 \begin{center}
     \url{http://reactivex.io/rxjs/manual/overview.html#scheduler}
@@ -450,7 +451,7 @@ Die Subscription des Outputs verursacht implizit eine des Inputs. Dieses Verhalt
 \end{figure}
 
 \subsubsection{Instanz Operatoren und statische Operatoren}
-Ein Instanz Operator, ist eine Methode die nur innerhalb einer Observable Instanz aufrufbar ist. Wenn die obige Methode eine offizielle Observable Methode sein würde, würde ihre Implementierung wie folgt aussehen:
+Ein Instanz Operator, ist eine Methode, die nur innerhalb einer Observable Instanz aufrufbar ist. Wenn die obige Methode eine offizielle Observable Methode sein würde, würde ihre Implementierung wie folgt aussehen:
 
 \begin{figure}[H]
 \begin{lstlisting}[basicstyle=\small]
@@ -478,11 +479,11 @@ source.subscribe(result => console.log(result));
 \end{figure}
 
 \noindent
-Ein statischer Operator hingegen ist eine Funktion, die direkt an die Observable-Klasse angehängt wird. Die typischsten statischen Operatoren sind die \textit{creation} Operatoren. Anstatt ein Input-Observable als Argument anzunehmen, wird ein nicht-Observable Objekt als Argument übergeben und somit ein neues Observable erstellt. Als Beispiel kann die Funktion interval genommen werden, die in Abbildung \ref{interval-obs} genutzt wurde. Sie nimmt einen numerischen Wert an und generiert ein neues Observable als Output. Weitere statische Kreationsoperatoren sind: \textbf{from()}, \textbf{range()}, \textbf{of()}, etc.
+Ein statischer Operator hingegen ist eine Funktion, die direkt an die Observable-Klasse angehängt wird. Die typischsten statischen Operatoren sind die \textit{Creation} Operatoren. Anstatt ein Input Observable als Argument anzunehmen, wird ein Nicht-Observable Objekt als Argument übergeben und somit ein neues Observable erstellt. Als Beispiel kann die Funktion interval genommen werden, die in Abbildung \ref{interval-obs} genutzt wurde. Sie nimmt einen numerischen Wert an und generiert ein neues Observable als Output. Weitere statische Kreationsoperatoren sind: from(), range(), of(), etc.
 
 \subsubsection{Kategorien}
 
-Es gibt Operatoren für verschiedene Anwendungsfälle und können kategorisiert werden in: Kreation, Transformierung, Multicasting, Kombination und Fehlerbehandlung. Wie ursprünglich bereits erwähnt werden Operatoren mit der pipe() Methode an einem Observable angeschlossen. Da die Kreations- und Multicasting-Operatoren bereits vorgestellt wurden, wird mit den Transformationsoperatoren fortgefahren.\\
+Es gibt Operatoren für verschiedene Anwendungsfälle und können kategorisiert werden in: Kreation, Transformierung, Multicasting, Kombination und Fehlerbehandlung. Wie ursprünglich bereits erwähnt werden Operatoren mit der \textbf{pipe()} Methode an einem Observable angeschlossen. Da die Kreations- und Multicasting-Operatoren bereits vorgestellt wurden, wird mit den Transformationsoperatoren fortgefahren.\\
 
 \noindent
 Um komplexe For-Schleifen zu umgehen, kann man in Javascript vorgefertigte Verarbeitungsfunktionen für Arrays nutzen.
@@ -517,7 +518,7 @@ result$.subscribe(res => console.log(res));
 \end{figure}
 
 \noindent
-Mit dem Kreationsoperator from() wird jedes Iterable oder Promise Okjekt in einem Observable umgewandelt. Das Filtern der Zahlen und die anschließende Addition wurde unabhängig von externen Variablen und ganz mit Hilfe von puren Funktionen implementiert. Weitere Transformationsoperatoren sind unter Anderem \textbf{scan()}, \textbf{pluck()}, \textbf{switchMap()} etc.\\
+Mit dem Kreationsoperator from() wird jedes Iterable oder Promise Okjekt in einem Observable umgewandelt. Das Filtern der Zahlen und die anschließende Addition wurden unabhängig von externen Variablen und ganz mit Hilfe von puren Funktionen implementiert. Weitere Transformationsoperatoren sind unter Anderem scan(), pluck(), switchMap() etc.\\
 
 \noindent
 Ein häufiger Anwendungsfall ist, asynchrone Operationen voneinander abhängig auszuführen. Wie in der Sektion Callbacks, Promises und Async await bereits vorgestellt, kann dieser Anwendungsfall auch mit Observables abgedeckt werden. Im Folgenden werden unterschiedliche Kombinationsoperatoren angewendet, die mit multiplen Datenströmen agieren. Es werden die bisherigen Kapitelaufrufe als Beispiel genutzt. 
@@ -584,8 +585,7 @@ Für jeden Wert den from() ausgibt, gibt concatMap() ein Observable zurück je n
 
 
 \noindent
-Es ist ebenfalls möglich Werte aus verschiedenen Observable Sequenzen gleichzeitig auszugeben. Mit dem statischen Operator \textbf{forkJoin()} kann ein Observable Array oder mehrere Observables als Argument übergeben werden. Sobald alle Observables erfolgreich ihre Werte emittiert haben und die Sequenzen abgeschlossen sind, werden die gesamte Anzahl an Werten an die Observer verteilt. Forkjoin() führt die Observables in der Reihenfolge aus, in der sie als Argument übergeben worden sind. Dementsprechend wird auf jede Sequenz gewartet bis die Werte ausgegeben und das Observable fertiggestellt wird. Somit addiert sich die Zeit bis alle Sequenzen abgeschlossen sind. Observables forkJoin() ist das Gegenstück zum \textbf{Promise.all()}. Es gibt noch zahlreiche weitere Operatoren die mehrere Observables kombinieren können. Dazu gehören unter anderem \textbf{MergeMap()}, \textbf{concat()}, \textbf{merge()}, \textbf{combineLatest()} etc.\\
-
+Es ist ebenfalls möglich Werte aus verschiedenen Observable Sequenzen gleichzeitig auszugeben. Mit dem statischen Operator \textbf{forkJoin()} kann ein Observable Array oder mehrere Observables als Argument übergeben werden. Sobald alle Observables erfolgreich ihre Werte emittiert haben und die Sequenzen abgeschlossen sind, werden die gesamte Anzahl an Werten an die Observer verteilt. Forkjoin() führt die Observables in der Reihenfolge aus, in der sie als Argument übergeben worden sind. Dementsprechend wird auf jede Sequenz gewartet bis die Werte ausgegeben und das Observable fertiggestellt wird. Somit addiert sich die Zeit bis alle Sequenzen abgeschlossen sind. Observables forkJoin() ist das Gegenstück zum Promise.all(). Es gibt noch zahlreiche weitere Operatoren, die mehrere Observables kombinieren können. Dazu gehören unter anderem MergeMap(), concat(), merge(), combineLatest() etc.\\
 
 \noindent
 Als Letzte aber nicht unwesentlich wichtige Kategorie wird die Fehlerbehandlung mit Observables abgedeckt. Bei selbsterstellten Observables werden Fehler mit der error() Funktion an die Observer übergeben (siehe Abb. \ref{catch-error-obs}). Observer verarbeiten daraufhin innerhalb der subscribe() Methode mit dem error() Callback jeden ankommenden Fehler. Mit Operatoren können Fehler zwischen der Verarbeitung geworfen oder gefangen werden:
@@ -613,7 +613,7 @@ from([1, 2, 3]).pipe(
 \end{figure}
 
 \noindent
-In diesem Beispiel wird der Auftritt eines Fehlers mit throwError() simuliert und mit catchError() gefangen. Ein in der Praxis öfters verwendeter Operator ist \textbf{retry()}. Da nach einer Emission eines Fehler eine Subscription abläuft, wird mit retry(count) die Subscription wieder neu initiiert. Die Anzahl an Neuversuchen einer Subscription wird vom übergebenen Parameter bestimmt.\\
+In diesem Beispiel wird der Auftritt eines Fehlers mit throwError() simuliert und mit catchError() gefangen. Ein in der Praxis öfters verwendeter Operator ist \textbf{retry()}. Da nach einer Emission eines Fehlers eine Subscription abläuft, wird mit retry(count) die Subscription wieder neu initiiert. Die Anzahl an Neuversuchen einer Subscription wird vom übergebenen Parameter bestimmt.\\
 
 \noindent
 Wie man nun gesehen hat bilden Operatoren etliche Optionen das Verhalten von Observables zu beeinflussen. Die angeführten Beispiele waren nur die Spitze des Eisbergs. Alle Operatoren abzudecken, würde jedoch den Rahmen sprengen. Um mehr von Operatoren zu erfahren, kann in der Dokumentation von RxJS nachgeschaut werden:
@@ -624,7 +624,7 @@ Wie man nun gesehen hat bilden Operatoren etliche Optionen das Verhalten von Obs
 
 \subsection{Optional: Wikipedia Such-App}
 
-Ein Autovervollständigungsmechanismus ist üblich für die Suche von Inhalten in einer Web-Applikation. Sie beschleunigen die Interaktion zwischen Nutzer und Applikation, da sofort eine Rückmeldung der Suchanfrage erwartet wird. Eine naive Implementation eines solchen Mechanismus, würde nach jeder Veränderung des Suchworts eine neue GET-Anfrage an den Server schicken. Da die durchschnittliche Tippgeschwindigkeit bei 40 bis 50 Wörtern liegt, könnte dies den Server relativ schnell überlasten. Aus diesem Grund, sollte vor dem Beginn der Implementierung eine Anforderungsliste erstellt werden:
+Ein Autovervollständigungsmechanismus ist üblich für die Suche von Inhalten in einer Web-Applikation. Sie beschleunigen die Interaktion zwischen Nutzer und Applikation, da sofort eine Rückmeldung der Suchanfrage erwartet wird. Eine native Implementation eines solchen Mechanismus, würde nach jeder Veränderung des Suchworts eine neue GET-Anfrage an den Server schicken. Da die durchschnittliche Tippgeschwindigkeit bei 40 bis 50 Wörtern liegt, könnte dies den Server relativ schnell überlasten. Aus diesem Grund sollte vor dem Beginn der Implementierung eine Anforderungsliste erstellt werden:
 
 \begin{itemize}
  \item Die Suchmaske sollte mindestens zwei Buchstaben enthalten, um eine Anfrage zu starten. Zusätzlich sollte dem Nutzer ein Ergebnis gezeigt werden, wenn das Suchfeld leer ist (keine Ergebnisse).
@@ -699,11 +699,11 @@ fromEvent(wikipediaSearch, 'input').pipe(
 \end{figure}
 
 \noindent
-In diesem Fall wird mit searchWikipedia() die Wikipedia API aufgerufen, die die Daten im JSON-Format zurückgibt. Der reaktive Teil der Anwendung beginnt mit dem Kreationsoperator \textbf{fromEvent()}. Hierbei wird als Argument ein HTML-Element und das auslösende Event-Ereignis übergeben. Nach jedem Input-Event wird ein neuer Wert innerhalb der Sequenz aufgenommen. \textbf{DebounceTime()} ist ein Operator, dass intern Schedulers nutzt. Mit der übergebenen Anzahl der Millisekunden als Parameter kann bestimmt werden, nach welcher Verzögerung ein Wert in die Sequenz angenommen wird. Der Timer wird nach jedem Input-Event zurückgesetzt. Ist der Timer abgelaufen wird das zuletzt eingegebene Suchwort als neuer Wert in die Sequenz aufgenommen. \textbf{SwitchMap()} stellt sicher, dass nur die Ergebnisse aus der aktuellsten GET-Anfrage emittiert werden. SwitchMap() nimmt ein Callback an, dass immer ein Obsevable zurückgibt. Wenn ein neuer Suchwert im Fluss weitergereicht wird, wird das alte Observable aufgegeben und zu dem neuen Observable gewechselt. In diesem Fall wird eine neue API-Anfrage mit dem neuem Suchwert gestartet. Mit distinctUntilChanged() wird die letzte fachliche Anforderung der Such-App sichergestellt. Es werden nur neuartige Werte im Observable-Fluss wahrgenommen\cite{distinctUntilChanged-bib}. Wenn beispielsweise zwei Mal hintereinander der gleiche Wert eingegeben wird (z.B. mit Hilfe von Copy-Paste), dann wird die zweite Suche erst gar nicht ausgelöst.\\
+In diesem Fall wird mit searchWikipedia() die Wikipedia API aufgerufen, die die Daten im JSON-Format zurückgibt. Der reaktive Teil der Anwendung beginnt mit dem Kreationsoperator \textbf{fromEvent()}. Hierbei wird als Argument ein HTML-Element und das auslösende Event-Ereignis übergeben. Nach jedem Input Event wird ein neuer Wert innerhalb der Sequenz aufgenommen. \textbf{DebounceTime()} ist ein Operator, dass intern Schedulers nutzt. Mit der übergebenen Anzahl der Millisekunden als Parameter kann bestimmt werden, nach welcher Verzögerung ein Wert in die Sequenz angenommen wird. Der Timer wird nach jedem Input Event zurückgesetzt. Ist der Timer abgelaufen wird das zuletzt eingegebene Suchwort als neuer Wert in die Sequenz aufgenommen. SwitchMap() stellt sicher, dass nur die Ergebnisse aus der aktuellsten GET-Anfrage emittiert werden. SwitchMap() nimmt ein Callback an, dass immer ein Obsevable zurückgibt. Wenn ein neuer Suchwert im Fluss weitergereicht wird, wird das alte Observable aufgegeben und zu dem neuen Observable gewechselt. In diesem Fall wird eine neue API-Anfrage mit dem neuen Suchwert gestartet. DistinctUntilChanged() erfüllt die letzte fachliche Anforderung der Such-App. Es werden nur abweichende Werte im Observable Fluss wahrgenommen \cite{distinctUntilChanged-bib}. Wenn beispielsweise zwei Mal hintereinander der gleiche Wert eingegeben wird (z.B. mit Hilfe von Copy-Paste), dann wird die zweite Suche erst gar nicht ausgelöst.\\
 
 \noindent
 Der Vorteil von RxJS sind die mitgelieferten Features, die mit den Operatoren zur Verfügung gestellt werden. Besonders in Javascript ist es wichtig zu wissen, dass das Rad nicht neu erfunden werden muss. In einer klassischen Implementierung wäre die Umsetzung der Anforderungsliste deutlich umfangreicher. 
 
 \subsection{Fazit}
-RxJS und das Prinzip der reaktiven Programmierung zu lernen kann hart sein. Speziell RxJS bietet eine riesige API und verlangt ein umdenken vom imperativen- zum deklarativen Programmierstil. Ohne einem fundamentalen Wissensstand wie Observables intern funktionieren, kann durchaus gedacht werden, dass RxJS viel \glqq Magie\grqq{} praktiziert. Diese Sektion sollte eine Einführung in die Konzeption eines Observables geben. Als Faustregel: Observables können sowohl synchron als auch asynchron agieren. Im Gegensatz zu Funktionen können mehrere Werte mit der Zeit ausgegeben werden. Sinnbildlich kann man ein Observable mit einem Array gleichsetzen, dass mit der Zeit Werte erstellt. Funktionen, die mit dieser speziellen Form eines Array operieren, können auf neu entstandene Werte zuzugreifen. Unterschiedliche Observable Typen offenbaren unterschiedliche Verhaltensmechanismen. Observables können cold oder hot sein. Cold Observables rufen den Datenproduzenten beim Start einer Subscription auf. Infolgedessen bekommt jeder Observer einen eigene Sequenz an Werten vom Datenproduzenten zugesprochen. Bei einer Subscription eines hot Observables hingegen, kann es durchaus sein, dass obwohl Werte erwartet werden, keine ankommen. In diesem Fall bekommen alle Observer die gleiche Sequenz an Werten und wenn spät angeschlossene Observer sich anschließen - werden alte Werte eventuell nicht wahrgenommen. Eine spezielle Form von Observables sind Subjects. Subjects sind von vornherein multicasting fähig. Das bedeutet, angeschlossene Observer werden in einer Liste von Observer registriert und alle registrierten Observer bekommen die gleiche Exekution des Datenproduzenten. Zudem können Subjects als Observable oder als Observer operieren. Deshalb kann ein Subject Objekt als Argument einer subscribe() Methode übergeben werden. Schedulers finden in RxJS selten an Anwendung. Mit Ihnen kann man steuern, wann ein Observable seine Observer benachrichtigt. Um dies zu realisieren, arbeiten Schedulers mit einer virtuellen Uhr.
+RxJS und das Prinzip der reaktiven Programmierung zu lernen kann hart sein. Speziell RxJS bietet eine riesige API und verlangt ein Umdenken vom imperativen- zum deklarativen Programmierstil. Ohne einem fundamentalen Wissensstand wie Observables intern funktionieren, kann durchaus gedacht werden, dass RxJS viel \glqq Magie\grqq{} praktiziert. Diese Sektion sollte eine Einführung in die Konzeption eines Observables geben. Als Faustregel: Observables können sowohl synchron als auch asynchron agieren. Im Gegensatz zu Funktionen können mehrere Werte mit der Zeit ausgegeben werden. Sinnbildlich kann man ein Observable mit einem Array gleichsetzen, dass mit der Zeit Werte erstellt. Funktionen, die mit dieser speziellen Form eines Arrays operieren, können auf neu entstandene Werte zugreifen. Unterschiedliche Observable Typen offenbaren unterschiedliche Verhaltensmechanismen. Observables können cold oder hot sein. Cold Observables rufen den Datenproduzenten beim Start einer Subscription auf. Infolgedessen bekommt jeder Observer eine eigene Sequenz an Werten vom Datenproduzenten zugesprochen. Bei einer Subscription eines Hot Observables hingegen, kann es durchaus sein, dass obwohl Werte erwartet werden, keine ankommen. In diesem Fall bekommen alle Observer die gleiche Sequenz an Werten und wenn spät angeschlossene Observer sich anschließen - werden alte Werte eventuell nicht wahrgenommen. Eine spezielle Form von Observables sind Subjects. Subjects sind von vornherein Multicasting fähig. Das bedeutet, angeschlossene Observer werden in einer Liste von Observer registriert und alle registrierten Observer bekommen die gleiche Exekution des Datenproduzenten. Zudem können Subjects als Observable oder als Observer operieren. Deshalb kann ein Subject Objekt als Argument einer subscribe() Methode übergeben werden. Schedulers finden in RxJS selten an Anwendung. Mit Ihnen kann man steuern, wann ein Observable seine Observer benachrichtigt. Um dies zu realisieren, arbeiten Schedulers mit einer virtuellen Uhr.
 
